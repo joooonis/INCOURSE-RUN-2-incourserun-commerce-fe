@@ -17,7 +17,7 @@ interface LayoutProps {
 const Layout = ({
   //
   header = <Header />,
-  footer,
+  footer = <Footer />,
   containerProps,
   content,
 }: LayoutProps) => {
