@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 
-import HomeLayout from '@components/common/@Layout/layouts/HomeLayout/HomeLayout';
+import Layout from '@components/common/@Layout/layouts/Layout';
 
 import { ROUTES } from '@constants/routes';
 
@@ -12,10 +12,10 @@ function HomePage() {
 
   // For: Redirect To Starter Docs Page (나중에 꼭 지워주세요)
   React.useEffect(() => {
-    router.push(ROUTES.STARTER_DOCS.MAIN);
+    router.push(ROUTES.HOME);
   }, [router]);
 
-  return <HomeLayout content={<HomePageContent />} />;
+  return <Layout content={<HomePageContent />} />;
 }
 
 export default HomePage;
