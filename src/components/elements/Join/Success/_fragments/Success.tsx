@@ -35,7 +35,7 @@ function Success() {
             size="sd"
             py="12px"
           >
-            회원가입 완료
+            시작하기
           </Button>
         </Box>
       </VStack>
