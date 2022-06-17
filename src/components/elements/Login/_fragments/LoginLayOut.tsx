@@ -21,7 +21,7 @@ const LoginLayout = ({
   return (
     <>
       {header}
-      <Container maxW={LAYOUT.SIZE.WIDTH} {...containerProps}>
+      <Container px={0} maxW={LAYOUT.SIZE.WIDTH} {...containerProps}>
         {content}
       </Container>
       {footer}
