@@ -13,7 +13,6 @@ function JoinHeader() {
       position="fixed"
       zIndex="1"
       transition="all 0.3s"
-      // border="1px solid black"
       w="100%"
       mx="auto"
       h={LAYOUT.HEADER.HEIGHT}

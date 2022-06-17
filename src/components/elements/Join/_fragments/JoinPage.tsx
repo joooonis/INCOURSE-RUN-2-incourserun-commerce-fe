@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Join from './_fragments/Join';
-import JoinLayout from './_fragments/JoinLayOut';
+import Join from './Join';
+import JoinLayout from './JoinLayOut';
 
 function JoinPage() {
   return <JoinLayout content={<Join />} />;
