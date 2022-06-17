@@ -4,22 +4,22 @@ import { Container, ContainerProps } from '@chakra-ui/react';
 
 import { LAYOUT } from '@constants/layout';
 
-import LoginHeader from './LoginHeader';
+import JoinHeader from './JoinHeader';
 
-interface LoginLayoutProps {
+interface JoinLayoutProps {
   header?: JSX.Element;
   footer?: JSX.Element;
   content?: JSX.Element;
   containerProps?: ContainerProps;
 }
 
-const LoginLayout = ({
+const JoinLayout = ({
   //
-  header = <LoginHeader />,
+  header = <JoinHeader />,
   footer,
   containerProps,
   content,
-}: LoginLayoutProps) => {
+}: JoinLayoutProps) => {
   return (
     <>
       {header}
@@ -35,4 +35,4 @@ const LoginLayout = ({
   );
 };
 
-export default LoginLayout;
+export default JoinLayout;

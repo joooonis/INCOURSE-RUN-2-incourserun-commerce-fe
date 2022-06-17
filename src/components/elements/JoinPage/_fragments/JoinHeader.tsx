@@ -4,7 +4,7 @@ import { Flex, Image } from '@chakra-ui/react';
 
 import { LAYOUT } from '@constants/layout';
 
-function LoginHeader() {
+function JoinHeader() {
   return (
     <Flex
       as="header"
@@ -25,4 +25,4 @@ function LoginHeader() {
   );
 }
 
-export default LoginHeader;
+export default JoinHeader;
