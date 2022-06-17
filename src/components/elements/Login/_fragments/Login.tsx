@@ -9,7 +9,7 @@ function Login() {
     <VStack
       w="100%"
       py="50px"
-      bg="brand.primary.500"
+      bg="primary.500"
       h="812px"
       justify="space-between"
     >
