@@ -4,8 +4,8 @@ import { Container, ContainerProps } from '@chakra-ui/react';
 
 import { LAYOUT } from '@constants/layout';
 
-import Header from '../headers/Header';
 import Footer from './Footer';
+import Header from './Header';
 
 interface LayoutProps {
   header?: JSX.Element;
@@ -24,12 +24,7 @@ const Layout = ({
   return (
     <>
       {header}
-      <Container
-        pt={LAYOUT.HEADER.HEIGHT}
-        px={LAYOUT.SIZE.PADDING}
-        {...containerProps}
-        maxW={LAYOUT.SIZE.WIDTH}
-      >
+      <Container {...containerProps} px={0} maxW={LAYOUT.SIZE.WIDTH}>
         {content}
       </Container>
       {footer}
