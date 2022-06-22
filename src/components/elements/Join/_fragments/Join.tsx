@@ -30,7 +30,7 @@ interface JoinInputProps {
 function JoinInput({ label, placeholder }: JoinInputProps) {
   return (
     <FormControl isRequired>
-      <FormLabel fontSize="12px" color="brand.primary.500">
+      <FormLabel fontSize="12px" color="primary.500">
         {label}
       </FormLabel>
       <Input
@@ -64,7 +64,7 @@ function Terms() {
         pb="7px"
         borderBottom="2px solid #FF710B"
       >
-        <Text color="brand.primary.500" fontSize="16px" fontWeight="700">
+        <Text color="primary.500" fontSize="16px" fontWeight="700">
           아래 약관에 모두 동의합니다.
         </Text>
         <Checkbox
@@ -148,7 +148,7 @@ function Join({ ...basisProps }: JoinProps) {
       </Box>
       <Box py="40px" alignSelf="center">
         <Avatar size="lg">
-          <AvatarBadge boxSize="1em" bg="brand.primary.500" />
+          <AvatarBadge boxSize="1em" bg="primary.500" />
         </Avatar>
       </Box>
       <SimpleGrid columns={1} spacingY="50px" w="full">
@@ -169,7 +169,7 @@ function Join({ ...basisProps }: JoinProps) {
         </Box>
         <GridItem colSpan={1}>
           <FormControl>
-            <FormLabel fontSize="12px" color="brand.primary.500">
+            <FormLabel fontSize="12px" color="primary.500">
               성별
             </FormLabel>
             <Select
@@ -187,7 +187,7 @@ function Join({ ...basisProps }: JoinProps) {
         </GridItem>
         <GridItem colSpan={1}>
           <FormControl>
-            <FormLabel fontSize="12px" color="brand.primary.500">
+            <FormLabel fontSize="12px" color="primary.500">
               연령대
             </FormLabel>
             <Select
@@ -216,7 +216,7 @@ function Join({ ...basisProps }: JoinProps) {
       <Terms />
       <Box w="100%" py="60px">
         <Button
-          colorScheme="brand.primary"
+          colorScheme="primary.500"
           w="100%"
           borderRadius="25px"
           size="sd"
