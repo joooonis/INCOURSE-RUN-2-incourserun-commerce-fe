@@ -29,7 +29,7 @@ function Success() {
         <Image src="/icons/svg/hands-clapping.svg" alt="logo" />
         <Box w="100%" py="60px">
           <Button
-            colorScheme="brand.primary"
+            colorScheme="primary"
             w="100%"
             borderRadius="25px"
             size="sd"
