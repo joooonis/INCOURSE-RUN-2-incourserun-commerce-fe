@@ -2,8 +2,6 @@ import React from 'react';
 
 import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 
-import Card from '@components/elements/Product/_fragments/Card';
-
 function Main() {
   return (
     <>
@@ -24,7 +22,6 @@ function Main() {
           제품을 만듭니다.
         </Box>
       </Box>
-      <Card></Card>
       <Box bgColor="#FFFCEF" h="782px" px="16px" pos="relative">
         <Image
           src="/images/main/item0.png"
