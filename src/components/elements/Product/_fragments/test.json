@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "name": "바스 & 샴푸",
+    "category": "bathnshampoo",
+    "capacity": 120,
+    "price": 27000,
+    "description": "머리부터 발끝까지 한번에! 마일드한 세정을 도와주는 올인원 클렌저",
+    "productImg": null,
+    "detailImg": null,
+    "hashtags": [
+      {
+        "id": 1,
+        "name": "바스&샴푸"
+      }
+    ],
+    "avgRating": 5,
+    "reviewCount": 1,
+    "reviews": [
+      {
+        "id": 1,
+        "user": 8,
+        "product": 1,
+        "rating": 5,
+        "content": "정말 좋아요",
+        "created": "2022-06-21T11:06:35.310850",
+        "photos": [],
+        "reply": {
+          "id": 1,
+          "content": "감사합니다!",
+          "created": "2022-06-21T11:07:19.081324",
+          "review": 1
+        }
+      }
+    ],
+    "created": "2022-06-20T12:34:16.484049"
+  },
+  {
+    "id": 2,
+    "name": "오일",
+    "category": "oil",
+    "capacity": 120,
+    "price": 27000,
+    "description": "자연유래 오일성분으로 자극없이 부드럽게 보습감을 부여해주는 오일",
+    "productImg": null,
+    "detailImg": null,
+    "hashtags": [
+      {
+        "id": 2,
+        "name": "오일"
+      },
+      {
+        "id": 6,
+        "name": "올인원"
+      },
+      {
+        "id": 7,
+        "name": "클렌저"
+      },
+      {
+        "id": 8,
+        "name": "마일드"
+      }
+    ],
+    "avgRating": 0,
+    "reviewCount": 0,
+    "reviews": [],
+    "created": "2022-06-21T17:23:52.175011"
+  },
+  {
+    "id": 3,
+    "name": "로션",
+    "category": "lotion",
+    "capacity": 120,
+    "price": 27000,
+    "description": "순하고 마일드한 안심 처방으로 피부가 민감하고 연약한 우리 아이를 위한 고보습 로션",
+    "productImg": null,
+    "detailImg": null,
+    "hashtags": [
+      {
+        "id": 3,
+        "name": "로션"
+      },
+      {
+        "id": 6,
+        "name": "올인원"
+      },
+      {
+        "id": 7,
+        "name": "클렌저"
+      },
+      {
+        "id": 8,
+        "name": "마일드"
+      }
+    ],
+    "avgRating": 4,
+    "reviewCount": 1,
+    "reviews": [
+      {
+        "id": 2,
+        "user": 8,
+        "product": 3,
+        "rating": 4,
+        "content": "순해서 아이피부에도 자극없이 사용할 수 있어요!",
+        "created": "2022-06-22T15:10:34.982486",
+        "photos": [],
+        "reply": {
+          "id": 2,
+          "content": "감사합니다 고객님! 앞으로 더 노력하는 인코스런이 되겠습니다!",
+          "created": "2022-06-22T15:11:16.680953",
+          "review": 2
+        }
+      }
+    ],
+    "created": "2022-06-22T14:06:56.524887"
+  },
+  {
+    "id": 4,
+    "name": "크림",
+    "category": "cream",
+    "capacity": 120,
+    "price": 27000,
+    "description": "촉촉하고 부드러운 보습감을 부여하는 마일드 크림",
+    "productImg": null,
+    "detailImg": null,
+    "hashtags": [
+      {
+        "id": 4,
+        "name": "크림"
+      },
+      {
+        "id": 6,
+        "name": "올인원"
+      },
+      {
+        "id": 7,
+        "name": "클렌저"
+      },
+      {
+        "id": 8,
+        "name": "마일드"
+      }
+    ],
+    "avgRating": 0,
+    "reviewCount": 0,
+    "reviews": [],
+    "created": "2022-06-22T14:07:47.022713"
+  },
+  {
+    "id": 5,
+    "name": "파우더로션",
+    "category": "powderlotion",
+    "capacity": 120,
+    "price": 27000,
+    "description": "겉은 보송하게 케어하고 피부속은 촉촉하게 채워주는 자극없고 순한 파우더로션",
+    "productImg": null,
+    "detailImg": null,
+    "hashtags": [
+      {
+        "id": 5,
+        "name": "파우더로션"
+      },
+      {
+        "id": 6,
+        "name": "올인원"
+      },
+      {
+        "id": 7,
+        "name": "클렌저"
+      },
+      {
+        "id": 8,
+        "name": "마일드"
+      }
+    ],
+    "avgRating": 0,
+    "reviewCount": 0,
+    "reviews": [],
+    "created": "2022-06-22T14:08:23.124566"
+  }
+]

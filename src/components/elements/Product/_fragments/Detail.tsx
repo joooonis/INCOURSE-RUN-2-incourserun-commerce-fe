@@ -1,41 +1,13 @@
 import React from 'react';
 
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Image,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Image, VStack } from '@chakra-ui/react';
 
-type Hashtag = {
-  id: number;
-  name: string;
-};
-interface CardProps {
-  name: string;
-  capacity: number;
-  price: number;
-  hashtags?: Hashtag[];
-  avgRating?: number;
-  reviewCount?: number;
-}
-
-function Card({
-  name,
-  capacity,
-  price,
-  hashtags,
-  avgRating,
-  reviewCount,
-}: CardProps) {
+function Detail() {
   return (
     <>
       <Box
-        position="relative"
         borderRadius="20px"
+        mx="16px"
         boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
       >
         <Image src="/images/product/card.png" />
@@ -60,7 +32,7 @@ function Card({
         >
           <Box px="13px">
             <Box {...TitleText}>
-              {name}
+              바스 & 샴푸
               <span
                 style={{
                   paddingLeft: '5px',
@@ -70,12 +42,11 @@ function Card({
                   color: '#757983',
                 }}
               >
-                {capacity}ml
+                300ml
               </span>
             </Box>
             <Box {...PriceText} pt="10px">
-              {/* 27000 */}
-              {price}
+              27000
               <span
                 style={{
                   fontWeight: 400,
@@ -88,8 +59,7 @@ function Card({
               </span>
             </Box>
             <Box {...TitleText}>
-              {/* 4.3 */}
-              {avgRating}
+              4.3
               <span
                 style={{
                   paddingLeft: '3px',
@@ -99,16 +69,11 @@ function Card({
                   color: '#757983',
                 }}
               >
-                {/* (리뷰 125개) */}
-                (리뷰 {reviewCount}개)
+                (리뷰 125개)
               </span>
             </Box>
             <Box {...SubText} pt="25px">
-              <HStack spacing="5px">
-                {hashtags?.map((hashtag) => {
-                  return <Text key={hashtag.id}>#{hashtag.name}</Text>;
-                })}
-              </HStack>
+              # 올인원 # 클렌져 # 마일드 # 바스앤샴푸
             </Box>
           </Box>
 
@@ -141,7 +106,7 @@ function Card({
   );
 }
 
-export default Card;
+export default Detail;
 
 const TitleText = {
   fontWeight: 700,
