@@ -1,173 +1,238 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Path, SubmitHandler, UseFormRegister, useForm } from 'react-hook-form';
 
 import {
   Avatar,
   AvatarBadge,
   Box,
-  BoxProps,
   Button,
   Checkbox,
   Flex,
   FormControl,
   FormLabel,
-  GridItem,
   Heading,
   Image,
   Input,
+  Link,
   Select,
-  SimpleGrid,
   Text,
   VStack,
 } from '@chakra-ui/react';
 
-interface JoinProps extends BoxProps {}
-
+interface IFormValues {
+  profileImg: File;
+  name: string;
+  nickname: string;
+  email: string;
+  phone: string;
+  gender: 'male' | 'female';
+  age: string;
+  agreeAllTerms: boolean;
+  requiredTerms: boolean;
+  privateInfoTerms: boolean;
+  marketingTerms: boolean;
+}
 interface JoinInputProps {
-  label?: string;
-  placeholder?: string;
+  label: Path<IFormValues>;
+  name: string;
+  placeholder: string;
+  register: UseFormRegister<IFormValues>;
+  options?: any;
 }
 
-function JoinInput({ label, placeholder }: JoinInputProps) {
+function JoinInput({
+  label,
+  name,
+  placeholder,
+  register,
+  options,
+}: JoinInputProps) {
+  const InputStyle = {
+    variant: 'outline',
+    size: 'xs',
+    px: '19px',
+    py: '5px',
+    h: '40px',
+    fontSize: '16px',
+    outline: '1px solid #1A1A1A',
+    borderRadius: '100px',
+    lineHeight: '28px',
+    _focus: { border: '2px solid #FF710B', outline: 'none' },
+    _placeholder: { color: '#1A1A1A' },
+  };
+  const NameStyle = {
+    fontSize: '12px',
+    color: 'primary.500',
+    fontWeight: 700,
+    lineheight: '18px',
+    pb: '10px',
+  };
   return (
-    <FormControl isRequired>
-      <FormLabel fontSize="12px" color="primary.500">
-        {label}
-      </FormLabel>
+    <Box w="full">
+      <Text {...NameStyle}>{name}</Text>
       <Input
-        _focus={{ border: '2px solid #FF710B', outline: 'none' }}
-        variant="outline"
-        size="xs"
-        px="19px"
-        py="5px"
-        h="40px"
-        fontSize="16px"
+        {...InputStyle}
         placeholder={placeholder}
-        _placeholder={{ color: '#1A1A1A' }}
-        outline="1px solid #1A1A1A"
-        borderRadius="100px"
-        lineHeight="28px"
-      ></Input>
-    </FormControl>
+        {...register(label, { ...options })}
+      />
+    </Box>
   );
 }
 
-function Terms() {
-  const [checkedItems, setCheckedItems] = React.useState([false, false, false]);
-  const allChecked = checkedItems.every(Boolean);
-  const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
+function Join() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+    setValue,
+  } = useForm<IFormValues>();
+
+  const onSubmit: SubmitHandler<IFormValues> = (data) => {
+    console.log(JSON.stringify(data));
+  };
+
+  const [toggle, setToggle] = useState(false);
+  const checkboxHandler = (e: any) => {
+    setValue(e.currentTarget.id, !getValues(e.currentTarget.id));
+    if (
+      e.currentTarget.id === 'agreeAllTerms' &&
+      getValues('agreeAllTerms') === true
+    ) {
+      setValue('requiredTerms', true);
+      setValue('privateInfoTerms', true);
+      setValue('marketingTerms', true);
+      setToggle(!toggle);
+    } else if (
+      e.currentTarget.id === 'agreeAllTerms' &&
+      getValues('agreeAllTerms') === false
+    ) {
+      setValue('requiredTerms', false);
+      setValue('privateInfoTerms', false);
+      setValue('marketingTerms', false);
+      setToggle(!toggle);
+    } else {
+      setValue('agreeAllTerms', false);
+      setToggle(!toggle);
+    }
+    if (
+      e.currentTarget.id !== 'agreeAllTerms' &&
+      getValues(['requiredTerms', 'privateInfoTerms', 'marketingTerms']).every(
+        Boolean,
+      )
+    ) {
+      setValue('agreeAllTerms', true);
+      setToggle(!toggle);
+    }
+  };
 
   return (
-    <VStack w="100%" justify="space-between" align="cener">
-      <Flex
-        justify="space-between"
-        mb="20px"
-        pb="7px"
-        borderBottom="2px solid #FF710B"
-      >
-        <Text color="primary.500" fontSize="16px" fontWeight="700">
-          아래 약관에 모두 동의합니다.
-        </Text>
-        <Checkbox
-          ml={0}
-          display="none"
-          isChecked={allChecked}
-          isIndeterminate={isIndeterminate}
-          onChange={(e) =>
-            setCheckedItems([
-              e.target.checked,
-              e.target.checked,
-              e.target.checked,
-            ])
-          }
-        ></Checkbox>
-        <Image src="/icons/svg/check-circle.svg" alt="checkAll" />
-      </Flex>
-      <Flex justify="space-between" py="20px">
-        <Text color="gray.600" fontSize="12px" textDecor="underline">
-          서비스 이용을 위한 필수약관 동의
-        </Text>
-        <Checkbox
-          display="none"
-          isChecked={checkedItems[0]}
-          onChange={(e) =>
-            setCheckedItems([
-              e.target.checked,
-              checkedItems[1],
-              checkedItems[2],
-            ])
-          }
-        />
-        <Image src="/icons/svg/check-line.svg" alt="check0" />
-      </Flex>
-      <Flex justify="space-between" py="20px">
-        <Text color="gray.600" fontSize="12px" textDecor="underline">
-          개인정보수집 및 이용, 제 3차 제공 동의
-        </Text>
-        <Checkbox
-          display="none"
-          isChecked={checkedItems[1]}
-          onChange={(e) =>
-            setCheckedItems([
-              checkedItems[0],
-              e.target.checked,
-              checkedItems[2],
-            ])
-          }
-        />
-        <Image src="/icons/svg/check-line.svg" alt="check1" />
-      </Flex>
-      <Flex justify="space-between" py="20px">
-        <Text color="gray.600" fontSize="12px" textDecor="underline">
-          마케팅 정보 수신 및 맞춤형 광고 동의(선택)
-        </Text>
-        <Checkbox
-          display="none"
-          isChecked={checkedItems[2]}
-          onChange={(e) =>
-            setCheckedItems([
-              checkedItems[0],
-              checkedItems[1],
-              e.target.checked,
-            ])
-          }
-        />
-        <Image src="/icons/svg/check-line.svg" alt="check2" />
-      </Flex>
-    </VStack>
-  );
-}
-
-function Join({ ...basisProps }: JoinProps) {
-  return (
-    <VStack alignItems="flex-start" {...basisProps}>
-      <Box>
-        <Heading size="lg">회원가입</Heading>
-      </Box>
-      <Box pt="60px">
-        <Heading size="sm">회원정보입력</Heading>
-      </Box>
-      <Box py="40px" alignSelf="center">
-        <Avatar size="lg">
-          <AvatarBadge boxSize="1em" bg="primary.500" />
-        </Avatar>
-      </Box>
-      <SimpleGrid columns={1} spacingY="50px" w="full">
-        <GridItem colSpan={1}>
-          <JoinInput label="이름" placeholder="김인코스런" />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <JoinInput label="닉네임" placeholder="인코스런" />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <JoinInput label="핸드폰번호" placeholder="010-1234-1234" />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <JoinInput label="이메일주소" placeholder="incourse.run@gmail.com" />
-        </GridItem>
-        <Box pt="60px">
-          <Heading size="sm">추가정보입력(선택)</Heading>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <VStack spacing={0} alignItems="flex-start">
+        <Box>
+          <Heading size="lg">회원가입</Heading>
         </Box>
-        <GridItem colSpan={1}>
+        <Box pt="60px">
+          <Heading size="sm">회원정보입력</Heading>
+        </Box>
+        <Box py="40px" alignSelf="center">
+          <Avatar w="70px" h="70px">
+            <AvatarBadge
+              boxSize="20px"
+              bg="primary.500"
+              borderWidth="0"
+              position="absolute"
+              right="5px"
+              bottom="5px"
+              _before={{
+                content: '""',
+                display: 'block',
+                width: '1.5px',
+                height: '10px',
+                borderRadius: '2px',
+                backgroundColor: 'white',
+                position: 'absolute',
+              }}
+              _after={{
+                content: '""',
+                display: 'block',
+                width: '10px',
+                height: '1.5px',
+                borderRadius: '2px',
+                backgroundColor: 'white',
+                position: 'absolute',
+              }}
+            />
+          </Avatar>
+        </Box>
+        <VStack spacing="78px" w="full" alignItems="flex-start">
+          <FormControl>
+            <JoinInput
+              label="name"
+              name="이름"
+              placeholder="김인코스런"
+              register={register}
+              options={{
+                required: true,
+                minLength: { value: 2 },
+              }}
+            ></JoinInput>
+            {errors.name && (
+              <Box {...ErrorStyle}>최소 2자 이상 입력해주세요.</Box>
+            )}
+          </FormControl>
+          <FormControl>
+            <JoinInput
+              label="nickname"
+              name="닉네임"
+              placeholder="인코스런"
+              register={register}
+              options={{
+                required: true,
+                minLength: { value: 2 },
+                maxLength: { value: 5 },
+              }}
+            />
+            {errors.nickname && (
+              <Box {...ErrorStyle}>
+                한글 1~5자, 영문 및 숫자 2~10자 사이로 입력해주세요.
+              </Box>
+            )}
+          </FormControl>
+          <FormControl>
+            <JoinInput
+              label="phone"
+              name="핸드폰 번호"
+              placeholder="010-1234-1234"
+              register={register}
+              options={{
+                required: true,
+                pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
+              }}
+            />
+            {errors.phone && (
+              <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
+            )}
+          </FormControl>
+          <FormControl>
+            <JoinInput
+              label="email"
+              name="이메일 주소"
+              placeholder="incourse.run@gmail.com"
+              register={register}
+              options={{
+                required: true,
+                pattern:
+                  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+              }}
+            />
+            {errors.email && (
+              <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
+            )}
+          </FormControl>
+          <Box pt="60px">
+            <Heading size="sm">추가정보입력(선택)</Heading>
+          </Box>
           <FormControl>
             <FormLabel fontSize="12px" color="primary.500">
               성별
@@ -179,13 +244,12 @@ function Join({ ...basisProps }: JoinProps) {
               fontSize="16px"
               placeholder="성별을 선택하세요"
               color="gray.400"
+              {...register('gender')}
             >
               <option value="male">남</option>
               <option value="female">여</option>
             </Select>
           </FormControl>
-        </GridItem>
-        <GridItem colSpan={1}>
           <FormControl>
             <FormLabel fontSize="12px" color="primary.500">
               연령대
@@ -199,6 +263,7 @@ function Join({ ...basisProps }: JoinProps) {
               _placeholder={{ color: '#FF710B' }}
               color="gray.400"
               _selected={{ color: '#1A1A1A' }}
+              {...register('age')}
             >
               <option value="10대">10대</option>
               <option value="20대">20대</option>{' '}
@@ -208,25 +273,123 @@ function Join({ ...basisProps }: JoinProps) {
               <option value="60대">60대</option>
             </Select>
           </FormControl>
-        </GridItem>
-      </SimpleGrid>
-      <Box py="60px">
-        <Heading size="sm">이용약관동의</Heading>
-      </Box>
-      <Terms />
-      <Box w="100%" py="60px">
-        <Button
-          colorScheme="primary.500"
-          w="100%"
-          borderRadius="25px"
-          size="sd"
-          py="12px"
-        >
-          회원가입 완료
-        </Button>
-      </Box>
-    </VStack>
+        </VStack>
+        <Box pt="81px" pb="44px">
+          <Heading size="sm">이용약관동의</Heading>
+        </Box>
+        <VStack w="full" spacing="42px" justify="space-between" align="cener">
+          <Flex
+            justify="space-between"
+            borderBottom="2px solid #FF710B"
+            pb="7px"
+          >
+            <Text color="primary.500" fontSize="16px" fontWeight="700">
+              아래 약관에 모두 동의합니다.
+            </Text>
+            <Checkbox
+              id="agreeAllTerms"
+              display="none"
+              ml={0}
+              {...register('agreeAllTerms')}
+              onChange={checkboxHandler}
+            ></Checkbox>
+            <label htmlFor="agreeAllTerms">
+              {getValues('agreeAllTerms') === true ? (
+                <Image
+                  src="/icons/svg/join/checked_circle.svg"
+                  alt="checkAll"
+                />
+              ) : (
+                <Image src="/icons/svg/join/check_circle.svg" alt="checkAll" />
+              )}
+            </label>
+          </Flex>
+          <Flex justify="space-between">
+            <Link href="https://toktokhan.notion.site/6e7a309e8d14464cad38fc86656d564a">
+              <Text color="gray.600" fontSize="12px" textDecor="underline">
+                서비스 이용을 위한 필수약관 동의
+              </Text>
+            </Link>
+
+            <Checkbox
+              id="requiredTerms"
+              display="none"
+              {...register('requiredTerms')}
+              onChange={checkboxHandler}
+            />
+            <label htmlFor="requiredTerms">
+              {getValues('requiredTerms') === true ? (
+                <Image src="/icons/svg/join/checked_line.svg" alt="check1" />
+              ) : (
+                <Image src="/icons/svg/join/check_line.svg" alt="check1" />
+              )}
+            </label>
+          </Flex>
+          <Flex justify="space-between">
+            <Link href="https://toktokhan.notion.site/3-2261ee2f25024c0a9b6a82a6f43fd0dc">
+              <Text color="gray.600" fontSize="12px" textDecor="underline">
+                개인정보수집 및 이용, 제 3차 제공 동의
+              </Text>
+            </Link>
+            <Checkbox
+              id="privateInfoTerms"
+              display="none"
+              {...register('privateInfoTerms')}
+              onChange={checkboxHandler}
+            />
+            <label htmlFor="privateInfoTerms">
+              {getValues('privateInfoTerms') === true ? (
+                <Image src="/icons/svg/join/checked_line.svg" alt="check2" />
+              ) : (
+                <Image src="/icons/svg/join/check_line.svg" alt="check2" />
+              )}
+            </label>
+          </Flex>
+          <Flex justify="space-between">
+            <Link href="https://toktokhan.notion.site/24f69842ebec48df89a3656bac7cf4c9">
+              <Text color="gray.600" fontSize="12px" textDecor="underline">
+                마케팅 정보 수신 및 맞춤형 광고 동의(선택)
+              </Text>
+            </Link>
+
+            <Checkbox
+              id="marketingTerms"
+              display="none"
+              {...register('marketingTerms')}
+              onChange={checkboxHandler}
+            />
+            <label htmlFor="marketingTerms">
+              {getValues('marketingTerms') === true ? (
+                <Image src="/icons/svg/join/checked_line.svg" alt="check3" />
+              ) : (
+                <Image src="/icons/svg/join/check_line.svg" alt="check3" />
+              )}
+            </label>
+          </Flex>
+        </VStack>
+        <Box w="full" pt="96px" pb="50px">
+          <Button
+            type="submit"
+            colorScheme="primary"
+            w="full"
+            borderRadius="25px"
+            size="sd"
+            py="12px"
+          >
+            회원가입 완료
+          </Button>
+        </Box>
+      </VStack>
+    </form>
   );
 }
 
 export default Join;
+
+const ErrorStyle = {
+  fontWeight: '400',
+  fontSize: '12px',
+  lineHeight: '18px',
+  color: '#FF001A',
+  pt: '10px',
+};
