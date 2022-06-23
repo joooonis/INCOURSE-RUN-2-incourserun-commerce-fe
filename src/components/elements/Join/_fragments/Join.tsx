@@ -13,6 +13,7 @@ import {
   Heading,
   Image,
   Input,
+  Link,
   Select,
   Text,
   VStack,
@@ -304,9 +305,12 @@ function Join() {
             </label>
           </Flex>
           <Flex justify="space-between">
-            <Text color="gray.600" fontSize="12px" textDecor="underline">
-              서비스 이용을 위한 필수약관 동의
-            </Text>
+            <Link href="https://toktokhan.notion.site/6e7a309e8d14464cad38fc86656d564a">
+              <Text color="gray.600" fontSize="12px" textDecor="underline">
+                서비스 이용을 위한 필수약관 동의
+              </Text>
+            </Link>
+
             <Checkbox
               id="requiredTerms"
               display="none"
@@ -322,9 +326,11 @@ function Join() {
             </label>
           </Flex>
           <Flex justify="space-between">
-            <Text color="gray.600" fontSize="12px" textDecor="underline">
-              개인정보수집 및 이용, 제 3차 제공 동의
-            </Text>
+            <Link href="https://toktokhan.notion.site/3-2261ee2f25024c0a9b6a82a6f43fd0dc">
+              <Text color="gray.600" fontSize="12px" textDecor="underline">
+                개인정보수집 및 이용, 제 3차 제공 동의
+              </Text>
+            </Link>
             <Checkbox
               id="privateInfoTerms"
               display="none"
@@ -340,9 +346,12 @@ function Join() {
             </label>
           </Flex>
           <Flex justify="space-between">
-            <Text color="gray.600" fontSize="12px" textDecor="underline">
-              마케팅 정보 수신 및 맞춤형 광고 동의(선택)
-            </Text>
+            <Link href="https://toktokhan.notion.site/24f69842ebec48df89a3656bac7cf4c9">
+              <Text color="gray.600" fontSize="12px" textDecor="underline">
+                마케팅 정보 수신 및 맞춤형 광고 동의(선택)
+              </Text>
+            </Link>
+
             <Checkbox
               id="marketingTerms"
               display="none"
