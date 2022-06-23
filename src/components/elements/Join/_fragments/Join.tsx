@@ -1,53 +1,80 @@
 import React from 'react';
+import { Path, SubmitHandler, UseFormRegister, useForm } from 'react-hook-form';
 
 import {
   Avatar,
   AvatarBadge,
   Box,
-  BoxProps,
   Button,
   Checkbox,
   Flex,
   FormControl,
   FormLabel,
-  GridItem,
   Heading,
   Image,
   Input,
   Select,
-  SimpleGrid,
   Text,
   VStack,
 } from '@chakra-ui/react';
 
-interface JoinProps extends BoxProps {}
-
+interface IFormValues {
+  profileImg: File;
+  name: string;
+  nicName: string;
+  Email: string;
+  phone: string;
+  gender: string;
+  age: string;
+  agreeAllTerms: boolean;
+  requiredTerms: boolean;
+  privateInfoTerms: boolean;
+  marketingTerms: boolean;
+}
 interface JoinInputProps {
-  label?: string;
-  placeholder?: string;
+  label: Path<IFormValues>;
+  name: string;
+  placeholder: string;
+  register: UseFormRegister<IFormValues>;
+  required?: boolean;
 }
 
-function JoinInput({ label, placeholder }: JoinInputProps) {
+function JoinInput({
+  label,
+  name,
+  placeholder,
+  register,
+  required,
+}: JoinInputProps) {
+  const InputStyle = {
+    variant: 'outline',
+    size: 'xs',
+    px: '19px',
+    py: '5px',
+    h: '40px',
+    fontSize: '16px',
+    outline: '1px solid #1A1A1A',
+    borderRadius: '100px',
+    lineHeight: '28px',
+    _focus: { border: '2px solid #FF710B', outline: 'none' },
+    _placeholder: { color: '#1A1A1A' },
+  };
+  const NameStyle = {
+    fontSize: '12px',
+    color: 'primary.500',
+    fontWeight: 700,
+    lineheight: '18px',
+    pb: '10px',
+  };
   return (
-    <FormControl isRequired>
-      <FormLabel fontSize="12px" color="primary.500">
-        {label}
-      </FormLabel>
+    <Box w="full">
+      <Text {...NameStyle}>{name}</Text>
       <Input
-        _focus={{ border: '2px solid #FF710B', outline: 'none' }}
-        variant="outline"
-        size="xs"
-        px="19px"
-        py="5px"
-        h="40px"
-        fontSize="16px"
+        {...InputStyle}
         placeholder={placeholder}
-        _placeholder={{ color: '#1A1A1A' }}
-        outline="1px solid #1A1A1A"
-        borderRadius="100px"
-        lineHeight="28px"
+        {...register(label, { required })}
       ></Input>
-    </FormControl>
+    </Box>
   );
 }
 
@@ -57,7 +84,7 @@ function Terms() {
   const isIndeterminate = checkedItems.some(Boolean) && !allChecked;
 
   return (
-    <VStack w="100%" justify="space-between" align="cener">
+    <VStack w="full" justify="space-between" align="cener">
       <Flex
         justify="space-between"
         mb="20px"
@@ -137,62 +164,83 @@ function Terms() {
   );
 }
 
-function Join({ ...basisProps }: JoinProps) {
+function Join() {
+  const { register, handleSubmit } = useForm<IFormValues>();
+
+  const onSubmit: SubmitHandler<IFormValues> = (data) => {
+    console.log(JSON.stringify(data));
+  };
   return (
-    <VStack alignItems="flex-start" {...basisProps}>
-      <Box>
-        <Heading size="lg">회원가입</Heading>
-      </Box>
-      <Box pt="60px">
-        <Heading size="sm">회원정보입력</Heading>
-      </Box>
-      <Box py="40px" alignSelf="center">
-        <Avatar w="70px" h="70px">
-          <AvatarBadge
-            boxSize="20px"
-            bg="primary.500"
-            borderWidth="0"
-            position="absolute"
-            right="5px"
-            bottom="5px"
-            _before={{
-              content: '""',
-              display: 'block',
-              width: '1.5px',
-              height: '10px',
-              borderRadius: '2px',
-              backgroundColor: 'white',
-              position: 'absolute',
-            }}
-            _after={{
-              content: '""',
-              display: 'block',
-              width: '10px',
-              height: '1.5px',
-              borderRadius: '2px',
-              backgroundColor: 'white',
-              position: 'absolute',
-            }}
-          />
-        </Avatar>
-      </Box>
-      <SimpleGrid columns={1} spacingY="50px" w="full">
-        <GridItem colSpan={1}>
-          <JoinInput label="이름" placeholder="김인코스런" />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <JoinInput label="닉네임" placeholder="인코스런" />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <JoinInput label="핸드폰번호" placeholder="010-1234-1234" />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <JoinInput label="이메일주소" placeholder="incourse.run@gmail.com" />
-        </GridItem>
-        <Box pt="60px">
-          <Heading size="sm">추가정보입력(선택)</Heading>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <VStack alignItems="flex-start">
+        <Box>
+          <Heading size="lg">회원가입</Heading>
         </Box>
-        <GridItem colSpan={1}>
+        <Box pt="60px">
+          <Heading size="sm">회원정보입력</Heading>
+        </Box>
+        <Box py="40px" alignSelf="center">
+          <Avatar w="70px" h="70px">
+            <AvatarBadge
+              boxSize="20px"
+              bg="primary.500"
+              borderWidth="0"
+              position="absolute"
+              right="5px"
+              bottom="5px"
+              _before={{
+                content: '""',
+                display: 'block',
+                width: '1.5px',
+                height: '10px',
+                borderRadius: '2px',
+                backgroundColor: 'white',
+                position: 'absolute',
+              }}
+              _after={{
+                content: '""',
+                display: 'block',
+                width: '10px',
+                height: '1.5px',
+                borderRadius: '2px',
+                backgroundColor: 'white',
+                position: 'absolute',
+              }}
+            />
+          </Avatar>
+        </Box>
+        <VStack spacing="50px" w="full" alignItems="flex-start">
+          <JoinInput
+            label="name"
+            name="이름"
+            placeholder="김인코스런"
+            register={register}
+            required
+          />
+          <JoinInput
+            label="nicName"
+            name="닉네임"
+            placeholder="인코스런"
+            register={register}
+            required
+          />
+          <JoinInput
+            label="phone"
+            name="핸드폰 번호"
+            placeholder="010-1234-1234"
+            register={register}
+            required
+          />
+          <JoinInput
+            label="Email"
+            name="이메일 주소"
+            placeholder="incourse.run@gmail.com"
+            register={register}
+            required
+          />
+          <Box pt="60px">
+            <Heading size="sm">추가정보입력(선택)</Heading>
+          </Box>
           <FormControl>
             <FormLabel fontSize="12px" color="primary.500">
               성별
@@ -209,8 +257,7 @@ function Join({ ...basisProps }: JoinProps) {
               <option value="female">여</option>
             </Select>
           </FormControl>
-        </GridItem>
-        <GridItem colSpan={1}>
+
           <FormControl>
             <FormLabel fontSize="12px" color="primary.500">
               연령대
@@ -233,24 +280,25 @@ function Join({ ...basisProps }: JoinProps) {
               <option value="60대">60대</option>
             </Select>
           </FormControl>
-        </GridItem>
-      </SimpleGrid>
-      <Box py="60px">
-        <Heading size="sm">이용약관동의</Heading>
-      </Box>
-      <Terms />
-      <Box w="100%" py="60px">
-        <Button
-          colorScheme="primary"
-          w="100%"
-          borderRadius="25px"
-          size="sd"
-          py="12px"
-        >
-          회원가입 완료
-        </Button>
-      </Box>
-    </VStack>
+        </VStack>
+        <Box py="60px">
+          <Heading size="sm">이용약관동의</Heading>
+        </Box>
+        <Terms />
+        <Box w="full" py="60px">
+          <Button
+            type="submit"
+            colorScheme="primary"
+            w="full"
+            borderRadius="25px"
+            size="sd"
+            py="12px"
+          >
+            회원가입 완료
+          </Button>
+        </Box>
+      </VStack>
+    </form>
   );
 }
 
