@@ -147,8 +147,33 @@ function Join({ ...basisProps }: JoinProps) {
         <Heading size="sm">회원정보입력</Heading>
       </Box>
       <Box py="40px" alignSelf="center">
-        <Avatar size="lg">
-          <AvatarBadge boxSize="1em" bg="primary.500" />
+        <Avatar w="70px" h="70px">
+          <AvatarBadge
+            boxSize="20px"
+            bg="primary.500"
+            borderWidth="0"
+            position="absolute"
+            right="5px"
+            bottom="5px"
+            _before={{
+              content: '""',
+              display: 'block',
+              width: '1.5px',
+              height: '10px',
+              borderRadius: '2px',
+              backgroundColor: 'white',
+              position: 'absolute',
+            }}
+            _after={{
+              content: '""',
+              display: 'block',
+              width: '10px',
+              height: '1.5px',
+              borderRadius: '2px',
+              backgroundColor: 'white',
+              position: 'absolute',
+            }}
+          />
         </Avatar>
       </Box>
       <SimpleGrid columns={1} spacingY="50px" w="full">
@@ -216,7 +241,7 @@ function Join({ ...basisProps }: JoinProps) {
       <Terms />
       <Box w="100%" py="60px">
         <Button
-          colorScheme="primary.500"
+          colorScheme="primary"
           w="100%"
           borderRadius="25px"
           size="sd"
