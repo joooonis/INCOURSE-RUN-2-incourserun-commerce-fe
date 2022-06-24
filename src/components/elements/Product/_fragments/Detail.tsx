@@ -1,12 +1,15 @@
 import React from 'react';
 
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Button,
   Flex,
-  HStack,
   Image,
-  Text,
   VStack,
 } from '@chakra-ui/react';
 
@@ -140,25 +143,36 @@ function Detail({
         <Box maxH="477px" overflow="hidden">
           <Image src="/images/product/lotion_detailed.png" alt="cream" />
         </Box>
-        <Box {...BoldText} w="full" position="relative">
-          <Box position="absolute" top="-50px" w="full" px="16px">
-            <Button
-              {...ButtonStyle}
-              variant="outline"
-              bg="white"
-              colorScheme="black"
-            >
-              상세정보 펼처보기
-              <Image
-                w="12px"
-                ml="6px"
-                src="/images/product/arrow.png"
-                alt="arrow"
-              />
-            </Button>
-          </Box>
-          주문 및 배송 안내
-        </Box>
+        <Accordion defaultIndex={[0]} allowMultiple>
+          <AccordionItem borderWidth={0}>
+            {({ isExpanded }) => (
+              <>
+                <AccordionPanel px={0} pb="20px" pt={0} overflow="hidden">
+                  <Image
+                    src="/images/product/lotion_detailed.png"
+                    alt="cream"
+                    marginTop="-477px"
+                  />
+                </AccordionPanel>
+                <Box px="16px">
+                  <AccordionButton {...ButtonStyle} border="1px solid black">
+                    {isExpanded ? (
+                      <Box {...BoldText} flex="1">
+                        상세정보 접기
+                        <AccordionIcon />
+                      </Box>
+                    ) : (
+                      <Box {...BoldText} flex="1">
+                        상세정보 펼처보기
+                        <AccordionIcon />
+                      </Box>
+                    )}
+                  </AccordionButton>
+                </Box>
+              </>
+            )}
+          </AccordionItem>
+        </Accordion>
       </Box>
     </>
   );
