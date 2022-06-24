@@ -26,7 +26,7 @@ const Footer = () => {
           <VStack alignItems="flex-start" color="white">
             <Text fontSize={12} fontWeight="300" lineHeight={2}>
               팀명 &#124; 인코스런 <br />
-              구성원 &#124; 모창일 박태준 <br />
+              구성원 &#124; 모창일 박태준 최보미 <br />
               이메일 incourse.run@gmail.com
             </Text>
             <Text fontSize={12} fontWeight="300" pt="40px" pb="55px">
