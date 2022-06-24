@@ -74,7 +74,6 @@ function Card({
               </span>
             </Box>
             <Box {...PriceText} pt="10px">
-              {/* 27000 */}
               {price}
               <span
                 style={{
@@ -88,7 +87,6 @@ function Card({
               </span>
             </Box>
             <Box {...TitleText}>
-              {/* 4.3 */}
               {avgRating}
               <span
                 style={{
@@ -99,7 +97,6 @@ function Card({
                   color: '#757983',
                 }}
               >
-                {/* (리뷰 125개) */}
                 (리뷰 {reviewCount}개)
               </span>
             </Box>
