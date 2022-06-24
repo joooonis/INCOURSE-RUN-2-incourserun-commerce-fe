@@ -10,6 +10,7 @@ import {
   Button,
   Flex,
   Image,
+  Text,
   VStack,
 } from '@chakra-ui/react';
 
@@ -143,7 +144,7 @@ function Detail({
         <Box maxH="477px" overflow="hidden">
           <Image src="/images/product/lotion_detailed.png" alt="cream" />
         </Box>
-        <Accordion defaultIndex={[0]} allowMultiple>
+        <Accordion defaultIndex={[1]} allowMultiple>
           <AccordionItem borderWidth={0}>
             {({ isExpanded }) => (
               <>
@@ -155,7 +156,11 @@ function Detail({
                   />
                 </AccordionPanel>
                 <Box px="16px">
-                  <AccordionButton {...ButtonStyle} border="1px solid black">
+                  <AccordionButton
+                    {...ButtonStyle}
+                    _expanded={{ border: '1px solid black' }}
+                    border="1px solid black"
+                  >
                     {isExpanded ? (
                       <Box {...BoldText} flex="1">
                         상세정보 접기
@@ -171,6 +176,31 @@ function Detail({
                 </Box>
               </>
             )}
+          </AccordionItem>
+        </Accordion>
+        <Accordion defaultIndex={[1]} allowMultiple pt="25px">
+          <AccordionItem>
+            <Box>
+              <AccordionButton py="15.5px">
+                <Box {...BoldText} flex="1" textAlign="left">
+                  주문 및 배송 안내
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+            </Box>
+            <AccordionPanel px="16px" pt="15px" pb="20px">
+              <Box {...BoldText}>[주문 및 배송 안내]</Box>
+              <VStack spacing="10px" alignItems="flex-start" py="20px">
+                <Box {...SubText}>배송방법 : 인코스런 택배</Box>
+                <Box {...SubText}>배송지역 : 전국</Box>
+                <Box {...SubText}>
+                  <Text> 배송비용 : 단품 상품 구매 시 3,000배송비 발생</Text>
+                  <Text pl="71px">
+                    그외 단품 묶음 구매의 경우 30,000원 이상 구매 시 무료배송
+                  </Text>
+                </Box>
+              </VStack>
+            </AccordionPanel>
           </AccordionItem>
         </Accordion>
       </Box>
