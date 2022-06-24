@@ -19,6 +19,13 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+interface Options {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: RegExp;
+}
+
 interface IFormValues {
   profileImg: File;
   name: string;
@@ -37,7 +44,7 @@ interface JoinInputProps {
   name: string;
   placeholder: string;
   register: UseFormRegister<IFormValues>;
-  options?: any;
+  options?: Options;
 }
 
 function JoinInput({
@@ -174,7 +181,7 @@ function Join() {
               register={register}
               options={{
                 required: true,
-                minLength: { value: 2 },
+                minLength: 2,
               }}
             ></JoinInput>
             {errors.name && (
@@ -189,8 +196,8 @@ function Join() {
               register={register}
               options={{
                 required: true,
-                minLength: { value: 2 },
-                maxLength: { value: 5 },
+                minLength: 2,
+                maxLength: 5,
               }}
             />
             {errors.nickname && (
