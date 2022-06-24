@@ -13,13 +13,14 @@ type Hashtag = {
 };
 
 type Product = {
+  id: number;
   name: string;
   capacity: number;
   price: number;
   hashtags?: Hashtag[];
   avgRating?: number;
   reviewCount?: number;
-  <T>(arr: T[]): T;
+  <T>(arg: T): T;
 };
 
 function Product() {
@@ -36,11 +37,14 @@ function Product() {
 
   return (
     <Box pt="120px" pb="80px">
+      <VStack spacing={0}></VStack>
+
       <VStack mx="16px" spacing="30px">
         {products &&
           products.map((product: Product, index) => {
             return (
               <Card
+                id={product.id}
                 key={index}
                 name={product.name}
                 capacity={product.capacity}

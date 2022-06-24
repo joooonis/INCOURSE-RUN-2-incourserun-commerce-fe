@@ -6,14 +6,16 @@ import { LAYOUT } from '@constants/layout';
 
 function Header() {
   return (
-    <Container maxW={LAYOUT.SIZE.WIDTH}>
+    <Container px={0} maxW={LAYOUT.SIZE.WIDTH}>
       <Flex
         as="header"
         alignItems="center"
         justifyContent="space-between"
+        w="375px"
+        px="16px"
+        bg="white"
         position="fixed"
-        zIndex="1"
-        w="343px"
+        zIndex={999}
         transition="all 0.3s"
         h={LAYOUT.HEADER.HEIGHT}
       >
