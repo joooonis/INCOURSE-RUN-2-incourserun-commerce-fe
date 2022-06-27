@@ -8,9 +8,15 @@ function Cart() {
   return (
     <Box pt="80px" pb="50px">
       <Flex {...SubText} px="16px" py="11px" justify="space-between">
-        <Checkbox size="lg" colorScheme="primary">
+        <Flex>
+          <Checkbox
+            size="lg"
+            colorScheme="primary"
+            pr="10px"
+            alignSelf="center"
+          ></Checkbox>
           모두선택
-        </Checkbox>
+        </Flex>
         <Box>선택삭제</Box>
       </Flex>
       <VStack mt="10px" spacing="30px">
