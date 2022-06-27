@@ -10,7 +10,7 @@ import {
   useNumberInput,
 } from '@chakra-ui/react';
 
-function Item() {
+function Item({ product, quantity }: any) {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
@@ -18,11 +18,9 @@ function Item() {
       min: 1,
       max: 10,
     });
-
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
-
   return (
     <VStack
       w="full"
@@ -36,10 +34,12 @@ function Item() {
       <Flex w="full" justify="flex-start">
         <Image w="90px" h="90px" src="/images/cart/product.png" />
         <VStack pl="10px" spacing={0} alignItems="flex-start">
-          <Box {...TitleText}>바스 & 샴푸</Box>
-          <Box {...SubText}>바스 & 샴푸 | 120ml</Box>
+          <Box {...TitleText}>{product.name}</Box>
+          <Box {...SubText}>
+            {product.name} | {product.capacity}ml
+          </Box>
           <Box {...TitleText} color="primary.500">
-            27,000원
+            {product.price}원
           </Box>
         </VStack>
       </Flex>
@@ -83,7 +83,7 @@ function Item() {
         bg="gray.200"
         borderRadius="5px"
       >
-        <Box {...SubText}>바스 & 샴푸</Box>
+        <Box {...SubText}>{product.name}</Box>
         <Flex justify="space-between" w="full" mt="4px">
           <Flex h="25px" alignSelf="center">
             <Box
@@ -164,7 +164,7 @@ function Item() {
         <Box {...SubText} color="black">
           배송비 무료
         </Box>
-        <Box {...PriceText}>54,000원</Box>
+        <Box {...PriceText}>{quantity * product.price}원</Box>
       </Flex>
     </VStack>
   );
