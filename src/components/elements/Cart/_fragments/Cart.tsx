@@ -20,27 +20,23 @@ function Cart() {
   const [items, setItems] = useState<Item[] | null>(null);
   const products = useProduct();
 
-  let url = SERVER_URL.USER + '/v1/users/cart';
-
-  const queryParams =
-    '?' + encodeURIComponent('user') + '=' + encodeURIComponent(1);
-  url += queryParams;
+  const url = SERVER_URL.USER + '/v1/users/cart';
 
   useEffect(() => {
-    axios({
-      method: 'GET',
-      url: url,
-    }).then((res) => {
-      setItems(res.data);
-    });
+    axios
+      .get(url, {
+        params: {
+          user: 1,
+        },
+      })
+      .then((res) => {
+        setItems(res.data);
+      });
   }, [url]);
 
   function findItem(products: ProductType[] | undefined, id: number) {
     if (products) return products.find((e) => e.id == id);
   }
-
-  console.log(items);
-  console.log(products);
 
   return (
     <Box pt="80px" pb="50px">
