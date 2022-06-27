@@ -1,0 +1,192 @@
+import React from 'react';
+
+import {
+  Box,
+  Checkbox,
+  Flex,
+  Image,
+  Input,
+  VStack,
+  useNumberInput,
+} from '@chakra-ui/react';
+
+function Item() {
+  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
+    useNumberInput({
+      step: 1,
+      defaultValue: 1,
+      min: 1,
+      max: 10,
+    });
+
+  const inc = getIncrementButtonProps();
+  const dec = getDecrementButtonProps();
+  const input = getInputProps();
+
+  return (
+    <VStack
+      w="full"
+      pl="46px"
+      pr="16px"
+      spacing={0}
+      pt="20px"
+      pb="20.5px"
+      position="relative"
+    >
+      <Flex w="full" justify="flex-start">
+        <Image w="90px" h="90px" src="/images/cart/product.png" />
+        <VStack pl="10px" spacing={0} alignItems="flex-start">
+          <Box {...TitleText}>바스 & 샴푸</Box>
+          <Box {...SubText}>바스 & 샴푸 | 120ml</Box>
+          <Box {...TitleText} color="primary.500">
+            27,000원
+          </Box>
+        </VStack>
+      </Flex>
+      <Checkbox
+        size="lg"
+        colorScheme="primary"
+        position="absolute"
+        left="16px"
+        top="20px"
+      ></Checkbox>
+      <Box
+        position="absolute"
+        top="25px"
+        right="40px"
+        _before={{
+          position: 'absolute',
+          left: '15px',
+          content: '""',
+          height: '15px',
+          width: '1.5px',
+          backgroundColor: '#1A1A1A',
+          transform: 'rotate(45deg)',
+          borderRadius: '5px',
+        }}
+        _after={{
+          position: 'absolute',
+          left: '15px',
+          content: '""',
+          height: '15px',
+          width: '1.5px',
+          backgroundColor: '#1A1A1A',
+          transform: 'rotate(-45deg)',
+          borderRadius: '5px',
+        }}
+      ></Box>
+      <VStack
+        alignItems="flex-start"
+        mt="15px"
+        p="10px"
+        w="full"
+        bg="gray.200"
+        borderRadius="5px"
+      >
+        <Box {...SubText}>바스 & 샴푸</Box>
+        <Flex justify="space-between" w="full" mt="4px">
+          <Flex h="25px" alignSelf="center">
+            <Box
+              position="relative"
+              bg="white"
+              border="1px solid #EAECF0"
+              borderRadius="5px 0px 0px 5px"
+              p={0}
+              {...dec}
+              w="25px"
+              h="25px"
+              _after={{
+                content: '""',
+                display: 'block',
+                height: '1px',
+                width: '9px',
+                backgroundColor: '#4A4D55',
+                position: 'absolute',
+                top: '11px',
+                left: '7px',
+              }}
+            ></Box>
+            <Flex
+              w="23px"
+              h="full"
+              borderTop="1px solid #EAECF0"
+              borderBottom="1px solid #EAECF0"
+            >
+              <Input
+                w="full"
+                h="full"
+                border="none"
+                {...input}
+                fontSize="12px"
+                textAlign="center"
+                color="gray.800"
+                p={0}
+                bg="white"
+              ></Input>
+            </Flex>
+            <Box
+              position="relative"
+              bg="white"
+              border="1px solid #EAECF0"
+              borderRadius="0px 5px 5px 0px"
+              w="25px"
+              h="25px"
+              p={0}
+              {...inc}
+              _before={{
+                content: '""',
+                display: 'block',
+                width: '1px',
+                height: '9px',
+                backgroundColor: '#4A4D55',
+                position: 'absolute',
+                top: '7px',
+                left: '11px',
+              }}
+              _after={{
+                content: '""',
+                display: 'block',
+                height: '1px',
+                width: '9px',
+                backgroundColor: '#4A4D55',
+                position: 'absolute',
+                top: '11px',
+                left: '7px',
+              }}
+            ></Box>
+          </Flex>
+          <Flex {...TitleText} color="gray.600" alignItems="center">
+            54,200원
+          </Flex>
+        </Flex>
+      </VStack>
+      <Flex justify="space-between" w="full" pt="15px">
+        <Box {...SubText} color="black">
+          배송비 무료
+        </Box>
+        <Box {...PriceText}>54,000원</Box>
+      </Flex>
+    </VStack>
+  );
+}
+
+export default Item;
+
+const TitleText = {
+  fontWeight: 700,
+  fontSize: '16px',
+  lineHeight: '28px',
+};
+
+const PriceText = {
+  fontWeight: 700,
+  fontSize: '20px',
+  lineHeight: '29px',
+};
+
+const SubText = {
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '28px',
+  color: 'gray.600',
+};
