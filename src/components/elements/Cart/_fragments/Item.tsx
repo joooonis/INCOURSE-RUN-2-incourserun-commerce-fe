@@ -2,53 +2,38 @@ import React, { useState } from 'react';
 
 import axios from 'axios';
 
-import {
-  Box,
-  Checkbox,
-  Flex,
-  Image,
-  Input,
-  VStack,
-  useNumberInput,
-} from '@chakra-ui/react';
+import { Box, Checkbox, Flex, Image, Input, VStack } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 
 function Item({ product, item }: any) {
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: item.quantity,
-      min: 1,
-      max: 10,
-    });
-  const inc = getIncrementButtonProps();
-  const dec = getDecrementButtonProps();
-  const input = getInputProps();
-
   const [quantity, setQunatity] = useState(item.quantity);
   const [total, setTotal] = useState(item.quantity * product.price);
   const url = SERVER_URL.USER + '/v1/users/cart/';
 
   const decQuantity = () => {
-    setQunatity((quantity: number) => quantity - 1);
-    setTotal((quantity - 1) * product.price);
-    axios
-      .patch(url, {
-        quantity: quantity,
-      })
-      .then((res) => console.log('성공', res.data));
+    if (quantity > 0) {
+      setQunatity((quantity: number) => quantity - 1);
+      setTotal((quantity - 1) * product.price);
+      axios
+        .patch(url, {
+          quantity: quantity,
+        })
+        .then((res) => console.log('성공', res.data));
+    } else return;
   };
 
   const incQuantity = () => {
-    setQunatity((quantity: number) => quantity + 1);
-    setTotal((quantity + 1) * product.price);
-    axios
-      .patch(url, {
-        quantity: quantity,
-      })
-      .then((res) => console.log('성공', res.data));
+    if (quantity < 10) {
+      setQunatity((quantity: number) => quantity + 1);
+      setTotal((quantity + 1) * product.price);
+      axios
+        .patch(url, {
+          quantity: quantity,
+        })
+        .then((res) => console.log('성공', res.data));
+    } else return;
   };
 
   return (
@@ -122,7 +107,6 @@ function Item({ product, item }: any) {
               border="1px solid #EAECF0"
               borderRadius="5px 0px 0px 5px"
               p={0}
-              {...dec}
               w="25px"
               h="25px"
               _after={{
@@ -135,6 +119,7 @@ function Item({ product, item }: any) {
                 top: '11px',
                 left: '7px',
               }}
+              _hover={{ cursor: 'pointer' }}
               onClick={decQuantity}
             ></Box>
             <Flex
@@ -147,7 +132,6 @@ function Item({ product, item }: any) {
                 w="full"
                 h="full"
                 border="none"
-                {...input}
                 fontSize="12px"
                 textAlign="center"
                 color="gray.800"
@@ -164,7 +148,6 @@ function Item({ product, item }: any) {
               w="25px"
               h="25px"
               p={0}
-              {...inc}
               _before={{
                 content: '""',
                 display: 'block',
@@ -186,6 +169,7 @@ function Item({ product, item }: any) {
                 left: '7px',
               }}
               onClick={incQuantity}
+              _hover={{ cursor: 'pointer' }}
             ></Box>
           </Flex>
           <Flex {...TitleText} color="gray.600" alignItems="center">
