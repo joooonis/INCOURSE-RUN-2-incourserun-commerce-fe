@@ -21,7 +21,7 @@ export type ProductType = {
 
 export function useProduct() {
   const [products, setProducts] = useState<ProductType[]>();
-  const url = SERVER_URL.PRODUCT + '/v1/products';
+  const url = SERVER_URL.NEW + '/v1/products';
   useEffect(() => {
     axios({
       method: 'GET',

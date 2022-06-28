@@ -8,7 +8,6 @@ import Card from './Card';
 
 function Product() {
   const products = useProduct();
-  console.log(products);
   return (
     <Box pt="120px" pb="80px">
       <VStack spacing={0}></VStack>
