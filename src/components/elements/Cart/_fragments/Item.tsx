@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import axios from 'axios';
 
 import {
   Box,
@@ -10,19 +12,45 @@ import {
   useNumberInput,
 } from '@chakra-ui/react';
 
+import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 
-function Item({ product, quantity }: any) {
+function Item({ product, item }: any) {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
-      defaultValue: 1,
+      defaultValue: item.quantity,
       min: 1,
       max: 10,
     });
   const inc = getIncrementButtonProps();
   const dec = getDecrementButtonProps();
   const input = getInputProps();
+
+  const [quantity, setQunatity] = useState(item.quantity);
+  const [total, setTotal] = useState(item.quantity * product.price);
+  const url = SERVER_URL.USER + '/v1/users/cart/';
+
+  const decQuantity = () => {
+    setQunatity((quantity: number) => quantity - 1);
+    setTotal((quantity - 1) * product.price);
+    axios
+      .patch(url, {
+        quantity: quantity,
+      })
+      .then((res) => console.log('성공', res.data));
+  };
+
+  const incQuantity = () => {
+    setQunatity((quantity: number) => quantity + 1);
+    setTotal((quantity + 1) * product.price);
+    axios
+      .patch(url, {
+        quantity: quantity,
+      })
+      .then((res) => console.log('성공', res.data));
+  };
+
   return (
     <VStack
       w="full"
@@ -107,6 +135,7 @@ function Item({ product, quantity }: any) {
                 top: '11px',
                 left: '7px',
               }}
+              onClick={decQuantity}
             ></Box>
             <Flex
               w="23px"
@@ -124,6 +153,7 @@ function Item({ product, quantity }: any) {
                 color="gray.800"
                 p={0}
                 bg="white"
+                value={quantity}
               ></Input>
             </Flex>
             <Box
@@ -155,6 +185,7 @@ function Item({ product, quantity }: any) {
                 top: '11px',
                 left: '7px',
               }}
+              onClick={incQuantity}
             ></Box>
           </Flex>
           <Flex {...TitleText} color="gray.600" alignItems="center">
@@ -166,7 +197,7 @@ function Item({ product, quantity }: any) {
         <Box {...SubText} color="black">
           배송비 무료
         </Box>
-        <Box {...PriceText}>{priceToString(quantity * product.price)}원</Box>
+        <Box {...PriceText}>{priceToString(total)}원</Box>
       </Flex>
     </VStack>
   );

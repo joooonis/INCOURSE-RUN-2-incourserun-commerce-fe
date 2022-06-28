@@ -57,13 +57,7 @@ function Cart() {
           products.products &&
           items.map((item: Item, index) => {
             const myProduct = findItem(products.products, item.id);
-            return (
-              <Item
-                key={index}
-                product={myProduct}
-                quantity={item.quantity}
-              ></Item>
-            );
+            return <Item key={index} product={myProduct} item={item}></Item>;
           })}
       </VStack>
     </Box>
