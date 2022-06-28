@@ -20,7 +20,7 @@ function Cart() {
   const [items, setItems] = useState<Item[] | null>(null);
   const products = useProduct();
 
-  const url = SERVER_URL.USER + '/v1/users/cart';
+  const url = SERVER_URL.NEW + '/v1/users/cart';
 
   useEffect(() => {
     axios

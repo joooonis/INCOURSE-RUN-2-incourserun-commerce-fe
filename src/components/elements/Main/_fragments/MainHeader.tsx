@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import { Container, Flex, Image } from '@chakra-ui/react';
@@ -5,6 +6,13 @@ import { Container, Flex, Image } from '@chakra-ui/react';
 import { LAYOUT } from '@constants/layout';
 
 function MainHeader() {
+  const router = useRouter();
+  const gotoCart = () => {
+    router.replace(`cart/`);
+  };
+  const gotoMain = () => {
+    router.replace(`/`);
+  };
   return (
     <Container px={0} maxW={LAYOUT.SIZE.WIDTH}>
       <Flex
@@ -19,8 +27,18 @@ function MainHeader() {
         h={LAYOUT.HEADER.HEIGHT}
       >
         <Image src="/icons/svg/menu.svg" alt="menu" />
-        <Image src="/icons/svg/logo.svg" alt="logo" />
-        <Image src="/icons/svg/cart.svg" alt="cart" />
+        <Image
+          src="/icons/svg/logo.svg"
+          alt="logo"
+          _hover={{ cursor: 'pointer' }}
+          onClick={gotoMain}
+        />
+        <Image
+          src="/icons/svg/cart.svg"
+          alt="cart"
+          _hover={{ cursor: 'pointer' }}
+          onClick={gotoCart}
+        />
       </Flex>
     </Container>
   );
