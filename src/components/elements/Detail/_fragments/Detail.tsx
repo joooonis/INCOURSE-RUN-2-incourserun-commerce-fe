@@ -17,6 +17,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import priceToString from '@components/hooks/priceToString';
+
 import { SERVER_URL } from '../../urls';
 
 interface Detail {
@@ -35,7 +37,7 @@ function Detail() {
   const router = useRouter();
   const [detail, setDetail] = useState<Detail | null>(null);
 
-  const url = SERVER_URL.PRODUCT + '/v1/products';
+  const url = SERVER_URL.NEW + '/v1/products';
   const id = Number(router.query.id);
 
   useEffect(() => {
@@ -45,7 +47,6 @@ function Detail() {
       });
     }
   }, [id]);
-  console.log(detail);
   return (
     <Box pt="120px" pb="80px">
       {detail && (
@@ -82,7 +83,7 @@ function Detail() {
               </span>
             </Box>
             <Box {...PriceText} pt="14px">
-              {detail.price}
+              {priceToString(detail.price)}
               <span
                 style={{
                   fontWeight: 400,
@@ -107,20 +108,29 @@ function Detail() {
             <Box {...SubText} pt="10px">
               {detail.description}
             </Box>
-            <Box {...BoldText} pt="10px" pb="15px">
-              {detail.avgRating}
-              <span
-                style={{
-                  paddingLeft: '5px',
-                  fontWeight: 400,
-                  fontSize: '16px',
-                  lineHeight: '28px',
-                  color: '#8C919F',
-                }}
-              >
-                ({detail.reviewCount}개 리뷰)
-              </span>
-            </Box>
+            {detail.avgRating?.toFixed(1) !== '0.0' && (
+              <Flex {...BoldText} alignItems="center" pt="10px" pb="15px">
+                <Image
+                  src="/icons/svg/product/star.svg"
+                  w="10px"
+                  h="10px"
+                  alt="star"
+                  mr="8px"
+                />
+                {detail.avgRating.toFixed(1)}
+                <span
+                  style={{
+                    paddingLeft: '5px',
+                    fontWeight: 400,
+                    fontSize: '16px',
+                    lineHeight: '28px',
+                    color: '#8C919F',
+                  }}
+                >
+                  ({detail.reviewCount}개 리뷰)
+                </span>
+              </Flex>
+            )}
             <Flex
               flexDir="column"
               justify="space-between"

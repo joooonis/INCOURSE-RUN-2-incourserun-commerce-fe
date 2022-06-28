@@ -5,7 +5,7 @@ import { Container, Flex, Image } from '@chakra-ui/react';
 
 import { LAYOUT } from '@constants/layout';
 
-function Header() {
+function MainHeader() {
   const router = useRouter();
   const gotoCart = () => {
     router.replace(`cart/`);
@@ -21,7 +21,6 @@ function Header() {
         justifyContent="space-between"
         w="375px"
         px="16px"
-        bg="white"
         position="fixed"
         zIndex={999}
         transition="all 0.3s"
@@ -45,4 +44,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default MainHeader;
