@@ -10,6 +10,8 @@ import {
   useNumberInput,
 } from '@chakra-ui/react';
 
+import priceToString from '@components/hooks/priceToString';
+
 function Item({ product, quantity }: any) {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
@@ -39,7 +41,7 @@ function Item({ product, quantity }: any) {
             {product.name} | {product.capacity}ml
           </Box>
           <Box {...TitleText} color="primary.500">
-            {product.price}원
+            {priceToString(product.price)}원
           </Box>
         </VStack>
       </Flex>
@@ -156,7 +158,7 @@ function Item({ product, quantity }: any) {
             ></Box>
           </Flex>
           <Flex {...TitleText} color="gray.600" alignItems="center">
-            54,200원
+            {priceToString(product.price)}원
           </Flex>
         </Flex>
       </VStack>
@@ -164,7 +166,7 @@ function Item({ product, quantity }: any) {
         <Box {...SubText} color="black">
           배송비 무료
         </Box>
-        <Box {...PriceText}>{quantity * product.price}원</Box>
+        <Box {...PriceText}>{priceToString(quantity * product.price)}원</Box>
       </Flex>
     </VStack>
   );

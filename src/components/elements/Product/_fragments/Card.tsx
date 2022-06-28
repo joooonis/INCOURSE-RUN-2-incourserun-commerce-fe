@@ -11,6 +11,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import priceToString from '@components/hooks/priceToString';
+
 type Hashtag = {
   id: number;
   name: string;
@@ -82,7 +84,7 @@ function Card({
             </span>
           </Box>
           <Box {...PriceText} pt="10px">
-            {price}
+            {priceToString(price)}
             <span
               style={{
                 fontWeight: 400,
