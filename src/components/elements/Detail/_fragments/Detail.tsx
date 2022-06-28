@@ -35,7 +35,7 @@ function Detail() {
   const router = useRouter();
   const [detail, setDetail] = useState<Detail | null>(null);
 
-  const url = SERVER_URL.PRODUCT + '/v1/products';
+  const url = SERVER_URL.NEW + '/v1/products';
   const id = Number(router.query.id);
 
   useEffect(() => {
@@ -45,7 +45,6 @@ function Detail() {
       });
     }
   }, [id]);
-  console.log(detail);
   return (
     <Box pt="120px" pb="80px">
       {detail && (
