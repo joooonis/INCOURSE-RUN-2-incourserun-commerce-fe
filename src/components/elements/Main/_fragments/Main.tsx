@@ -9,7 +9,7 @@ function Main() {
         bgImage="/images/main/bg_intro.png"
         bgRepeat="no-repeat"
         bgSize="cover"
-        h="100vh"
+        h="782px"
         px="16px"
       >
         <Box {...TitleText} pt="160px">
