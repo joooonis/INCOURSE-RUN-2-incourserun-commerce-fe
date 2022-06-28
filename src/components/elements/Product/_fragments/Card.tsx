@@ -96,20 +96,30 @@ function Card({
               원
             </span>
           </Box>
-          <Box {...TitleText}>
-            {avgRating}
-            <span
-              style={{
-                paddingLeft: '3px',
-                fontWeight: 400,
-                fontSize: '16px',
-                lineHeight: '28px',
-                color: '#757983',
-              }}
-            >
-              (리뷰 {reviewCount}개)
-            </span>
-          </Box>
+          {avgRating?.toFixed(1) !== '0.0' && (
+            <Flex alignItems="center" {...TitleText}>
+              <Image
+                src="/icons/svg/product/star.svg"
+                w="10px"
+                h="10px"
+                alt="star"
+                mr="8px"
+              />
+              {avgRating?.toFixed(1)}
+              <span
+                style={{
+                  paddingLeft: '3px',
+                  fontWeight: 400,
+                  fontSize: '16px',
+                  lineHeight: '28px',
+                  color: '#757983',
+                }}
+              >
+                (리뷰 {reviewCount}개)
+              </span>
+            </Flex>
+          )}
+
           <Box {...SubText} pt="25px">
             <HStack spacing="5px">
               {hashtags?.map((hashtag) => {
