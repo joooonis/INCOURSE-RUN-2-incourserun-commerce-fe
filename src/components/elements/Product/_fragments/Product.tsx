@@ -1,47 +1,20 @@
-import React, { useEffect, useState } from 'react';
-
-import axios from 'axios';
+import React from 'react';
 
 import { Box, VStack } from '@chakra-ui/react';
 
-import { SERVER_URL } from '../../urls';
+import { ProductType, useProduct } from '@components/hooks/useProduct';
+
 import Card from './Card';
 
-type Hashtag = {
-  id: number;
-  name: string;
-};
-
-type Product = {
-  id: number;
-  name: string;
-  capacity: number;
-  price: number;
-  hashtags?: Hashtag[];
-  avgRating?: number;
-  reviewCount?: number;
-  <T>(arg: T): T;
-};
-
 function Product() {
-  const [products, setProducts] = useState([]);
-  const url = SERVER_URL.PRODUCT + '/v1/products';
-  useEffect(() => {
-    axios({
-      method: 'GET',
-      url: url,
-    }).then((res) => {
-      setProducts(res.data);
-    });
-  }, []);
-
+  const products = useProduct();
+  console.log(products);
   return (
     <Box pt="120px" pb="80px">
       <VStack spacing={0}></VStack>
-
       <VStack mx="16px" spacing="30px">
-        {products &&
-          products.map((product: Product, index) => {
+        {products.products &&
+          products.products.map((product: ProductType, index: number) => {
             return (
               <Card
                 id={product.id}
