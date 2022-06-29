@@ -6,10 +6,7 @@ import {
   Button,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   Flex,
   HStack,
@@ -55,6 +52,7 @@ function Card({ product }: CardProps) {
   return (
     <>
       <Box
+        w="full"
         position="relative"
         borderRadius="20px"
         boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
@@ -146,7 +144,7 @@ function Card({ product }: CardProps) {
           <Flex justify="space-between" w="100%" pt="20px" pb="10px">
             <Button
               colorScheme="primary"
-              w="165px"
+              w="150px"
               h="50px"
               borderRadius="25px"
               size="sd"
@@ -158,7 +156,7 @@ function Card({ product }: CardProps) {
             <Button
               variant="outline"
               colorScheme="primary"
-              w="165px"
+              w="150px"
               h="50px"
               borderRadius="25px"
               size="sd"
