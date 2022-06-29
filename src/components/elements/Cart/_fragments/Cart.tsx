@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
@@ -14,6 +15,11 @@ function Cart() {
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [total, setTotal] = useState<number>(0);
   const [products, setProducts] = useState<ProductType[]>();
+  const router = useRouter();
+
+  const gotoProduct = () => {
+    router.replace('./products');
+  };
 
   function findItem(products: ProductType[], id: number): ProductType {
     const targetIndex = products.findIndex((e) => e.id === id);
@@ -50,9 +56,8 @@ function Cart() {
         console.log(err);
       }
     };
-
     fetchURL();
-  }, []);
+  }, [total]);
 
   const incTotal = (price: number) => {
     setTotal((total) => total + price);
@@ -150,6 +155,7 @@ function Cart() {
             p="0px 15px"
             borderRadius="25px"
             size="lg"
+            onClick={gotoProduct}
           >
             상품보러가기
           </Button>
