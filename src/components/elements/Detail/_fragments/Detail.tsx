@@ -37,7 +37,7 @@ function Detail() {
   const router = useRouter();
   const [detail, setDetail] = useState<Detail | null>(null);
 
-  const url = SERVER_URL.NEW + '/v1/products';
+  const url = SERVER_URL.LOCAL + '/v1/products';
   const id = Number(router.query.id);
 
   useEffect(() => {
