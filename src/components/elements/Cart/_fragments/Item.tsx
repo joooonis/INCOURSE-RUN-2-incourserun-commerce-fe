@@ -18,19 +18,16 @@ interface ItemPropsType {
 
 export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
   const [quantity, setQunatity] = useState(item.quantity);
-  const [sum, setSum] = useState(item.quantity * product.price);
-  const url = SERVER_URL.LOCAL + '/v1/users/cart/2';
-
+  const [sum, setSum] = useState(item?.quantity * product?.price);
+  const url = SERVER_URL.LOCAL + '/v1/users/cart/';
   const decQuantity = () => {
-    if (quantity > 0) {
+    if (quantity > 1) {
       setQunatity((quantity: number) => quantity - 1);
       setSum((quantity - 1) * product.price);
       decTotal(product.price);
-      axios
-        .patch(url, {
-          quantity: quantity,
-        })
-        .then((res) => console.log('성공', res.data));
+      axios.patch(url + item.id, {
+        quantity: quantity - 1,
+      });
     }
   };
 
@@ -39,11 +36,9 @@ export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
       setQunatity((quantity: number) => quantity + 1);
       setSum((quantity + 1) * product.price);
       incTotal(product.price);
-      axios
-        .patch(url, {
-          quantity: quantity,
-        })
-        .then((res) => console.log('성공', res.data));
+      axios.patch(url + item.id, {
+        quantity: quantity + 1,
+      });
     }
   };
 
@@ -60,12 +55,12 @@ export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
       <Flex w="full" justify="flex-start">
         <Image w="90px" h="90px" src="/images/cart/product.png" />
         <VStack pl="10px" spacing={0} alignItems="flex-start">
-          <Box {...TitleText}>{product.name}</Box>
+          <Box {...TitleText}>{product?.name}</Box>
           <Box {...SubText}>
-            {product.name} | {product.capacity}ml
+            {product?.name} | {product?.capacity}ml
           </Box>
           <Box {...TitleText} color="primary.500">
-            {priceToString(product.price)}원
+            {priceToString(product?.price)}원
           </Box>
         </VStack>
       </Flex>
@@ -109,7 +104,7 @@ export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
         bg="gray.200"
         borderRadius="5px"
       >
-        <Box {...SubText}>{product.name}</Box>
+        <Box {...SubText}>{product?.name}</Box>
         <Flex justify="space-between" w="full" mt="4px">
           <Flex h="25px" alignSelf="center">
             <Box
@@ -185,7 +180,7 @@ export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
             ></Box>
           </Flex>
           <Flex {...TitleText} color="gray.600" alignItems="center">
-            {priceToString(product.price)}원
+            {priceToString(product?.price)}원
           </Flex>
         </Flex>
       </VStack>
