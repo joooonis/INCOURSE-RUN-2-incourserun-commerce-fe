@@ -1,15 +1,14 @@
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
+import axios from 'axios';
+
 import {
   Box,
   Button,
   Drawer,
   DrawerBody,
-  DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
   DrawerOverlay,
   Flex,
   HStack,
@@ -20,6 +19,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 
 import { ProductType } from './types';
@@ -37,24 +37,31 @@ function Card({ product }: CardProps) {
   const decQuantity = () => {
     if (quantity > 1) {
       setQunatity((quantity: number) => quantity - 1);
-      // axios.patch(url + item.id, {
-      //   quantity: quantity - 1,
-      // });
     }
   };
 
   const incQuantity = () => {
     if (quantity < 10) {
       setQunatity((quantity: number) => quantity + 1);
-      // axios.patch(url + item.id, {
-      //   quantity: quantity + 1,
-      // });
     }
   };
+
+  const postCart = () => {
+    const url = SERVER_URL.LOCAL + '/v1/users/cart';
+    axios
+      .post(url, {
+        user: 1,
+        product: product.id,
+        quantity: quantity,
+      })
+      .then((res) => console.log(res));
+  };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Box
+        w="full"
         position="relative"
         borderRadius="20px"
         boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
@@ -146,7 +153,7 @@ function Card({ product }: CardProps) {
           <Flex justify="space-between" w="100%" pt="20px" pb="10px">
             <Button
               colorScheme="primary"
-              w="165px"
+              w="150px"
               h="50px"
               borderRadius="25px"
               size="sd"
@@ -158,7 +165,7 @@ function Card({ product }: CardProps) {
             <Button
               variant="outline"
               colorScheme="primary"
-              w="165px"
+              w="150px"
               h="50px"
               borderRadius="25px"
               size="sd"
@@ -171,14 +178,9 @@ function Card({ product }: CardProps) {
         </Flex>
       </Box>
       <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay bg="transparent" />
-        <DrawerContent>
-          <DrawerBody
-            px="16px"
-            py="20px"
-            borderTopRadius="20px"
-            border="1px solid green"
-          >
+        <DrawerOverlay />
+        <DrawerContent bg="transparent">
+          <DrawerBody px="16px" py="20px" bg="white" borderTopRadius="20px">
             <Box>
               <VStack
                 alignItems="flex-start"
@@ -289,7 +291,6 @@ function Card({ product }: CardProps) {
                   borderRadius="25px"
                   size="sd"
                   py="12px"
-                  onClick={onOpen}
                 >
                   바로구매
                 </Button>
@@ -301,7 +302,7 @@ function Card({ product }: CardProps) {
                   borderRadius="25px"
                   size="sd"
                   py="12px"
-                  onClick={onOpen}
+                  onClick={postCart}
                 >
                   장바구니
                 </Button>

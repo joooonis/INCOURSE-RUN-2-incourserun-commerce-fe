@@ -21,7 +21,7 @@ function Product() {
   return (
     <Box pt="120px" pb="80px">
       <VStack spacing={0}></VStack>
-      <VStack mx="16px" spacing="30px">
+      <VStack px="16px" spacing="30px">
         {products &&
           products.map((product, index) => {
             return <Card product={product} key={index}></Card>;
