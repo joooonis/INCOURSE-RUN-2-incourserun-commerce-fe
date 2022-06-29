@@ -7,33 +7,44 @@ import { Box, Checkbox, Flex, Image, Input, VStack } from '@chakra-ui/react';
 import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 
-function Item({ product, item }: any) {
+import { ItemType, ProductType } from './types';
+
+interface ItemPropsType {
+  product: ProductType;
+  item: ItemType;
+  incTotal: Function;
+  decTotal: Function;
+}
+
+export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
   const [quantity, setQunatity] = useState(item.quantity);
-  const [total, setTotal] = useState(item.quantity * product.price);
-  const url = SERVER_URL.USER + '/v1/users/cart/';
+  const [sum, setSum] = useState(item.quantity * product.price);
+  const url = SERVER_URL.LOCAL + '/v1/users/cart/2';
 
   const decQuantity = () => {
     if (quantity > 0) {
       setQunatity((quantity: number) => quantity - 1);
-      setTotal((quantity - 1) * product.price);
+      setSum((quantity - 1) * product.price);
+      decTotal(product.price);
       axios
         .patch(url, {
           quantity: quantity,
         })
         .then((res) => console.log('성공', res.data));
-    } else return;
+    }
   };
 
   const incQuantity = () => {
     if (quantity < 10) {
       setQunatity((quantity: number) => quantity + 1);
-      setTotal((quantity + 1) * product.price);
+      setSum((quantity + 1) * product.price);
+      incTotal(product.price);
       axios
         .patch(url, {
           quantity: quantity,
         })
         .then((res) => console.log('성공', res.data));
-    } else return;
+    }
   };
 
   return (
@@ -138,6 +149,7 @@ function Item({ product, item }: any) {
                 p={0}
                 bg="white"
                 value={quantity}
+                readOnly
               ></Input>
             </Flex>
             <Box
@@ -181,13 +193,11 @@ function Item({ product, item }: any) {
         <Box {...SubText} color="black">
           배송비 무료
         </Box>
-        <Box {...PriceText}>{priceToString(total)}원</Box>
+        <Box {...PriceText}>{priceToString(sum)}원</Box>
       </Flex>
     </VStack>
   );
 }
-
-export default Item;
 
 const TitleText = {
   fontWeight: 700,
