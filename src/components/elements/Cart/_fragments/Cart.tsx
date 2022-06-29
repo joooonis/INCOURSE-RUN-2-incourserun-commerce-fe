@@ -5,38 +5,62 @@ import axios from 'axios';
 import { Box, Button, Checkbox, Flex, VStack } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
-import { ProductType, useProduct } from '@components/hooks/useProduct';
+import priceToString from '@components/hooks/priceToString';
 
-import Item from './Item';
-
-type Item = {
-  id: number;
-  user: number;
-  product: number;
-  quantity: number;
-};
+import { Item } from './Item';
+import { ItemType, ProductType } from './types';
 
 function Cart() {
-  const [items, setItems] = useState<Item[] | null>(null);
-  const products = useProduct();
+  const [items, setItems] = useState<ItemType[] | null>(null);
+  const [total, setTotal] = useState<number>(0);
+  const [products, setProducts] = useState<ProductType[]>();
 
-  const url = SERVER_URL.NEW + '/v1/users/cart';
+  function findItem(products: ProductType[], id: number): ProductType {
+    const targetIndex = products.findIndex((e) => e.id === id);
+    // targetIndex === -1 인 케이스 예외처리
+    return products[targetIndex];
+  }
+
+  const calculateTotalPrice = (products: ProductType[], items: ItemType[]) => {
+    if (!products || !items) return;
+    else {
+      let totalPrice = 0;
+      items.forEach((item) => {
+        const price = item.quantity * findItem(products, item.id).price;
+        totalPrice += price;
+      });
+      setTotal(totalPrice);
+    }
+  };
 
   useEffect(() => {
-    axios
-      .get(url, {
-        params: {
-          user: 1,
-        },
-      })
-      .then((res) => {
-        setItems(res.data);
-      });
-  }, [url]);
+    const fetchURL = async () => {
+      try {
+        const res1 = await axios.get(SERVER_URL.LOCAL + '/v1/products');
+        const res2 = await axios.get(SERVER_URL.LOCAL + '/v1/users/cart', {
+          params: {
+            user: 1,
+          },
+        });
 
-  function findItem(products: ProductType[] | undefined, id: number) {
-    if (products) return products.find((e) => e.id == id);
-  }
+        setProducts(res1.data);
+        setItems(res2.data);
+        calculateTotalPrice(res1.data, res2.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchURL();
+  }, []);
+
+  const incTotal = (price: number) => {
+    setTotal((total) => total + price);
+  };
+
+  const decTotal = (price: number) => {
+    setTotal((total) => total - price);
+  };
 
   return (
     <Box pt="80px" pb="50px">
@@ -54,16 +78,24 @@ function Cart() {
       </Flex>
       <VStack mt="10px" spacing="30px">
         {items &&
-          products.products &&
-          items.map((item: Item, index) => {
-            const myProduct = findItem(products.products, item.id);
-            return <Item key={index} product={myProduct} item={item}></Item>;
+          products &&
+          items.map((item: ItemType, index) => {
+            const myProduct = findItem(products, item.id);
+            return (
+              <Item
+                key={index}
+                product={myProduct}
+                item={item}
+                incTotal={incTotal}
+                decTotal={decTotal}
+              ></Item>
+            );
           })}
       </VStack>
       <VStack spacing={0} px="16px" pt="20px" mt="10px" pb="30px">
         <Flex {...TextStyle} w="full" justify="space-between">
           <Box>총 상품금액</Box>
-          <Box>108,000 원</Box>
+          <Box>{priceToString(total)} 원</Box>
         </Flex>
         <Flex {...TextStyle} pt="10px" w="full" justify="space-between">
           <Box>총 배송비</Box>
@@ -79,7 +111,7 @@ function Cart() {
         >
           <Box>결제금액</Box>
           <Box color="primary.500" fontWeight="700">
-            108,000 원
+            {priceToString(total)} 원
           </Box>
         </Flex>
         <Button

@@ -8,7 +8,7 @@ import { LAYOUT } from '@constants/layout';
 function Header() {
   const router = useRouter();
   const gotoCart = () => {
-    router.replace(`cart/`);
+    router.replace(`/cart`);
   };
   const gotoMain = () => {
     router.replace(`/`);
