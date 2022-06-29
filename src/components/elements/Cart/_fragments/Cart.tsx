@@ -62,7 +62,6 @@ function Cart() {
     setTotal((total) => total - price);
   };
 
-  console.log(items);
   return (
     <Box pt="80px" pb="50px">
       {items?.length !== 0 ? (
