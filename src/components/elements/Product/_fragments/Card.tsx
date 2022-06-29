@@ -13,32 +13,16 @@ import {
 
 import priceToString from '@components/hooks/priceToString';
 
-type Hashtag = {
-  id: number;
-  name: string;
-};
+import { ProductType } from './types';
+
 interface CardProps {
-  id: number;
-  name: string;
-  capacity: number;
-  price: number;
-  hashtags?: Hashtag[];
-  avgRating?: number;
-  reviewCount?: number;
+  product: ProductType;
 }
 
-function Card({
-  id,
-  name,
-  capacity,
-  price,
-  hashtags,
-  avgRating,
-  reviewCount,
-}: CardProps) {
+function Card({ product }: CardProps) {
   const router = useRouter();
   const gotoDetail = () => {
-    router.replace(`products/${id}`);
+    router.replace(`products/${product.id}`);
   };
   return (
     <Box
@@ -70,7 +54,7 @@ function Card({
       >
         <Box px="13px">
           <Box {...TitleText}>
-            {name}
+            {product.name}
             <span
               style={{
                 paddingLeft: '5px',
@@ -80,11 +64,11 @@ function Card({
                 color: '#757983',
               }}
             >
-              {capacity}ml
+              {product.capacity}ml
             </span>
           </Box>
           <Box {...PriceText} pt="10px">
-            {priceToString(price)}
+            {priceToString(product.price)}
             <span
               style={{
                 fontWeight: 400,
@@ -96,7 +80,7 @@ function Card({
               원
             </span>
           </Box>
-          {avgRating?.toFixed(1) !== '0.0' && (
+          {product.avgRating.toFixed(1) !== '0.0' && (
             <Flex alignItems="center" {...TitleText}>
               <Image
                 src="/icons/svg/product/star.svg"
@@ -105,7 +89,7 @@ function Card({
                 alt="star"
                 mr="8px"
               />
-              {avgRating?.toFixed(1)}
+              {product.avgRating.toFixed(1)}
               <span
                 style={{
                   paddingLeft: '3px',
@@ -115,14 +99,14 @@ function Card({
                   color: '#757983',
                 }}
               >
-                (리뷰 {reviewCount}개)
+                (리뷰 {product.reviewCount}개)
               </span>
             </Flex>
           )}
 
           <Box {...SubText} pt="25px">
             <HStack spacing="5px">
-              {hashtags?.map((hashtag) => {
+              {product.hashtags?.map((hashtag) => {
                 return <Text key={hashtag.id}>#{hashtag.name}</Text>;
               })}
             </HStack>
