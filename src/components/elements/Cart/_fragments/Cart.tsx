@@ -26,7 +26,7 @@ function Cart() {
     else {
       let totalPrice = 0;
       items.forEach((item) => {
-        const price = item.quantity * findItem(products, item.id).price;
+        const price = item.quantity * findItem(products, item.product).price;
         totalPrice += price;
       });
       setTotal(totalPrice);
@@ -39,7 +39,7 @@ function Cart() {
         const res1 = await axios.get(SERVER_URL.LOCAL + '/v1/products');
         const res2 = await axios.get(SERVER_URL.LOCAL + '/v1/users/cart', {
           params: {
-            user: 1,
+            user: 1, //여기에서 user id 를 수정합니다.
           },
         });
 
@@ -62,68 +62,80 @@ function Cart() {
     setTotal((total) => total - price);
   };
 
+  console.log(items);
   return (
     <Box pt="80px" pb="50px">
-      <Flex {...TextStyle} px="16px" py="11px" w="full" justify="space-between">
-        <Flex>
-          <Checkbox
-            size="lg"
-            colorScheme="primary"
-            pr="10px"
-            alignSelf="center"
-          ></Checkbox>
-          모두선택
-        </Flex>
-        <Box>선택삭제</Box>
-      </Flex>
-      <VStack mt="10px" spacing="30px">
-        {items &&
-          products &&
-          items.map((item: ItemType, index) => {
-            const myProduct = findItem(products, item.id);
-            return (
-              <Item
-                key={index}
-                product={myProduct}
-                item={item}
-                incTotal={incTotal}
-                decTotal={decTotal}
-              ></Item>
-            );
-          })}
-      </VStack>
-      <VStack spacing={0} px="16px" pt="20px" mt="10px" pb="30px">
-        <Flex {...TextStyle} w="full" justify="space-between">
-          <Box>총 상품금액</Box>
-          <Box>{priceToString(total)} 원</Box>
-        </Flex>
-        <Flex {...TextStyle} pt="10px" w="full" justify="space-between">
-          <Box>총 배송비</Box>
-          <Box>0 원</Box>
-        </Flex>
-        <Flex
-          {...TextStyle}
-          color="#1A1A1A"
-          pt="40px"
-          pb="20px"
-          w="full"
-          justify="space-between"
-        >
-          <Box>결제금액</Box>
-          <Box color="primary.500" fontWeight="700">
-            {priceToString(total)} 원
-          </Box>
-        </Flex>
-        <Button
-          w="full"
-          colorScheme="primary"
-          p="0px 15px"
-          borderRadius="25px"
-          size="lg"
-        >
-          결제하기
-        </Button>
-        <VStack spacing="30px">
+      {items?.length !== 0 ? (
+        <>
+          <Flex
+            {...TextStyle}
+            px="16px"
+            py="11px"
+            w="full"
+            justify="space-between"
+          >
+            <Flex>
+              <Checkbox
+                size="lg"
+                colorScheme="primary"
+                pr="10px"
+                alignSelf="center"
+              ></Checkbox>
+              모두선택
+            </Flex>
+            <Box>선택삭제</Box>
+          </Flex>
+          <VStack mt="10px" spacing="30px">
+            {items &&
+              products &&
+              items.map((item: ItemType, index) => {
+                const targeProduct = findItem(products, item.product);
+                return (
+                  <Item
+                    key={index}
+                    product={targeProduct}
+                    item={item}
+                    incTotal={incTotal}
+                    decTotal={decTotal}
+                  ></Item>
+                );
+              })}
+          </VStack>
+          <VStack spacing={0} px="16px" pt="20px" mt="10px" pb="30px">
+            <Flex {...TextStyle} w="full" justify="space-between">
+              <Box>총 상품금액</Box>
+              <Box>{priceToString(total)} 원</Box>
+            </Flex>
+            <Flex {...TextStyle} pt="10px" w="full" justify="space-between">
+              <Box>총 배송비</Box>
+              <Box>0 원</Box>
+            </Flex>
+            <Flex
+              {...TextStyle}
+              color="#1A1A1A"
+              pt="40px"
+              pb="20px"
+              w="full"
+              justify="space-between"
+            >
+              <Box>결제금액</Box>
+              <Box color="primary.500" fontWeight="700">
+                {priceToString(total)} 원
+              </Box>
+            </Flex>
+            <Button
+              w="full"
+              colorScheme="primary"
+              p="0px 15px"
+              borderRadius="25px"
+              size="lg"
+            >
+              결제하기
+            </Button>
+          </VStack>
+        </>
+      ) : (
+        <VStack spacing="30px" pt="100px" pb="30px">
           <Box
             fontWeight="700"
             fontSize="16px"
@@ -143,7 +155,7 @@ function Cart() {
             상품보러가기
           </Button>
         </VStack>
-      </VStack>
+      )}
     </Box>
   );
 }
