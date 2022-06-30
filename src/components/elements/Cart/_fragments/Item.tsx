@@ -14,9 +14,16 @@ interface ItemPropsType {
   item: ItemType;
   incTotal: Function;
   decTotal: Function;
+  deleteItem: Function;
 }
 
-export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
+export function Item({
+  product,
+  item,
+  incTotal,
+  decTotal,
+  deleteItem,
+}: ItemPropsType) {
   const [quantity, setQunatity] = useState(item.quantity);
   const [sum, setSum] = useState(item?.quantity * product?.price);
   const [visible, setVisible] = useState(true);
@@ -26,6 +33,7 @@ export function Item({ product, item, incTotal, decTotal }: ItemPropsType) {
     axios.delete(url + item.id).then((res) => console.log(res));
     setVisible((visible) => !visible);
     decTotal(quantity * product.price);
+    deleteItem();
   };
 
   const decQuantity = () => {

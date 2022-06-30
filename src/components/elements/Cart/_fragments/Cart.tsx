@@ -11,14 +11,21 @@ import priceToString from '@components/hooks/priceToString';
 import { Item } from './Item';
 import { ItemType, ProductType } from './types';
 
+import counter from 'pages/examples/counter';
+
 function Cart() {
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [total, setTotal] = useState<number>(0);
   const [products, setProducts] = useState<ProductType[]>();
+  const [itemCounter, setItemCounter] = useState<number>(0);
   const router = useRouter();
 
   const gotoProduct = () => {
     router.replace('./products');
+  };
+
+  const deleteItem = () => {
+    setItemCounter((counter) => counter - 1);
   };
 
   function findItem(products: ProductType[], id: number): ProductType {
@@ -51,13 +58,14 @@ function Cart() {
 
         setProducts(res1.data);
         setItems(res2.data);
+        setItemCounter(res2.data.length);
         calculateTotalPrice(res1.data, res2.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchURL();
-  }, [total]);
+  }, []);
 
   const incTotal = (price: number) => {
     setTotal((total) => total + price);
@@ -69,7 +77,7 @@ function Cart() {
 
   return (
     <Box pt="80px" pb="50px">
-      {items?.length !== 0 ? (
+      {itemCounter !== 0 ? (
         <>
           <Flex
             {...TextStyle}
@@ -101,6 +109,7 @@ function Cart() {
                     item={item}
                     incTotal={incTotal}
                     decTotal={decTotal}
+                    deleteItem={deleteItem}
                   ></Item>
                 );
               })}
