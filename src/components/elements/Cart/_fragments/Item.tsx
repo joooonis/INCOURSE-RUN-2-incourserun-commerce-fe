@@ -25,7 +25,7 @@ export function Item({
   deleteItem,
 }: ItemPropsType) {
   const [quantity, setQunatity] = useState(item.quantity);
-  const [sum, setSum] = useState(item?.quantity * product?.price);
+  const [total, setTotal] = useState(item?.quantity * product?.price);
   const [visible, setVisible] = useState(true);
   const url = SERVER_URL.LOCAL + '/v1/users/cart/';
 
@@ -39,7 +39,7 @@ export function Item({
   const decQuantity = () => {
     if (quantity > 1) {
       setQunatity((quantity: number) => quantity - 1);
-      setSum((quantity - 1) * product.price);
+      setTotal((quantity - 1) * product.price);
       decTotal(product.price);
       axios.patch(url + item.id, {
         quantity: quantity - 1,
@@ -50,7 +50,7 @@ export function Item({
   const incQuantity = () => {
     if (quantity) {
       setQunatity((quantity: number) => quantity + 1);
-      setSum((quantity + 1) * product.price);
+      setTotal((quantity + 1) * product.price);
       incTotal(product.price);
       axios.patch(url + item.id, {
         quantity: quantity + 1,
@@ -206,7 +206,7 @@ export function Item({
           <Box {...SubText} color="black">
             배송비 무료
           </Box>
-          <Box {...PriceText}>{priceToString(sum)}원</Box>
+          <Box {...PriceText}>{priceToString(total)}원</Box>
         </Flex>
       </VStack>
     );

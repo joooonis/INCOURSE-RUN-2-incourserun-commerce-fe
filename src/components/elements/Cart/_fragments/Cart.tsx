@@ -11,13 +11,12 @@ import priceToString from '@components/hooks/priceToString';
 import { Item } from './Item';
 import { ItemType, ProductType } from './types';
 
-import counter from 'pages/examples/counter';
-
 function Cart() {
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [total, setTotal] = useState<number>(0);
   const [products, setProducts] = useState<ProductType[]>();
   const [itemCounter, setItemCounter] = useState<number>(0);
+
   const router = useRouter();
 
   const gotoProduct = () => {
@@ -27,6 +26,8 @@ function Cart() {
   const deleteItem = () => {
     setItemCounter((counter) => counter - 1);
   };
+
+  console.log(items);
 
   function findItem(products: ProductType[], id: number): ProductType {
     const targetIndex = products.findIndex((e) => e.id === id);
