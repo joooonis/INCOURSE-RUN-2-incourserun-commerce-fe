@@ -91,7 +91,7 @@ function Order() {
                             quantity={orderProduct.quantity}
                             hasReview={orderProduct.hasReview}
                             shippingStatus={orderProduct.shippingStatus}
-                            isFreeOrder={order.totalAmount >= 30000}
+                            isFreeDelivery={order.totalAmount >= 30000}
                           ></SingleOrder>
                         );
                       })}
