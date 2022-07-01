@@ -93,16 +93,3 @@ const SubText = {
   lineHeight: '18px',
   color: 'gray.700',
 };
-
-const TabStyle = {
-  fontWeight: 700,
-  fontSize: '16px',
-  lineHeight: '28px',
-  color: 'gray.400',
-};
-
-const InputTitleStyle = {
-  fontWeight: 400,
-  fontSize: '16px',
-  lineHeight: '28px',
-};
