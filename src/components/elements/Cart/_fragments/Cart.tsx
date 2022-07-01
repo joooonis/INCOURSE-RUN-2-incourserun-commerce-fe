@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
@@ -14,6 +15,19 @@ function Cart() {
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [total, setTotal] = useState<number>(0);
   const [products, setProducts] = useState<ProductType[]>();
+  const [itemCounter, setItemCounter] = useState<number>(0);
+
+  const router = useRouter();
+
+  const gotoProduct = () => {
+    router.replace('./products');
+  };
+
+  const deleteItem = () => {
+    setItemCounter((counter) => counter - 1);
+  };
+
+  console.log(items);
 
   function findItem(products: ProductType[], id: number): ProductType {
     const targetIndex = products.findIndex((e) => e.id === id);
@@ -45,12 +59,12 @@ function Cart() {
 
         setProducts(res1.data);
         setItems(res2.data);
+        setItemCounter(res2.data.length);
         calculateTotalPrice(res1.data, res2.data);
       } catch (err) {
         console.log(err);
       }
     };
-
     fetchURL();
   }, []);
 
@@ -62,10 +76,9 @@ function Cart() {
     setTotal((total) => total - price);
   };
 
-  console.log(items);
   return (
     <Box pt="80px" pb="50px">
-      {items?.length !== 0 ? (
+      {itemCounter !== 0 ? (
         <>
           <Flex
             {...TextStyle}
@@ -97,6 +110,7 @@ function Cart() {
                     item={item}
                     incTotal={incTotal}
                     decTotal={decTotal}
+                    deleteItem={deleteItem}
                   ></Item>
                 );
               })}
@@ -151,6 +165,7 @@ function Cart() {
             p="0px 15px"
             borderRadius="25px"
             size="lg"
+            onClick={gotoProduct}
           >
             상품보러가기
           </Button>

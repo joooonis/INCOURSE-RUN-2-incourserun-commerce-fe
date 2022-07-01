@@ -24,6 +24,7 @@ function MainHeader() {
         position="fixed"
         zIndex={999}
         transition="all 0.3s"
+        bg="transparent"
         h={LAYOUT.HEADER.HEIGHT}
       >
         <Image src="/icons/svg/menu.svg" alt="menu" />

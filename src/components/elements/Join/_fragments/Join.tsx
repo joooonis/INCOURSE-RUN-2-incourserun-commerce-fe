@@ -65,7 +65,7 @@ function JoinInput({
     borderRadius: '100px',
     lineHeight: '28px',
     _focus: { border: '2px solid #FF710B', outline: 'none' },
-    _placeholder: { color: '#1A1A1A' },
+    _placeholder: { color: 'gray.400' },
   };
   const NameStyle = {
     fontSize: '12px',
@@ -250,7 +250,6 @@ function Join() {
               _focus={{ borderBottom: '2px solid #FF710B' }}
               fontSize="16px"
               placeholder="성별을 선택하세요"
-              color="gray.400"
               {...register('gender')}
             >
               <option value="male">남</option>
@@ -267,8 +266,6 @@ function Join() {
               _focus={{ borderBottom: '2px solid #FF710B' }}
               fontSize="16px"
               placeholder="연령대를 선택하세요"
-              _placeholder={{ color: '#FF710B' }}
-              color="gray.400"
               _selected={{ color: '#1A1A1A' }}
               {...register('age')}
             >
@@ -376,12 +373,13 @@ function Join() {
         </VStack>
         <Box w="full" pt="96px" pb="50px">
           <Button
+            {...ButtonStyle}
             type="submit"
             colorScheme="primary"
-            w="full"
+            w="343px"
+            h="50px"
             borderRadius="25px"
-            size="sd"
-            py="12px"
+            py="11px"
           >
             회원가입 완료
           </Button>
@@ -399,4 +397,10 @@ const ErrorStyle = {
   lineHeight: '18px',
   color: '#FF001A',
   pt: '10px',
+};
+
+const ButtonStyle = {
+  fontWeight: 700,
+  fontSize: '16px',
+  lineHeight: '28px',
 };
