@@ -19,7 +19,7 @@ import {
 
 import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
-import priceToString from '@components/hooks/priceToString';
+import { findProduct, priceToString } from '@components/hooks';
 
 import SingleOrder from './SingleOrder';
 import { OrderType, ProductType } from './types';
@@ -42,11 +42,6 @@ function Order() {
       .then((res) => setProducts(res.data));
   }, []);
 
-  function findItem(products: ProductType[], id: number): ProductType {
-    const targetIndex = products.findIndex((e) => e.id === id);
-    // targetIndex === -1 인 케이스 예외처리
-    return products[targetIndex];
-  }
   console.log(orders);
   return (
     <>
@@ -75,7 +70,7 @@ function Order() {
                   return { year, month, date };
                 };
                 const date = dateToString(order.createdAt);
-
+                const dateString = date.year + date.month + date.date;
                 return (
                   <TabPanel key={order.id}>
                     <Box {...TitleText} w="full" py="19px">
@@ -84,18 +79,19 @@ function Order() {
                     {order.orderProducts &&
                       products &&
                       order.orderProducts.map((orderProduct) => {
-                        const targeProduct = findItem(
+                        const targeProduct = findProduct(
                           products,
                           orderProduct.product,
                         );
                         return (
                           <SingleOrder
                             key={orderProduct.id}
+                            createdAt={dateString}
                             product={targeProduct}
                             quantity={orderProduct.quantity}
                             hasReview={orderProduct.hasReview}
                             shippingStatus={orderProduct.shippingStatus}
-                            isFreeOrder={order.totalAmount >= 30000}
+                            isFreeDelivery={order.totalAmount >= 30000}
                           ></SingleOrder>
                         );
                       })}
