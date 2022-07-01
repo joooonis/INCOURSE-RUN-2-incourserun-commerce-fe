@@ -17,7 +17,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import priceToString from '@components/hooks/priceToString';
+import { priceToString } from '@components/hooks';
 
 import { SERVER_URL } from '../../urls';
 
