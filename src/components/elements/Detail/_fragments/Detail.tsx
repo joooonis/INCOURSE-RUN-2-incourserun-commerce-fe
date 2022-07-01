@@ -102,7 +102,8 @@ function Detail() {
                   color: '#FF710B',
                 }}
               >
-                &nbsp;무료배송
+                {' '}
+                무료배송
               </span>
             </Box>
             <Box {...SubText} pt="10px">
@@ -210,7 +211,9 @@ function Detail() {
                   <Box {...SubText}>배송방법 : 인코스런 택배</Box>
                   <Box {...SubText}>배송지역 : 전국</Box>
                   <Box {...SubText}>
-                    <Text> 배송비용 : 단품 상품 구매 시 3,000배송비 발생</Text>
+                    <Text>
+                      배송비용 : 단품 상품 구매 시 3,000원 배송비 발생
+                    </Text>
                     <Text pl="71px">
                       그외 단품 묶음 구매의 경우 30,000원 이상 구매 시 무료배송
                     </Text>
