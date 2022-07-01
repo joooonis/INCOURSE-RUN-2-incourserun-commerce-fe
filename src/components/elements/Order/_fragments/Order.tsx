@@ -1,6 +1,9 @@
+import React, { useEffect, useState } from 'react';
+
+import axios from 'axios';
+
 import {
   Box,
-  Button,
   Flex,
   HStack,
   Image,
@@ -15,9 +18,36 @@ import {
 } from '@chakra-ui/react';
 
 import PrimaryButton from '@components/common/Button/Button';
+import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 
+import SingleOrder from './SingleOrder';
+import { OrderType, ProductType } from './types';
+
 function Order() {
+  const [orders, setOrders] = useState<OrderType[]>();
+  const [products, setProducts] = useState<ProductType[]>();
+
+  useEffect(() => {
+    axios
+      .get(SERVER_URL.LOCAL + '/v1/orders', {
+        params: {
+          user: 1, //여기에서 user id 를 수정합니다.
+        },
+      })
+      .then((res) => setOrders(res.data));
+
+    axios
+      .get(SERVER_URL.LOCAL + '/v1/products')
+      .then((res) => setProducts(res.data));
+  }, []);
+
+  function findItem(products: ProductType[], id: number): ProductType {
+    const targetIndex = products.findIndex((e) => e.id === id);
+    // targetIndex === -1 인 케이스 예외처리
+    return products[targetIndex];
+  }
+  console.log(orders);
   return (
     <>
       <Box pt="130px" px="16px" pb="50px">
@@ -27,146 +57,51 @@ function Order() {
         <Box h="80px"></Box>
         <Tabs variant="unstyled" size="sm">
           <TabPanels>
-            <TabPanel px={0} py={0}>
-              <Box {...TitleText} w="full" py="19px">
-                [2021 - 04 - 01]
-              </Box>
-              <Flex py="10px" justify="space-between" alignItems="center">
-                <Flex>
-                  <Image
-                    src="/images/order/product.png"
-                    w="60px"
-                    h="60px"
-                    mr="10px"
-                  ></Image>
-                  <VStack spacing={0} alignItems="flex-start">
-                    <Box {...TitleText}>샴푸 & 바디</Box>
-                    <Box {...SubText}>샴푸 & 바디 | 120ml</Box>
-                    <Box {...TitleText} color="primary.500">
-                      {priceToString(27000)}원 / 1개
+            {orders &&
+              orders.map((order) => {
+                const dateToString = (createdAt: string) => {
+                  const d = new Date(createdAt);
+                  const year = String(d.getFullYear());
+                  let month = String(d.getMonth());
+                  let date = String(d.getDate());
+
+                  if (Number(month) < 10) {
+                    month = '0' + month;
+                  }
+
+                  if (Number(date) < 10) {
+                    date = '0' + date;
+                  }
+                  return { year, month, date };
+                };
+                const date = dateToString(order.createdAt);
+
+                return (
+                  <TabPanel key={order.id}>
+                    <Box {...TitleText} w="full" py="19px">
+                      [{date.year} - {date.month} - {date.date}]
                     </Box>
-                  </VStack>
-                </Flex>
-                <VStack spacing={0} alignItems="flex-end">
-                  <Box {...TitleText} color="primary.500">
-                    결제완료
-                  </Box>
-                  <Box {...SubText} color="#1A1A1A">
-                    배송비 2,500원
-                  </Box>
-                </VStack>
-              </Flex>
-              <Flex w="full" pt="10px" pb="21px" justify="flex-end">
-                <Button
-                  borderRadius="5px"
-                  w="140px"
-                  h="40px"
-                  p="0px 15px"
-                  colorScheme="primary"
-                  {...TitleText}
-                >
-                  주문취소
-                </Button>
-              </Flex>
-            </TabPanel>
-            <TabPanel px={0} py={0}>
-              <Box {...TitleText} w="full" py="19px">
-                [2021 - 03 - 21]
-              </Box>
-              <Flex py="10px" justify="space-between" alignItems="center">
-                <Flex>
-                  <Image
-                    src="/images/order/product.png"
-                    w="60px"
-                    h="60px"
-                    mr="10px"
-                  ></Image>
-                  <VStack spacing={0} alignItems="flex-start">
-                    <Box {...TitleText}>샴푸 & 바디</Box>
-                    <Box {...SubText}>샴푸 & 바디 | 120ml</Box>
-                    <Box {...TitleText} color="primary.500">
-                      {priceToString(27000)}원 / 1개
-                    </Box>
-                  </VStack>
-                </Flex>
-                <VStack spacing={0} alignItems="flex-end">
-                  <Box {...TitleText} color="primary.500">
-                    상품준비
-                  </Box>
-                  <Box {...SubText} color="#1A1A1A">
-                    무료배송
-                  </Box>
-                </VStack>
-              </Flex>
-              <Flex py="10px" justify="space-between" alignItems="center">
-                <Flex>
-                  <Image
-                    src="/images/order/product.png"
-                    w="60px"
-                    h="60px"
-                    mr="10px"
-                  ></Image>
-                  <VStack spacing={0} alignItems="flex-start">
-                    <Box {...TitleText}>샴푸 & 바디</Box>
-                    <Box {...SubText}>샴푸 & 바디 | 120ml</Box>
-                    <Box {...TitleText} color="primary.500">
-                      {priceToString(27000)}원 / 1개
-                    </Box>
-                  </VStack>
-                </Flex>
-                <VStack spacing={0} alignItems="flex-end">
-                  <Box {...TitleText} color="primary.500">
-                    배송중
-                  </Box>
-                  <Box {...SubText} color="#1A1A1A">
-                    배송비 2,500원
-                  </Box>
-                </VStack>
-              </Flex>
-            </TabPanel>
-            <TabPanel px={0} py={0}>
-              <Box {...TitleText} w="full" py="19px">
-                [2021 - 03 - 11]
-              </Box>
-              <Flex py="10px" justify="space-between" alignItems="center">
-                <Flex>
-                  <Image
-                    src="/images/order/product.png"
-                    w="60px"
-                    h="60px"
-                    mr="10px"
-                  ></Image>
-                  <VStack spacing={0} alignItems="flex-start">
-                    <Box {...TitleText}>샴푸 & 바디</Box>
-                    <Box {...SubText}>샴푸 & 바디 | 120ml</Box>
-                    <Box {...TitleText} color="primary.500">
-                      {priceToString(27000)}원 / 1개
-                    </Box>
-                  </VStack>
-                </Flex>
-                <VStack spacing={0} alignItems="flex-end">
-                  <Box {...TitleText} color="primary.500">
-                    배송완료
-                  </Box>
-                  <Box {...SubText} color="#1A1A1A">
-                    무료배송
-                  </Box>
-                </VStack>
-              </Flex>
-              <Flex w="full" pt="10px" pb="21px" justify="flex-end">
-                <Button
-                  borderRadius="5px"
-                  w="140px"
-                  h="40px"
-                  p="0px 15px"
-                  colorScheme="primary"
-                  variant="outline"
-                  {...TitleText}
-                >
-                  리뷰작성
-                </Button>
-              </Flex>
-            </TabPanel>
+                    {order.orderProducts &&
+                      products &&
+                      order.orderProducts.map((orderProduct) => {
+                        const targeProduct = findItem(
+                          products,
+                          orderProduct.product,
+                        );
+                        return (
+                          <SingleOrder
+                            key={orderProduct.id}
+                            product={targeProduct}
+                            quantity={orderProduct.quantity}
+                            hasReview={orderProduct.hasReview}
+                            shippingStatus={orderProduct.shippingStatus}
+                            isFreeOrder={order.totalAmount >= 30000}
+                          ></SingleOrder>
+                        );
+                      })}
+                  </TabPanel>
+                );
+              })}
           </TabPanels>
           <TabList
             py="30px"
@@ -174,15 +109,18 @@ function Order() {
             alignItems="center"
             position="relative"
           >
-            <Tab {...TabStyle} _selected={{ color: '#1A1A1A' }}>
-              1
-            </Tab>
-            <Tab {...TabStyle} _selected={{ color: '#1A1A1A' }}>
-              2
-            </Tab>
-            <Tab {...TabStyle} _selected={{ color: '#1A1A1A' }}>
-              3
-            </Tab>
+            {orders &&
+              orders.map((order, index) => {
+                return (
+                  <Tab
+                    key={index}
+                    {...TabStyle}
+                    _selected={{ color: '#1A1A1A' }}
+                  >
+                    {index}
+                  </Tab>
+                );
+              })}
           </TabList>
         </Tabs>
       </Box>

@@ -15,7 +15,6 @@ function Product() {
 
   useEffect(() => {
     axios.get(url).then((res) => setProducts(res.data));
-    [];
   }, []);
 
   return (

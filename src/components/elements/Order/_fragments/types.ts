@@ -34,4 +34,5 @@ export interface SingleOrderProps {
   quantity: number;
   shippingStatus: string;
   hasReview: boolean;
+  isFreeOrder: boolean;
 }
