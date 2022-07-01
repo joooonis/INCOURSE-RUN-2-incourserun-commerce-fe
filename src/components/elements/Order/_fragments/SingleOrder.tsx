@@ -1,18 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Image,
-  Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Textarea,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Image, VStack } from '@chakra-ui/react';
 
 import priceToString from '@components/hooks/priceToString';
 
@@ -23,6 +9,7 @@ function SingleOrder({
   quantity,
   shippingStatus,
   hasReview,
+  isFreeOrder,
 }: SingleOrderProps) {
   return (
     <>
@@ -48,9 +35,15 @@ function SingleOrder({
           <Box {...TitleText} color="primary.500">
             {shippingStatus}
           </Box>
-          <Box {...SubText} color="#1A1A1A">
-            배송비 2,500원
-          </Box>
+          {isFreeOrder ? (
+            <Box {...SubText} color="#1A1A1A">
+              무료 배송
+            </Box>
+          ) : (
+            <Box {...SubText} color="#1A1A1A">
+              배송비 3,000원
+            </Box>
+          )}
         </VStack>
       </Flex>
       {shippingStatus === '결제완료' && (
