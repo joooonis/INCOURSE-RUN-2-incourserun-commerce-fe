@@ -13,7 +13,7 @@ type Hashtag = {
   name: string;
 };
 
-interface orderProductType {
+interface OrderProductType {
   id: number;
   product: number;
   quantity: number;
@@ -25,7 +25,7 @@ export type OrderType = {
   id: number;
   user: number;
   createdAt: string;
-  orderProducts: orderProductType[];
+  orderProducts: OrderProductType[];
   totalAmount: number;
 };
 

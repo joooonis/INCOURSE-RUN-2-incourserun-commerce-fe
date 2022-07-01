@@ -19,6 +19,47 @@ import { findProduct, priceToString } from '@components/hooks';
 
 import { ProductType } from './types';
 
+interface StarRatingProps {
+  starRating: number;
+  upStar: any;
+  downStar: any;
+}
+
+function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
+  const rendering = () => {
+    const result = [];
+    for (let i = 0; i < starRating; i++) {
+      result.push(
+        <Image
+          src="icons/svg/review/star.svg"
+          w="24px"
+          alt={String(i)}
+          onClick={downStar}
+          _hover={{ cursor: 'pointer' }}
+        />,
+      );
+    }
+    for (let i = starRating; i < 5; i++) {
+      result.push(
+        <Image
+          src="icons/svg/review/star_gray.svg"
+          w="24px"
+          alt={String(i)}
+          onClick={upStar}
+          _hover={{ cursor: 'pointer' }}
+        />,
+      );
+    }
+    return result;
+  };
+
+  return (
+    <HStack spacing="12px" w="full" py="28px" justify="center">
+      {rendering()}
+    </HStack>
+  );
+}
+
 function Review() {
   const [products, setProducts] = useState<ProductType[]>();
   const router = useRouter();
@@ -26,6 +67,19 @@ function Review() {
   const year = createdAt?.slice(0, 4);
   const month = createdAt?.slice(4, 6);
   const date = createdAt?.slice(6, 8);
+
+  const [starRating, setStarRating] = useState<number>(0);
+  const upStar = () => {
+    if (starRating < 5) {
+      setStarRating((starRating: number) => starRating + 1);
+    }
+  };
+
+  const downStar = () => {
+    if (starRating > 0) {
+      setStarRating((starRating: number) => starRating - 1);
+    }
+  };
 
   useEffect(() => {
     axios
@@ -84,33 +138,11 @@ function Review() {
             <Box {...InputTitleStyle} py="20px">
               별점
             </Box>
-            <HStack spacing="12px" w="full" py="28px" justify="center">
-              <Image
-                src="icons/svg/review/star_gray.svg"
-                w="24px"
-                alt="star1"
-              />
-              <Image
-                src="icons/svg/review/star_gray.svg"
-                w="24px"
-                alt="star2"
-              />
-              <Image
-                src="icons/svg/review/star_gray.svg"
-                w="24px"
-                alt="star3"
-              />
-              <Image
-                src="icons/svg/review/star_gray.svg"
-                w="24px"
-                alt="star4"
-              />
-              <Image
-                src="icons/svg/review/star_gray.svg"
-                w="24px"
-                alt="star5"
-              />
-            </HStack>
+            <StarRating
+              starRating={starRating}
+              upStar={upStar}
+              downStar={downStar}
+            />
             <Box {...InputTitleStyle} pt="40px" pb="20px">
               내용
             </Box>
@@ -171,7 +203,6 @@ function Review() {
                 borderRadius="5px"
               ></Box>
             </HStack>
-
             <Input type="file" display="hidden"></Input>
             <PrimaryButton>작성하기</PrimaryButton>
           </VStack>
