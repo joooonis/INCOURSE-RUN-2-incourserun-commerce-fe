@@ -30,6 +30,7 @@ export type OrderType = {
 };
 
 export interface SingleOrderProps {
+  id: number;
   product: ProductType;
   quantity: number;
   shippingStatus: string;

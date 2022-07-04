@@ -7,6 +7,7 @@ import priceToString from '@components/hooks/priceToString';
 import { SingleOrderProps } from './types';
 
 function SingleOrder({
+  id,
   createdAt,
   product,
   quantity,
@@ -18,6 +19,7 @@ function SingleOrder({
     Router.push({
       pathname: '/review',
       query: {
+        id: id,
         createdAt: createdAt,
         product: product.id,
         quantity: quantity,
