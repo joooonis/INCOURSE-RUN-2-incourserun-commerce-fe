@@ -9,7 +9,7 @@ import { SERVER_URL } from '@components/elements/urls';
 import Card from './Card';
 import { ProductType } from './types';
 
-function Product() {
+function Products() {
   const [products, setProducts] = useState<ProductType[]>();
   const url = SERVER_URL.LOCAL + '/v1/products';
 
@@ -30,4 +30,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default Products;

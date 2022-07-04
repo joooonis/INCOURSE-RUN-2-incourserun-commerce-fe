@@ -2,10 +2,10 @@ import React from 'react';
 
 import Layout from '@components/common/@Layout/layouts/HomeLayout';
 
-import Product from './Product';
+import Products from './Products';
 
 function ProductPage() {
-  return <Layout content={<Product />} />;
+  return <Layout content={<Products />} />;
 }
 
 export default ProductPage;

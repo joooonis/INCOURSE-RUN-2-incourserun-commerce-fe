@@ -1,3 +1,3 @@
-import Products from '@components/elements/Product';
+import { Product } from '@components/elements/Product';
 
-export default Products;
+export default Product;
