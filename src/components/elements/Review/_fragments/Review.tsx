@@ -17,13 +17,7 @@ import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
-import { ProductType } from './types';
-
-interface StarRatingProps {
-  starRating: number;
-  upStar: any;
-  downStar: any;
-}
+import { ProductType, StarRatingProps } from './types';
 
 function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
   const rendering = () => {
@@ -31,7 +25,8 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
     for (let i = 0; i < starRating; i++) {
       result.push(
         <Image
-          src="icons/svg/review/star.svg"
+          key={i}
+          src="/icons/svg/review/star.svg"
           w="24px"
           alt={String(i)}
           onClick={downStar}
@@ -42,7 +37,8 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
     for (let i = starRating; i < 5; i++) {
       result.push(
         <Image
-          src="icons/svg/review/star_gray.svg"
+          key={i}
+          src="/icons/svg/review/star_gray.svg"
           w="24px"
           alt={String(i)}
           onClick={upStar}

@@ -36,3 +36,26 @@ export interface SingleOrderProps {
   hasReview: boolean;
   isFreeOrder: boolean;
 }
+
+interface Photo {
+  id: number;
+  img: string;
+}
+
+export type ReviewType = {
+  id: number;
+  content: string;
+  createdAt: string;
+  rating: number;
+  photos: Photo[];
+};
+
+export interface SingleReviewProps {
+  review: ReviewType;
+}
+
+export interface StarRatingProps {
+  starRating: number;
+  upStar?: any;
+  downStar?: any;
+}

@@ -1,53 +1,103 @@
+import { useEffect, useState } from 'react';
+
+import axios from 'axios';
+
 import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 
-function SingleReview() {
+import { SERVER_URL } from '@components/elements/urls';
+
+import { ReviewType, SingleReviewProps, StarRatingProps } from './types';
+
+function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
+  const rendering = () => {
+    const result = [];
+    for (let i = 0; i < starRating; i++) {
+      result.push(
+        <Image
+          key={i}
+          src="/icons/svg/review/star.svg"
+          w="10px"
+          alt={String(i)}
+          onClick={downStar}
+        />,
+      );
+    }
+    for (let i = starRating; i < 5; i++) {
+      result.push(
+        <Image
+          key={i}
+          src="/icons/svg/review/star_gray.svg"
+          w="10px"
+          alt={String(i)}
+          onClick={upStar}
+        />,
+      );
+    }
+    return result;
+  };
+
+  return (
+    <HStack spacing="6px" justify="center">
+      {rendering()}
+    </HStack>
+  );
+}
+
+function SingleReview({ review }: SingleReviewProps) {
+  const year = review.createdAt.slice(0, 4);
+  const month = review.createdAt.slice(5, 7);
+  const date = review.createdAt.slice(8, 10);
   return (
     <VStack spacing={0} pt="23px" pb="25px" w="full">
       <Flex w="full" justify="space-between">
         <Box {...ReviewrStyle}>incourse.run</Box>
-        <Box>별점입니다. </Box>
+        <StarRating starRating={review.rating} />
       </Flex>
       <Box {...ReviewDateStyle} w="full">
-        2021.03.29
+        {year}.{month}.{date}
       </Box>
       <Box {...ReviewContentStyle} w="full" pt="17px">
-        순해서 아이피부에도 자극없이 사용할 수 있어요
+        {review.content}
       </Box>
       <HStack spacing="10px" w="full" justify="flex-start" pt="9px">
-        <Image
-          borderRadius="5px"
-          w="80px"
-          h="80px"
-          src="/images/review/review.png"
-        ></Image>
-        <Image
-          borderRadius="5px"
-          w="80px"
-          h="80px"
-          src="/images/review/review.png"
-        ></Image>
-        <Image
-          borderRadius="5px"
-          w="80px"
-          h="80px"
-          src="/images/review/review.png"
-        ></Image>
+        {review.photos.map((photo) => (
+          <Image
+            key={photo.id}
+            borderRadius="5px"
+            w="80px"
+            h="80px"
+            src={photo.img}
+          ></Image>
+        ))}
       </HStack>
     </VStack>
   );
 }
 
 function MyReview() {
+  const [myReviews, setMyReviews] = useState<ReviewType[]>();
+  useEffect(() => {
+    axios
+      .get(SERVER_URL.LOCAL + '/v1/reviews', { params: { user: 1 } })
+      .then((res) => {
+        setMyReviews(res.data.results);
+      });
+  }, []);
+
   return (
     <Box pt="130px" px="16px" pb="50px">
       <Box {...TitleStyle} w="full">
         내 상품 리뷰
       </Box>
       <Box {...CountStyle} pt="80px" pb="30px" w="full">
-        총 <span style={{ color: '#FF710B' }}>78</span>건
+        총 <span style={{ color: '#FF710B' }}>{myReviews?.length}</span>건
       </Box>
       <Box w="full" h="30px"></Box>
-      <SingleReview />
+      {myReviews &&
+        myReviews.map((review) => (
+          <SingleReview key={review.id} review={review} />
+        ))}
+      <Box w="full" borderBottom="1px solid #F2F3F4"></Box>
     </Box>
   );
 }
