@@ -28,7 +28,6 @@ function Order() {
       .then((res) => setProducts(res.data));
   }, []);
 
-  console.log(orders);
   return (
     <Box pt="130px" px="16px" pb="50px">
       <Box {...TitleStyle} w="full">
@@ -70,6 +69,7 @@ function Order() {
                       );
                       return (
                         <SingleOrder
+                          id={orderProduct.id}
                           key={orderProduct.id}
                           createdAt={dateString}
                           product={targeProduct}
@@ -118,22 +118,9 @@ const TitleText = {
   lineHeight: '18px',
 };
 
-const SubText = {
-  fontWeight: 400,
-  fontSize: '12px',
-  lineHeight: '18px',
-  color: 'gray.700',
-};
-
 const TabStyle = {
   fontWeight: 700,
   fontSize: '16px',
   lineHeight: '28px',
   color: 'gray.400',
-};
-
-const InputTitleStyle = {
-  fontWeight: 400,
-  fontSize: '16px',
-  lineHeight: '28px',
 };

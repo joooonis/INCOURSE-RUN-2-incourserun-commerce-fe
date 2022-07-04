@@ -18,7 +18,12 @@ import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
-import { ProductType, StarRatingProps } from './types';
+import {
+  PreviewsType,
+  ProductType,
+  ReviewFormValues,
+  StarRatingProps,
+} from './types';
 
 function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
   const rendering = () => {
@@ -57,15 +62,6 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
   );
 }
 
-type ReviewFormValues = {
-  user: number;
-  orderProduct: number;
-  rating: number;
-  content: string;
-  img: File;
-  review: number;
-};
-
 function Review() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const router = useRouter();
@@ -89,22 +85,56 @@ function Review() {
     }
   };
 
-  const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();
+  const { register, handleSubmit, setValue, watch } =
+    useForm<ReviewFormValues>();
 
   const postReview = (data: ReviewFormValues) => {
-    console.log(data);
-    axios.post(SERVER_URL.LOCAL + '/v1/reviews', data).then((res) => {
-      console.log(res);
-    });
+    const formData = new FormData();
+    formData.append('file', data.photos[0]);
+    axios
+      .post(SERVER_URL.LOCAL + '/v1/reviews', { ...data, photos: formData })
+      .then((res) => {
+        console.log(res);
+      });
   };
 
   useEffect(() => {
     axios
       .get(SERVER_URL.LOCAL + '/v1/products')
       .then((res) => setProducts(res.data));
-
     setValue('rating', 0); // 별점 초기화
   }, []);
+  // console.log(watch('photos'));
+
+  const [imgPreview, setImgPreview] = useState<PreviewsType>();
+
+  const img = watch('photos');
+
+  useEffect(() => {
+    if (img && img[0] && img[1] && img[2]) {
+      const file0 = img[0];
+      const file1 = img[1];
+      const file2 = img[2];
+
+      setImgPreview({
+        preview1: URL.createObjectURL(file0),
+        preview2: URL.createObjectURL(file1),
+        preview3: URL.createObjectURL(file2),
+      });
+    } else if (img && img[0] && img[1]) {
+      const file0 = img[0];
+      const file1 = img[1];
+      setImgPreview({
+        preview1: URL.createObjectURL(file0),
+        preview2: URL.createObjectURL(file1),
+      });
+    } else if (img && img[0]) {
+      const file0 = img[0];
+      setImgPreview({
+        preview1: URL.createObjectURL(file0),
+      });
+    }
+  }, [img]);
 
   if (products) {
     setValue('review', 21);
@@ -189,50 +219,128 @@ function Review() {
                 <Box
                   w="80px"
                   h="80px"
-                  border="2px dashed #CBCED6"
+                  border={imgPreview?.preview1 ? 'none' : '2px dashed #CBCED6'}
                   borderRadius="5px"
                   position="relative"
                 >
-                  <Box
-                    _before={{
-                      content: '""',
-                      display: 'block',
-                      width: '2px',
-                      height: '18px',
-                      backgroundColor: '#CBCED6',
-                      borderRadius: '2px',
-                      position: 'absolute',
-                      top: '29px',
-                      left: '37px',
-                    }}
-                    _after={{
-                      content: '""',
-                      display: 'block',
-                      height: '2px',
-                      width: '18px',
-                      backgroundColor: '#CBCED6',
-                      borderRadius: '2px',
-                      position: 'absolute',
-                      top: '37px',
-                      left: '29px',
-                    }}
-                    _hover={{ cursor: 'pointer' }}
-                  ></Box>
+                  {imgPreview?.preview1 ? (
+                    <Box>
+                      <Image src={imgPreview.preview1}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                    ></Box>
+                  )}
                 </Box>
                 <Box
                   w="80px"
                   h="80px"
-                  border="2px dashed #CBCED6"
+                  border={imgPreview?.preview2 ? 'none' : '2px dashed #CBCED6'}
                   borderRadius="5px"
-                ></Box>
+                  position="relative"
+                >
+                  {imgPreview?.preview2 ? (
+                    <Box>
+                      <Image src={imgPreview.preview2}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                    ></Box>
+                  )}
+                </Box>
                 <Box
                   w="80px"
                   h="80px"
-                  border="2px dashed #CBCED6"
+                  border={imgPreview?.preview3 ? 'none' : '2px dashed #CBCED6'}
                   borderRadius="5px"
-                ></Box>
+                  position="relative"
+                >
+                  {imgPreview?.preview3 ? (
+                    <Box>
+                      <Image src={imgPreview.preview3}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                    ></Box>
+                  )}
+                </Box>
               </HStack>
-              <Input type="file" accept="image/*" {...register('img')}></Input>
+              <Input
+                // display="none"
+                type="file"
+                multiple
+                accept="image/*"
+                {...register('photos')}
+              ></Input>
               <PrimaryButton type="submit">작성하기</PrimaryButton>
             </VStack>
           </form>

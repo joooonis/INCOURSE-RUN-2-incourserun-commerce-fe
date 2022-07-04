@@ -59,3 +59,18 @@ export interface StarRatingProps {
   upStar?: any;
   downStar?: any;
 }
+
+export type ReviewFormValues = {
+  user: number;
+  orderProduct: number;
+  rating: number;
+  content: string;
+  photos: FileList;
+  review: number;
+};
+
+export interface PreviewsType {
+  preview1?: string;
+  preview2?: string;
+  preview3?: string;
+}
