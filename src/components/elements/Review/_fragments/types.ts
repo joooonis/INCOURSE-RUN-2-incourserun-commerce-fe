@@ -13,7 +13,7 @@ type Hashtag = {
   name: string;
 };
 
-interface orderProductType {
+interface OrderProductType {
   id: number;
   product: number;
   quantity: number;
@@ -25,7 +25,7 @@ export type OrderType = {
   id: number;
   user: number;
   createdAt: string;
-  orderProducts: orderProductType[];
+  orderProducts: OrderProductType[];
   totalAmount: number;
 };
 
@@ -35,4 +35,27 @@ export interface SingleOrderProps {
   shippingStatus: string;
   hasReview: boolean;
   isFreeOrder: boolean;
+}
+
+interface Photo {
+  id: number;
+  img: string;
+}
+
+export type ReviewType = {
+  id: number;
+  content: string;
+  createdAt: string;
+  rating: number;
+  photos: Photo[];
+};
+
+export interface SingleReviewProps {
+  review: ReviewType;
+}
+
+export interface StarRatingProps {
+  starRating: number;
+  upStar?: any;
+  downStar?: any;
 }
