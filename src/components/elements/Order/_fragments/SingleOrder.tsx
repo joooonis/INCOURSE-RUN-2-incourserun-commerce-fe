@@ -51,7 +51,7 @@ function SingleOrder({
           </Box>
           {isFreeDelivery ? (
             <Box {...SubText} color="#1A1A1A">
-              무료 배송
+              무료배송
             </Box>
           ) : (
             <Box {...SubText} color="#1A1A1A">

@@ -2,24 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 
-import {
-  Box,
-  Flex,
-  HStack,
-  Image,
-  Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Textarea,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
-import { findProduct, priceToString } from '@components/hooks';
+import { findProduct } from '@components/hooks';
 
 import SingleOrder from './SingleOrder';
 import { OrderType, ProductType } from './types';
@@ -90,7 +76,7 @@ function Order() {
                           quantity={orderProduct.quantity}
                           hasReview={orderProduct.hasReview}
                           shippingStatus={orderProduct.shippingStatus}
-                          isFreeDelivery={order.totalAmount >= 30000}
+                          isFreeDelivery={order.totalPrice >= 30000}
                         ></SingleOrder>
                       );
                     })}
