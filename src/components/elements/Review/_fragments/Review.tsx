@@ -91,7 +91,7 @@ function Review() {
   };
 
   const attachImg = useRef<HTMLInputElement>(null);
-  const handleAttachImg = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAttachImg = (e: React.MouseEvent) => {
     console.log(e);
     e.preventDefault();
     if (attachImg.current) {
