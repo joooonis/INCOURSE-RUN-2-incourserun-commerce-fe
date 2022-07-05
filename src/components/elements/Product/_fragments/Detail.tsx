@@ -28,6 +28,7 @@ import {
 import { priceToString } from '@components/hooks';
 
 import { SERVER_URL } from '../../urls';
+import reviewAnalysis from './reviewAnalysis';
 import {
   DetailType,
   ReviewType,
@@ -105,6 +106,7 @@ function Detail() {
   const router = useRouter();
   const [detail, setDetail] = useState<DetailType | null>(null);
   const [reviews, setReviews] = useState<ReviewType[]>();
+  const [ratingCounts, setRatingCounts] = useState<number[]>();
   const id = Number(router.query.id);
 
   useEffect(() => {
@@ -117,7 +119,10 @@ function Detail() {
         .get(SERVER_URL.LOCAL + '/v1/reviews', {
           params: { product: id, ordering: 'created_at' },
         })
-        .then((res) => setReviews(res.data.results));
+        .then((res) => {
+          setReviews(res.data.results);
+          setRatingCounts(reviewAnalysis(res.data.results));
+        });
     }
   }, [id]);
 
@@ -138,6 +143,7 @@ function Detail() {
       setHasPhoto((hasPhoto) => !hasPhoto);
     }
   };
+  console.log(reviews);
 
   useEffect(() => {
     if (id && id > 0 && hasPhoto) {
