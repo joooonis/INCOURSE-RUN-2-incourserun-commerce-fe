@@ -66,9 +66,14 @@ function Review() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const router = useRouter();
   const { id, createdAt, product, quantity, isfreedelivery } = router.query;
-  const year = createdAt?.slice(0, 4);
-  const month = createdAt?.slice(4, 6);
-  const date = createdAt?.slice(6, 8);
+
+  const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();
+
+  const [year, month, date] = [
+    createdAt?.slice(0, 4),
+    createdAt?.slice(4, 6),
+    createdAt?.slice(6, 8),
+  ];
 
   const [starRating, setStarRating] = useState<number>(0);
   const upStar = () => {
@@ -84,21 +89,6 @@ function Review() {
       setValue('rating', starRating - 1);
     }
   };
-
-  const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();
-
-  const postReview = async (data: ReviewFormValues) => {
-    console.log(data);
-  };
-
-  useEffect(() => {
-    axios
-      .get(SERVER_URL.LOCAL + '/v1/products')
-      .then((res) => setProducts(res.data));
-    setValue('rating', 0); // 별점 초기화
-  }, []);
-
-  const [imgPreview, setImgPreview] = useState<PreviewsType>();
 
   const attachImg = useRef<HTMLInputElement>(null);
   const handleAttachImg = (e: any) => {
@@ -143,6 +133,39 @@ function Review() {
       });
     }
   }, [img]);
+
+  const postReview = async (data: ReviewFormValues) => {
+    console.log(data);
+
+    const buildFormDate = (data: ReviewFormValues) => {
+      const formData = new FormData();
+      formData.append('orderProduct', String(data.orderProduct));
+      formData.append('user', String(data.user));
+      formData.append('content', data.content);
+      formData.append('rating', String(data.rating));
+      if (img) {
+        formData.append('imgs', img[0]);
+        formData.append('imgs', img[1]);
+        formData.append('imgs', img[2]);
+      }
+      return formData;
+    };
+
+    const formData = await buildFormDate(data);
+
+    axios
+      .post(SERVER_URL.LOCAL + '/v1/reviews', formData)
+      .then((res) => console.log(res));
+  };
+
+  useEffect(() => {
+    axios
+      .get(SERVER_URL.LOCAL + '/v1/products')
+      .then((res) => setProducts(res.data));
+    setValue('rating', 0); // 별점 초기화
+  }, []);
+
+  const [imgPreview, setImgPreview] = useState<PreviewsType>();
 
   if (products) {
     setValue('orderProduct', Number(id));
