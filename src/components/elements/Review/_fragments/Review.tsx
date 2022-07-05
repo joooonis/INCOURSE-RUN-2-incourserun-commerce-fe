@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import axios from 'axios';
@@ -85,17 +85,10 @@ function Review() {
     }
   };
 
-  const { register, handleSubmit, setValue, watch } =
-    useForm<ReviewFormValues>();
+  const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();
 
-  const postReview = (data: ReviewFormValues) => {
-    const formData = new FormData();
-    formData.append('file', data.photos[0]);
-    axios
-      .post(SERVER_URL.LOCAL + '/v1/reviews', { ...data, photos: formData })
-      .then((res) => {
-        console.log(res);
-      });
+  const postReview = async (data: ReviewFormValues) => {
+    console.log(data);
   };
 
   useEffect(() => {
@@ -104,14 +97,29 @@ function Review() {
       .then((res) => setProducts(res.data));
     setValue('rating', 0); // 별점 초기화
   }, []);
-  // console.log(watch('photos'));
 
   const [imgPreview, setImgPreview] = useState<PreviewsType>();
 
-  const img = watch('photos');
+  const attachImg = useRef<HTMLInputElement>(null);
+  const handleAttachImg = (e: any) => {
+    e.preventDefault();
+    if (attachImg.current) {
+      attachImg.current.click();
+    }
+  };
+
+  const handleImgOnChange = (e: any) => {
+    e.preventDefault();
+    if (attachImg.current?.files) {
+      setImg(attachImg.current?.files);
+    }
+  };
+
+  const [img, setImg] = useState(attachImg.current?.files);
 
   useEffect(() => {
     if (img && img[0] && img[1] && img[2]) {
+      2;
       const file0 = img[0];
       const file1 = img[1];
       const file2 = img[2];
@@ -137,8 +145,8 @@ function Review() {
   }, [img]);
 
   if (products) {
-    setValue('review', 21);
     setValue('orderProduct', Number(id));
+    setValue('user', 1);
     const targetProduct = findProduct(products, Number(product));
     return (
       <>
@@ -213,9 +221,9 @@ function Review() {
                 {...register('content')}
               />
               <Box {...InputTitleStyle} pt="20px">
-                사진첨부 (0/3)
+                사진첨부 ({img?.length ? img?.length : 0}/3)
               </Box>
-              <HStack spacing="20px" pt="30px" justify="flex-start">
+              <HStack spacing="20px" pt="30px" pb="100px" justify="flex-start">
                 <Box
                   w="80px"
                   h="80px"
@@ -252,94 +260,49 @@ function Review() {
                         left: '29px',
                       }}
                       _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
                     ></Box>
                   )}
                 </Box>
-                <Box
-                  w="80px"
-                  h="80px"
-                  border={imgPreview?.preview2 ? 'none' : '2px dashed #CBCED6'}
-                  borderRadius="5px"
-                  position="relative"
-                >
-                  {imgPreview?.preview2 ? (
+                {imgPreview?.preview2 && (
+                  <Box
+                    w="80px"
+                    h="80px"
+                    border={
+                      imgPreview?.preview2 ? 'none' : '2px dashed #CBCED6'
+                    }
+                    borderRadius="5px"
+                    position="relative"
+                  >
                     <Box>
                       <Image src={imgPreview.preview2}></Image>
                     </Box>
-                  ) : (
-                    <Box
-                      _before={{
-                        content: '""',
-                        display: 'block',
-                        width: '2px',
-                        height: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '29px',
-                        left: '37px',
-                      }}
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '2px',
-                        width: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '37px',
-                        left: '29px',
-                      }}
-                      _hover={{ cursor: 'pointer' }}
-                    ></Box>
-                  )}
-                </Box>
-                <Box
-                  w="80px"
-                  h="80px"
-                  border={imgPreview?.preview3 ? 'none' : '2px dashed #CBCED6'}
-                  borderRadius="5px"
-                  position="relative"
-                >
-                  {imgPreview?.preview3 ? (
+                  </Box>
+                )}
+                {imgPreview?.preview3 && (
+                  <Box
+                    w="80px"
+                    h="80px"
+                    border={
+                      imgPreview?.preview3 ? 'none' : '2px dashed #CBCED6'
+                    }
+                    borderRadius="5px"
+                    position="relative"
+                  >
                     <Box>
                       <Image src={imgPreview.preview3}></Image>
                     </Box>
-                  ) : (
-                    <Box
-                      _before={{
-                        content: '""',
-                        display: 'block',
-                        width: '2px',
-                        height: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '29px',
-                        left: '37px',
-                      }}
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '2px',
-                        width: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '37px',
-                        left: '29px',
-                      }}
-                      _hover={{ cursor: 'pointer' }}
-                    ></Box>
-                  )}
-                </Box>
+                  </Box>
+                )}
               </HStack>
               <Input
-                // display="none"
+                display="none"
                 type="file"
                 multiple
                 accept="image/*"
-                {...register('photos')}
+                ref={attachImg}
+                onChange={handleImgOnChange}
+                // {...register('photos')}
               ></Input>
               <PrimaryButton type="submit">작성하기</PrimaryButton>
             </VStack>

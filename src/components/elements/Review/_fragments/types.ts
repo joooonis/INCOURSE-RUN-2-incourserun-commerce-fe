@@ -66,7 +66,6 @@ export type ReviewFormValues = {
   rating: number;
   content: string;
   photos: FileList;
-  review: number;
 };
 
 export interface PreviewsType {
