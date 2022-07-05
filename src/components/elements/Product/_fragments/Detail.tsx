@@ -120,20 +120,34 @@ function Detail() {
   const [hasPhoto, setHasPhoto] = useState<boolean>(false);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
     if (e.target.value) {
       setOrdering(e.target.value);
     }
   };
 
+  const handleHasPhotoOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    e.preventDefault();
+    if (e.target.value) {
+      setHasPhoto((hasPhoto) => !hasPhoto);
+    }
+  };
+
   useEffect(() => {
-    if (id && id > 0) {
+    if (id && id > 0 && hasPhoto) {
+      axios
+        .get(SERVER_URL.LOCAL + '/v1/reviews', {
+          params: { product: id, ordering: ordering, has_photo: true },
+        })
+        .then((res) => setReviews(res.data.results));
+    } else if (id && id > 0 && !hasPhoto) {
       axios
         .get(SERVER_URL.LOCAL + '/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
         .then((res) => setReviews(res.data.results));
     }
-  }, [ordering]);
+  }, [ordering, hasPhoto]);
 
   return (
     <Box pt="120px" pb="80px">
@@ -351,6 +365,7 @@ function Detail() {
                   bg="gray.200"
                   borderRadius="5px"
                   border="1px solid red"
+                  onChange={handleHasPhotoOnChange}
                   defaultValue="전체보기"
                 >
                   <option value="false">전체보기</option>
