@@ -26,10 +26,11 @@ export type OrderType = {
   user: number;
   createdAt: string;
   orderProducts: orderProductType[];
-  totalAmount: number;
+  totalPrice: number;
 };
 
 export interface SingleOrderProps {
+  id: number;
   product: ProductType;
   quantity: number;
   shippingStatus: string;

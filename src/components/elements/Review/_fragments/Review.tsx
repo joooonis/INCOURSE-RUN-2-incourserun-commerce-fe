@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import axios from 'axios';
 
@@ -17,7 +18,12 @@ import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
-import { ProductType, StarRatingProps } from './types';
+import {
+  PreviewsType,
+  ProductType,
+  ReviewFormValues,
+  StarRatingProps,
+} from './types';
 
 function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
   const rendering = () => {
@@ -57,33 +63,113 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
 }
 
 function Review() {
-  const [products, setProducts] = useState<ProductType[]>();
+  const [products, setProducts] = useState<ProductType[]>([]);
   const router = useRouter();
-  const { createdAt, product, quantity, isfreedelivery } = router.query;
-  const year = createdAt?.slice(0, 4);
-  const month = createdAt?.slice(4, 6);
-  const date = createdAt?.slice(6, 8);
+  const { id, createdAt, product, quantity, isfreedelivery } = router.query;
+
+  const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();
+
+  const [year, month, date] = [
+    createdAt?.slice(0, 4),
+    createdAt?.slice(4, 6),
+    createdAt?.slice(6, 8),
+  ];
 
   const [starRating, setStarRating] = useState<number>(0);
   const upStar = () => {
     if (starRating < 5) {
       setStarRating((starRating: number) => starRating + 1);
+      setValue('rating', starRating + 1);
     }
   };
 
   const downStar = () => {
     if (starRating > 0) {
       setStarRating((starRating: number) => starRating - 1);
+      setValue('rating', starRating - 1);
     }
+  };
+
+  const attachImg = useRef<HTMLInputElement>(null);
+  const handleAttachImg = (e: any) => {
+    e.preventDefault();
+    if (attachImg.current) {
+      attachImg.current.click();
+    }
+  };
+
+  const handleImgOnChange = (e: any) => {
+    e.preventDefault();
+    if (attachImg.current?.files) {
+      setImg(attachImg.current?.files);
+    }
+  };
+
+  const [img, setImg] = useState(attachImg.current?.files);
+
+  useEffect(() => {
+    if (img && img[0] && img[1] && img[2]) {
+      2;
+      const file0 = img[0];
+      const file1 = img[1];
+      const file2 = img[2];
+
+      setImgPreview({
+        preview1: URL.createObjectURL(file0),
+        preview2: URL.createObjectURL(file1),
+        preview3: URL.createObjectURL(file2),
+      });
+    } else if (img && img[0] && img[1]) {
+      const file0 = img[0];
+      const file1 = img[1];
+      setImgPreview({
+        preview1: URL.createObjectURL(file0),
+        preview2: URL.createObjectURL(file1),
+      });
+    } else if (img && img[0]) {
+      const file0 = img[0];
+      setImgPreview({
+        preview1: URL.createObjectURL(file0),
+      });
+    }
+  }, [img]);
+
+  const postReview = async (data: ReviewFormValues) => {
+    console.log(data);
+
+    const buildFormDate = (data: ReviewFormValues) => {
+      const formData = new FormData();
+      formData.append('orderProduct', String(data.orderProduct));
+      formData.append('user', String(data.user));
+      formData.append('content', data.content);
+      formData.append('rating', String(data.rating));
+      if (img) {
+        formData.append('imgs', img[0]);
+        formData.append('imgs', img[1]);
+        formData.append('imgs', img[2]);
+      }
+      return formData;
+    };
+
+    const formData = await buildFormDate(data);
+
+    axios
+      .post(SERVER_URL.LOCAL + '/v1/reviews', formData)
+      .then((res) => console.log(res));
   };
 
   useEffect(() => {
     axios
       .get(SERVER_URL.LOCAL + '/v1/products')
       .then((res) => setProducts(res.data));
+    setValue('rating', 0); // 별점 초기화
   }, []);
 
+  const [imgPreview, setImgPreview] = useState<PreviewsType>();
+
   if (products) {
+    setValue('orderProduct', Number(id));
+    setValue('user', 1);
     const targetProduct = findProduct(products, Number(product));
     return (
       <>
@@ -104,12 +190,12 @@ function Review() {
                 mr="10px"
               ></Image>
               <VStack spacing={0} alignItems="flex-start">
-                <Box {...TitleText}>{targetProduct.name}</Box>
+                <Box {...TitleText}>{targetProduct?.name}</Box>
                 <Box {...SubText}>
-                  {targetProduct.name} | {targetProduct.capacity}ml
+                  {targetProduct?.name} | {targetProduct?.capacity}ml
                 </Box>
                 <Box {...TitleText} color="primary.500">
-                  {priceToString(targetProduct.price * Number(quantity))}원 /{' '}
+                  {priceToString(targetProduct?.price * Number(quantity))}원 /{' '}
                   {quantity}개
                 </Box>
               </VStack>
@@ -120,7 +206,7 @@ function Review() {
               </Box>
               {isfreedelivery ? (
                 <Box {...SubText} color="#1A1A1A">
-                  무료 배송
+                  무료배송
                 </Box>
               ) : (
                 <Box {...SubText} color="#1A1A1A">
@@ -130,78 +216,120 @@ function Review() {
             </VStack>
           </Flex>
           <Box w="full" bg="gray.100" my="20px" h="10px"></Box>
-          <VStack spacing={0} align="flex-start">
-            <Box {...InputTitleStyle} py="20px">
-              별점
-            </Box>
-            <StarRating
-              starRating={starRating}
-              upStar={upStar}
-              downStar={downStar}
-            />
-            <Box {...InputTitleStyle} pt="40px" pb="20px">
-              내용
-            </Box>
-            <Textarea
-              variant="flushed"
-              placeholder="내용을 작성하세요."
-              _focus={{ borderBottom: '2px solid #4A4D55' }}
-              rows={10}
-              resize="none"
-            />
-            <Box {...InputTitleStyle} pt="20px">
-              사진첨부 (0/3)
-            </Box>
-            <HStack spacing="20px" pt="30px" justify="flex-start">
-              <Box
-                w="80px"
-                h="80px"
-                border="2px dashed #CBCED6"
-                borderRadius="5px"
-                position="relative"
-              >
-                <Box
-                  _before={{
-                    content: '""',
-                    display: 'block',
-                    width: '2px',
-                    height: '18px',
-                    backgroundColor: '#CBCED6',
-                    borderRadius: '2px',
-                    position: 'absolute',
-                    top: '29px',
-                    left: '37px',
-                  }}
-                  _after={{
-                    content: '""',
-                    display: 'block',
-                    height: '2px',
-                    width: '18px',
-                    backgroundColor: '#CBCED6',
-                    borderRadius: '2px',
-                    position: 'absolute',
-                    top: '37px',
-                    left: '29px',
-                  }}
-                  _hover={{ cursor: 'pointer' }}
-                ></Box>
+          <form onSubmit={handleSubmit(async (data) => await postReview(data))}>
+            {' '}
+            <VStack spacing={0} align="flex-start">
+              <Box {...InputTitleStyle} py="20px">
+                별점
               </Box>
-              <Box
-                w="80px"
-                h="80px"
-                border="2px dashed #CBCED6"
-                borderRadius="5px"
-              ></Box>
-              <Box
-                w="80px"
-                h="80px"
-                border="2px dashed #CBCED6"
-                borderRadius="5px"
-              ></Box>
-            </HStack>
-            <Input type="file" display="hidden"></Input>
-            <PrimaryButton>작성하기</PrimaryButton>
-          </VStack>
+              <StarRating
+                starRating={starRating}
+                upStar={upStar}
+                downStar={downStar}
+              />
+              {/* <Input
+                display="hidden"
+                value={starRating}
+                {...register('rating')}
+              /> */}
+              <Box {...InputTitleStyle} pt="40px" pb="20px">
+                내용
+              </Box>
+              <Textarea
+                variant="flushed"
+                placeholder="내용을 작성하세요."
+                _focus={{ borderBottom: '2px solid #4A4D55' }}
+                rows={10}
+                resize="none"
+                {...register('content')}
+              />
+              <Box {...InputTitleStyle} pt="20px">
+                사진첨부 ({img?.length ? img?.length : 0}/3)
+              </Box>
+              <HStack spacing="20px" pt="30px" pb="100px" justify="flex-start">
+                <Box
+                  w="80px"
+                  h="80px"
+                  border={imgPreview?.preview1 ? 'none' : '2px dashed #CBCED6'}
+                  borderRadius="5px"
+                  position="relative"
+                >
+                  {imgPreview?.preview1 ? (
+                    <Box>
+                      <Image src={imgPreview.preview1}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
+                  )}
+                </Box>
+                {imgPreview?.preview2 && (
+                  <Box
+                    w="80px"
+                    h="80px"
+                    border={
+                      imgPreview?.preview2 ? 'none' : '2px dashed #CBCED6'
+                    }
+                    borderRadius="5px"
+                    position="relative"
+                  >
+                    <Box>
+                      <Image src={imgPreview.preview2}></Image>
+                    </Box>
+                  </Box>
+                )}
+                {imgPreview?.preview3 && (
+                  <Box
+                    w="80px"
+                    h="80px"
+                    border={
+                      imgPreview?.preview3 ? 'none' : '2px dashed #CBCED6'
+                    }
+                    borderRadius="5px"
+                    position="relative"
+                  >
+                    <Box>
+                      <Image src={imgPreview.preview3}></Image>
+                    </Box>
+                  </Box>
+                )}
+              </HStack>
+              <Input
+                display="none"
+                type="file"
+                multiple
+                accept="image/*"
+                ref={attachImg}
+                onChange={handleImgOnChange}
+                // {...register('photos')}
+              ></Input>
+              <PrimaryButton type="submit">작성하기</PrimaryButton>
+            </VStack>
+          </form>
         </Box>
       </>
     );

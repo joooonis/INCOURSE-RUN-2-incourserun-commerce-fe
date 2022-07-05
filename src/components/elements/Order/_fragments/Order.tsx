@@ -2,24 +2,10 @@ import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 
-import {
-  Box,
-  Flex,
-  HStack,
-  Image,
-  Input,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Textarea,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
-import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
-import { findProduct, priceToString } from '@components/hooks';
+import { findProduct } from '@components/hooks';
 
 import SingleOrder from './SingleOrder';
 import { OrderType, ProductType } from './types';
@@ -42,7 +28,6 @@ function Order() {
       .then((res) => setProducts(res.data));
   }, []);
 
-  console.log(orders);
   return (
     <Box pt="130px" px="16px" pb="50px">
       <Box {...TitleStyle} w="full">
@@ -84,13 +69,14 @@ function Order() {
                       );
                       return (
                         <SingleOrder
+                          id={orderProduct.id}
                           key={orderProduct.id}
                           createdAt={dateString}
                           product={targeProduct}
                           quantity={orderProduct.quantity}
                           hasReview={orderProduct.hasReview}
                           shippingStatus={orderProduct.shippingStatus}
-                          isFreeDelivery={order.totalAmount >= 30000}
+                          isFreeDelivery={order.totalPrice >= 30000}
                         ></SingleOrder>
                       );
                     })}
@@ -132,22 +118,9 @@ const TitleText = {
   lineHeight: '18px',
 };
 
-const SubText = {
-  fontWeight: 400,
-  fontSize: '12px',
-  lineHeight: '18px',
-  color: 'gray.700',
-};
-
 const TabStyle = {
   fontWeight: 700,
   fontSize: '16px',
   lineHeight: '28px',
   color: 'gray.400',
-};
-
-const InputTitleStyle = {
-  fontWeight: 400,
-  fontSize: '16px',
-  lineHeight: '28px',
 };

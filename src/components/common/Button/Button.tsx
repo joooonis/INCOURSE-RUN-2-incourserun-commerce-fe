@@ -1,6 +1,6 @@
-import { Button } from '@chakra-ui/react';
+import { Button, ButtonProps } from '@chakra-ui/react';
 
-interface PrimaryButtonProps {
+interface PrimaryButtonProps extends ButtonProps {
   children: string | JSX.Element;
 }
 

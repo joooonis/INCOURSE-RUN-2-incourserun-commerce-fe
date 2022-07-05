@@ -7,6 +7,7 @@ import priceToString from '@components/hooks/priceToString';
 import { SingleOrderProps } from './types';
 
 function SingleOrder({
+  id,
   createdAt,
   product,
   quantity,
@@ -18,6 +19,7 @@ function SingleOrder({
     Router.push({
       pathname: '/review',
       query: {
+        id: id,
         createdAt: createdAt,
         product: product.id,
         quantity: quantity,
@@ -51,7 +53,7 @@ function SingleOrder({
           </Box>
           {isFreeDelivery ? (
             <Box {...SubText} color="#1A1A1A">
-              무료 배송
+              무료배송
             </Box>
           ) : (
             <Box {...SubText} color="#1A1A1A">
