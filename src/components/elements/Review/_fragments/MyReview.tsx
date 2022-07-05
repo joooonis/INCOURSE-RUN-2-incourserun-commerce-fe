@@ -89,7 +89,7 @@ function MyReview() {
       <Box {...TitleStyle} w="full">
         내 상품 리뷰
       </Box>
-      <Box {...CountStyle} pt="80px" pb="30px" w="full">
+      <Box {...ReviewCountStyle} pt="80px" pb="30px" w="full">
         총 <span style={{ color: '#FF710B' }}>{myReviews?.length}</span>건
       </Box>
       <Box w="full" h="30px"></Box>
@@ -110,7 +110,7 @@ const TitleStyle = {
   lineHeight: '29px',
 };
 
-const CountStyle = {
+const ReviewCountStyle = {
   fontWeight: 700,
   fontSize: '16px',
   lineHeight: '28px',
