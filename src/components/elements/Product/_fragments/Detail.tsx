@@ -101,6 +101,35 @@ function SingleReview({ review }: SingleReviewProps) {
     </VStack>
   );
 }
+interface ReviewChartBarProps {
+  countAll: number;
+  count: number;
+}
+
+function ReviewChartBar({ countAll, count }: ReviewChartBarProps) {
+  const height = 50 * (count / countAll);
+  return (
+    <>
+      <Box
+        w="10px"
+        h="50px"
+        borderTopRadius="5px"
+        bg="#FFF8E7"
+        position="relative"
+      >
+        <Box
+          w="10px"
+          h={height}
+          borderTopRadius="5px"
+          bg="#FF710B"
+          position="absolute"
+          bottom={0}
+          zIndex={1}
+        ></Box>
+      </Box>
+    </>
+  );
+}
 
 function Detail() {
   const router = useRouter();
@@ -127,7 +156,6 @@ function Detail() {
   }, [id]);
 
   const [ordering, setOrdering] = useState('created_at');
-
   const [hasPhoto, setHasPhoto] = useState<boolean>(false);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -412,6 +440,54 @@ function Detail() {
                 </Select>
               </HStack>
             </HStack>
+            <Flex justify="space-between" alignItems="center" pb="21px">
+              <HStack spacing={0}>
+                <Box
+                  {...BoldText}
+                  bg="primary.500"
+                  p="0px 7px"
+                  ml="6px"
+                  mr="12px"
+                  borderRadius="15px"
+                  color="white"
+                >
+                  {detail.avgRating?.toFixed(1)}
+                </Box>
+                <StarRating
+                  starRating={Number(detail.avgRating?.toFixed(1))}
+                ></StarRating>
+              </HStack>
+              <Box w="1px" h="70px" bg="gray.200"></Box>
+              <VStack spacing={0} alignItems="center">
+                <HStack spacing="23px">
+                  {reviews &&
+                    ratingCounts &&
+                    ratingCounts.map((count, index) => {
+                      return (
+                        <ReviewChartBar
+                          key={index}
+                          count={count}
+                          countAll={reviews?.length}
+                        />
+                      );
+                    })}
+                </HStack>
+                <Box w="150px" h="1px" bg="gray.200"></Box>
+                <HStack
+                  {...ChartStyle}
+                  spacing="15px"
+                  mt="4px"
+                  color="gray.600"
+                >
+                  <Box>5점</Box>
+                  <Box>4점</Box>
+                  <Box>3점</Box>
+                  <Box>2점</Box>
+                  <Box>1점</Box>
+                </HStack>
+              </VStack>
+            </Flex>
+
             {reviews &&
               reviews.map((review) => (
                 <SingleReview key={review.id} review={review} />
@@ -627,4 +703,10 @@ const ReviewCountStyle = {
   fontWeight: 700,
   fontSize: '16px',
   lineHeight: '28px',
+};
+
+const ChartStyle = {
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '18px',
 };
