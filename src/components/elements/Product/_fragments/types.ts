@@ -31,12 +31,18 @@ interface Photo {
 
 export type OrderingType = 'created_at' | 'rating' | '-rating';
 
+type ReplyType = {
+  content: string;
+  createdAt: string;
+};
+
 export type ReviewType = {
   id: number;
   content: string;
   createdAt: string;
   rating: number;
   photos: Photo[];
+  reply: ReplyType;
 };
 
 export interface SingleReviewProps {
