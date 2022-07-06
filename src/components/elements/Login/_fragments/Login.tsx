@@ -18,7 +18,7 @@ function Login() {
       <SocialButton
         data={{
           social: 'kakao',
-          link: 'https://03adbca0-7e7a-4d4f-be59-e432880d0b5d.mock.pstmn.io/v1/users/login/kakao',
+          link: 'http://172.30.1.18:8000/v1/users/login/kakao',
         }}
         size="md"
       />
