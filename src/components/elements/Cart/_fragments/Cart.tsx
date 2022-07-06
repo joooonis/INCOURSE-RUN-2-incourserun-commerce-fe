@@ -27,8 +27,6 @@ function Cart() {
     setItemCounter((counter) => counter - 1);
   };
 
-  console.log(items);
-
   const calculateTotalPrice = (products: ProductType[], items: ItemType[]) => {
     if (!products || !items) return;
     else {
@@ -45,7 +43,7 @@ function Cart() {
     const fetchURL = async () => {
       try {
         const res1 = await axios.get(SERVER_URL.LOCAL + '/v1/products');
-        const res2 = await axios.get(SERVER_URL.LOCAL + '/v1/users/cart', {
+        const res2 = await axios.get(SERVER_URL.LOCAL + '/v1/carts', {
           params: {
             user: 1, //여기에서 user id 를 수정합니다.
           },
