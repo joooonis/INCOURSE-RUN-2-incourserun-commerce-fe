@@ -47,7 +47,7 @@ function Card({ product }: CardProps) {
   };
 
   const postCart = () => {
-    const url = SERVER_URL.LOCAL + '/v1/users/cart';
+    const url = SERVER_URL.LOCAL + '/v1/carts';
     axios
       .post(url, {
         user: 1,

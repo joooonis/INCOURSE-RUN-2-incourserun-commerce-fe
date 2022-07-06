@@ -21,7 +21,6 @@ function Header() {
         justifyContent="space-between"
         w="375px"
         px="16px"
-        bg="white"
         position="fixed"
         zIndex={999}
         transition="all 0.3s"
