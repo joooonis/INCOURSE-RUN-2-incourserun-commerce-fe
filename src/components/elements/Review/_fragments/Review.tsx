@@ -98,46 +98,34 @@ function Review() {
       attachImg.current.click();
     }
   };
+  const [img, setImg] = useState(attachImg.current?.files);
 
   const handleImgOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (attachImg.current?.files) {
       setImg(attachImg.current?.files);
+      const files = attachImg.current?.files;
+
+      if (files && files[0] && files[1] && files[2]) {
+        setPreview({
+          preview1: URL.createObjectURL(files[0]),
+          preview2: URL.createObjectURL(files[1]),
+          preview3: URL.createObjectURL(files[2]),
+        });
+      } else if (files && files[0] && files[1]) {
+        setPreview({
+          preview1: URL.createObjectURL(files[0]),
+          preview2: URL.createObjectURL(files[1]),
+        });
+      } else if (files && files[0]) {
+        setPreview({
+          preview1: URL.createObjectURL(files[0]),
+        });
+      }
     }
   };
 
-  const [img, setImg] = useState(attachImg.current?.files);
-
-  useEffect(() => {
-    if (img && img[0] && img[1] && img[2]) {
-      2;
-      const file0 = img[0];
-      const file1 = img[1];
-      const file2 = img[2];
-
-      setImgPreview({
-        preview1: URL.createObjectURL(file0),
-        preview2: URL.createObjectURL(file1),
-        preview3: URL.createObjectURL(file2),
-      });
-    } else if (img && img[0] && img[1]) {
-      const file0 = img[0];
-      const file1 = img[1];
-      setImgPreview({
-        preview1: URL.createObjectURL(file0),
-        preview2: URL.createObjectURL(file1),
-      });
-    } else if (img && img[0]) {
-      const file0 = img[0];
-      setImgPreview({
-        preview1: URL.createObjectURL(file0),
-      });
-    }
-  }, [img]);
-
   const postReview = async (data: ReviewFormValues) => {
-    console.log(data);
-
     const buildFormDate = (data: ReviewFormValues) => {
       const formData = new FormData();
       formData.append('orderProduct', String(data.orderProduct));
@@ -166,7 +154,7 @@ function Review() {
     setValue('rating', 0); // 별점 초기화
   }, []);
 
-  const [imgPreview, setImgPreview] = useState<PreviewsType>();
+  const [preview, setPreview] = useState<PreviewsType>();
 
   if (products) {
     setValue('orderProduct', Number(id));
@@ -251,13 +239,13 @@ function Review() {
                 <Box
                   w="80px"
                   h="80px"
-                  border={imgPreview?.preview1 ? 'none' : '2px dashed #CBCED6'}
+                  border={preview?.preview1 ? 'none' : '2px dashed #CBCED6'}
                   borderRadius="5px"
                   position="relative"
                 >
-                  {imgPreview?.preview1 ? (
+                  {preview?.preview1 ? (
                     <Box>
-                      <Image src={imgPreview.preview1}></Image>
+                      <Image src={preview.preview1}></Image>
                     </Box>
                   ) : (
                     <Box
@@ -288,33 +276,29 @@ function Review() {
                     ></Box>
                   )}
                 </Box>
-                {imgPreview?.preview2 && (
+                {preview?.preview2 && (
                   <Box
                     w="80px"
                     h="80px"
-                    border={
-                      imgPreview?.preview2 ? 'none' : '2px dashed #CBCED6'
-                    }
+                    border={preview?.preview2 ? 'none' : '2px dashed #CBCED6'}
                     borderRadius="5px"
                     position="relative"
                   >
                     <Box>
-                      <Image src={imgPreview.preview2}></Image>
+                      <Image src={preview.preview2}></Image>
                     </Box>
                   </Box>
                 )}
-                {imgPreview?.preview3 && (
+                {preview?.preview3 && (
                   <Box
                     w="80px"
                     h="80px"
-                    border={
-                      imgPreview?.preview3 ? 'none' : '2px dashed #CBCED6'
-                    }
+                    border={preview?.preview3 ? 'none' : '2px dashed #CBCED6'}
                     borderRadius="5px"
                     position="relative"
                   >
                     <Box>
-                      <Image src={imgPreview.preview3}></Image>
+                      <Image src={preview.preview3}></Image>
                     </Box>
                   </Box>
                 )}
