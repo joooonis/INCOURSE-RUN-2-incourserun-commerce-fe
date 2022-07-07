@@ -1,3 +1,4 @@
+import Edit from './_fragments/EditPage';
 import My from './_fragments/MyPage';
 
-export default My;
+export { My, Edit };
