@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
@@ -6,25 +7,42 @@ import { Box, Flex, Image } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
 
+type User = {
+  username: string;
+  email: string;
+};
+
 function My() {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<User>();
   useEffect(() => {
     axios.get(SERVER_URL.LOCAL + '/v1/users/1').then((res) => {
-      console.log(res.data);
       setUser(res.data);
     });
   }, []);
 
+  const router = useRouter();
+
+  const gotoOrder = () => {
+    router.replace('order');
+  };
+
+  const gotoMyReview = () => {
+    router.replace('review/myreview');
+  };
+
   return (
     <Box>
-      <Box px="16px" pt="150px" pb="30px">
-        <Box {...TitleText} w="full">
-          김인코스런
+      {user && (
+        <Box px="16px" pt="150px" pb="30px">
+          <Box {...TitleText} w="full">
+            {user.username}
+          </Box>
+          <Box {...BasicText} color="gray.400" w="full">
+            {user.email}
+          </Box>
         </Box>
-        <Box {...BasicText} color="gray.400" w="full">
-          incourse.run@gmail.com
-        </Box>
-      </Box>
+      )}
+
       <Box w="full" h="10px" bg="gray.100"></Box>
       <Flex w="full">
         <Box
@@ -53,6 +71,8 @@ function My() {
           pb="36px"
           textAlign="center"
           position="relative"
+          _hover={{ cursor: 'pointer' }}
+          onClick={gotoOrder}
         >
           <Image
             src="/images/my/cart.png"
@@ -72,6 +92,8 @@ function My() {
           pb="36px"
           textAlign="center"
           position="relative"
+          _hover={{ cursor: 'pointer' }}
+          onClick={gotoMyReview}
         >
           <Image
             src="/images/my/review.png"
