@@ -15,19 +15,23 @@ type User = {
 function My() {
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    axios.get(SERVER_URL.LOCAL + '/v1/users/1').then((res) => {
+    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
       setUser(res.data);
     });
   }, []);
 
   const router = useRouter();
 
+  const gotoEdit = () => {
+    router.push('mypage/edit');
+  };
+
   const gotoOrder = () => {
-    router.replace('order');
+    router.push('order');
   };
 
   const gotoMyReview = () => {
-    router.replace('review/myreview');
+    router.push('review/myreview');
   };
 
   return (
@@ -52,6 +56,8 @@ function My() {
           pb="36px"
           textAlign="center"
           position="relative"
+          _hover={{ cursor: 'pointer' }}
+          onClick={gotoEdit}
         >
           <Image
             src="/images/my/edit.png"
