@@ -1,16 +1,11 @@
 import router from 'next/router';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
 
 import axios from 'axios';
-
-import { setIsLogin } from '@features/Oauth/loginSlice';
 
 import { SERVER_URL } from '@components/elements/urls';
 
 const Kakao = () => {
-  const dispatch = useDispatch();
-
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
 
@@ -21,11 +16,16 @@ const Kakao = () => {
         redirectUri: 'http://172.30.1.17:3000/login/kakao/callback',
       })
       .then((res) => {
-        // console.log(res); // 토큰이 넘어올 것임
-        dispatch(setIsLogin()); // 로그인 정보 저장
-        const ACCESS_TOKEN = res.data.accessToken;
-        localStorage.setItem('token', ACCESS_TOKEN); //예시로 로컬에 저장함
-        router.replace('/');
+        console.log(res);
+        const token = res.data.access;
+        const isRegister = res.data.isRegister;
+
+        if (token) {
+          localStorage.setItem('token', token);
+        }
+
+        if (isRegister) router.replace('/products');
+        else router.replace('/join');
       })
       .catch((err) => {
         console.log('소셜로그인 에러', err);
