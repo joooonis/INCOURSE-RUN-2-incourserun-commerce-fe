@@ -16,7 +16,7 @@ const Kakao = () => {
         redirectUri: 'http://172.30.1.17:3000/login/kakao/callback',
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         const token = res.data.access;
         const isRegister = res.data.isRegister;
 
