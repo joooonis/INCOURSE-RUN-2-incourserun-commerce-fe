@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -41,7 +42,6 @@ function Join() {
       setUser(res.data);
 
       if (res.data.avatar) setPreview(res.data.avatar);
-      console.log(res.data);
     });
   }, []);
 
@@ -49,9 +49,9 @@ function Join() {
 
   const [img, setImg] = useState(avatarRef.current?.files);
   const [preview, setPreview] = useState<string>();
+  const router = useRouter();
 
   const handleAvatar = (e: React.MouseEvent) => {
-    console.log(e);
     e.preventDefault();
     if (avatarRef.current) {
       avatarRef.current.click();
@@ -68,7 +68,29 @@ function Join() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(JSON.stringify(data));
+    if (
+      (img && data.agreeAllTerms) ||
+      (img && data.requiredTerms && data.marketingTerms)
+    ) {
+      axios
+        .patch(SERVER_URL.LOCAL + '/v1/users/5', data)
+        .then((res) => console.log(res.data));
+
+      const formData = new FormData();
+      formData.append('avatar', img[0]);
+      axios
+        .patch(SERVER_URL.LOCAL + '/v1/users/5', formData)
+        .then((res) => console.log(res.data));
+      router.replace('join/success');
+    } else if (
+      data.agreeAllTerms ||
+      (img && data.requiredTerms && data.marketingTerms)
+    ) {
+      axios
+        .patch(SERVER_URL.LOCAL + '/v1/users/5', data)
+        .then((res) => console.log(res.data));
+      router.replace('join/success');
+    }
   };
 
   const [toggle, setToggle] = useState(false);

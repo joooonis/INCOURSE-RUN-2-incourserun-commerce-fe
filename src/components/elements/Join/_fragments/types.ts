@@ -15,7 +15,7 @@ export interface FormValues {
   nickname: string;
   email: string;
   phone: string;
-  gender: 'male' | 'female';
+  gender: string;
   age: string;
   agreeAllTerms: boolean;
   requiredTerms: boolean;
