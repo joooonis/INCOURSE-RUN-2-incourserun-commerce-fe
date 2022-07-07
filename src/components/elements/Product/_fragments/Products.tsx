@@ -4,6 +4,8 @@ import axios from 'axios';
 
 import { Box, VStack } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+
 import { SERVER_URL } from '@components/elements/urls';
 
 import Card from './Card';
@@ -14,7 +16,14 @@ function Products() {
   const url = SERVER_URL.LOCAL + '/v1/products';
 
   useEffect(() => {
-    axios.get(url).then((res) => setProducts(res.data));
+    axios
+      .get(url, {
+        // withCredentials: true,
+        // headers: {
+        //   access_token: localStorage.getItem('token'),
+        // },
+      })
+      .then((res) => setProducts(res.data));
   }, []);
 
   return (
