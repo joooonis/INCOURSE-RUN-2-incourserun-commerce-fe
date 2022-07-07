@@ -82,7 +82,6 @@ function Review() {
       setValue('rating', starRating + 1);
     }
   };
-
   const downStar = () => {
     if (starRating > 0) {
       setStarRating((starRating: number) => starRating - 1);
@@ -90,21 +89,24 @@ function Review() {
     }
   };
 
-  const attachImg = useRef<HTMLInputElement>(null);
+  const attachImgRef = useRef<HTMLInputElement>(null);
+
+  const [img, setImg] = useState(attachImgRef.current?.files);
+  const [preview, setPreview] = useState<PreviewsType>();
+
   const handleAttachImg = (e: React.MouseEvent) => {
     console.log(e);
     e.preventDefault();
-    if (attachImg.current) {
-      attachImg.current.click();
+    if (attachImgRef.current) {
+      attachImgRef.current.click();
     }
   };
-  const [img, setImg] = useState(attachImg.current?.files);
 
   const handleImgOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (attachImg.current?.files) {
-      setImg(attachImg.current?.files);
-      const files = attachImg.current?.files;
+    if (attachImgRef.current?.files) {
+      setImg(attachImgRef.current?.files);
+      const files = attachImgRef.current?.files;
 
       if (files && files[0] && files[1] && files[2]) {
         setPreview({
@@ -153,8 +155,6 @@ function Review() {
       .then((res) => setProducts(res.data));
     setValue('rating', 0); // 별점 초기화
   }, []);
-
-  const [preview, setPreview] = useState<PreviewsType>();
 
   if (products) {
     setValue('orderProduct', Number(id));
@@ -308,7 +308,7 @@ function Review() {
                 type="file"
                 multiple
                 accept="image/*"
-                ref={attachImg}
+                ref={attachImgRef}
                 onChange={handleImgOnChange}
                 // {...register('photos')}
               ></Input>

@@ -14,6 +14,7 @@ import {
   FormLabel,
   Heading,
   Image,
+  Input,
   Link,
   Select,
   Text,
@@ -44,20 +45,25 @@ function Join() {
     });
   }, []);
 
+  const avatarRef = useRef<HTMLInputElement>(null);
+
+  const [img, setImg] = useState(avatarRef.current?.files);
   const [preview, setPreview] = useState<string>();
-  const avatar = useRef<HTMLInputElement>(null);
+
   const handleAvatar = (e: React.MouseEvent) => {
     console.log(e);
     e.preventDefault();
-    if (avatar.current) {
-      avatar.current.click();
+    if (avatarRef.current) {
+      avatarRef.current.click();
     }
   };
 
   const handleAvatarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (avatar.current?.files) {
-      setAvatar(avatar.current?.files);
+    if (avatarRef.current?.files) {
+      setImg(avatarRef.current?.files);
+      const file = avatarRef.current?.files[0];
+      setPreview(URL.createObjectURL(file));
     }
   };
 
@@ -117,6 +123,8 @@ function Join() {
               position="absolute"
               right="5px"
               bottom="5px"
+              _hover={{ cursor: 'pointer' }}
+              onClick={handleAvatar}
               _before={{
                 content: '""',
                 display: 'block',
@@ -137,6 +145,15 @@ function Join() {
               }}
             />
           </Avatar>
+          <Input
+            display="none"
+            type="file"
+            multiple
+            accept="image/*"
+            ref={avatarRef}
+            onChange={handleAvatarOnChange}
+            // {...register('photos')}
+          ></Input>
         </Box>
         <VStack spacing="78px" w="full" alignItems="flex-start">
           <FormControl>
