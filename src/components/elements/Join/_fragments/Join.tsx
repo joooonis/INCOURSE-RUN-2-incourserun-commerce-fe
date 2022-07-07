@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { Path, SubmitHandler, UseFormRegister, useForm } from 'react-hook-form';
+import React, { useEffect, useRef, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+import axios from 'axios';
 
 import {
   Avatar,
@@ -12,79 +14,16 @@ import {
   FormLabel,
   Heading,
   Image,
-  Input,
   Link,
   Select,
   Text,
   VStack,
 } from '@chakra-ui/react';
 
-interface Options {
-  required?: boolean;
-  minLength?: number;
-  maxLength?: number;
-  pattern?: RegExp;
-}
+import { SERVER_URL } from '@components/elements/urls';
 
-interface IFormValues {
-  profileImg: File;
-  name: string;
-  nickname: string;
-  email: string;
-  phone: string;
-  gender: 'male' | 'female';
-  age: string;
-  agreeAllTerms: boolean;
-  requiredTerms: boolean;
-  privateInfoTerms: boolean;
-  marketingTerms: boolean;
-}
-interface JoinInputProps {
-  label: Path<IFormValues>;
-  name: string;
-  placeholder: string;
-  register: UseFormRegister<IFormValues>;
-  options?: Options;
-}
-
-function JoinInput({
-  label,
-  name,
-  placeholder,
-  register,
-  options,
-}: JoinInputProps) {
-  const InputStyle = {
-    variant: 'outline',
-    size: 'xs',
-    px: '19px',
-    py: '5px',
-    h: '40px',
-    fontSize: '16px',
-    outline: '1px solid #1A1A1A',
-    borderRadius: '100px',
-    lineHeight: '28px',
-    _focus: { border: '2px solid #FF710B', outline: 'none' },
-    _placeholder: { color: 'gray.400' },
-  };
-  const NameStyle = {
-    fontSize: '12px',
-    color: 'primary.500',
-    fontWeight: 700,
-    lineheight: '18px',
-    pb: '10px',
-  };
-  return (
-    <Box w="full">
-      <Text {...NameStyle}>{name}</Text>
-      <Input
-        {...InputStyle}
-        placeholder={placeholder}
-        {...register(label, { ...options })}
-      />
-    </Box>
-  );
-}
+import JoinInput from './JoinInput';
+import { FormValues, User } from './types';
 
 function Join() {
   const {
@@ -93,9 +32,36 @@ function Join() {
     formState: { errors },
     getValues,
     setValue,
-  } = useForm<IFormValues>();
+  } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<IFormValues> = (data) => {
+  const [user, setUser] = useState<User>();
+  useEffect(() => {
+    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+      setUser(res.data);
+
+      if (res.data.avatar) setPreview(res.data.avatar);
+      console.log(res.data);
+    });
+  }, []);
+
+  const [preview, setPreview] = useState<string>();
+  const avatar = useRef<HTMLInputElement>(null);
+  const handleAvatar = (e: React.MouseEvent) => {
+    console.log(e);
+    e.preventDefault();
+    if (avatar.current) {
+      avatar.current.click();
+    }
+  };
+
+  const handleAvatarOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    if (avatar.current?.files) {
+      setAvatar(avatar.current?.files);
+    }
+  };
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(JSON.stringify(data));
   };
 
@@ -143,7 +109,7 @@ function Join() {
           <Heading size="sm">회원정보입력</Heading>
         </Box>
         <Box py="40px" alignSelf="center">
-          <Avatar w="70px" h="70px">
+          <Avatar w="70px" h="70px" src={preview}>
             <AvatarBadge
               boxSize="20px"
               bg="primary.500"
@@ -175,7 +141,7 @@ function Join() {
         <VStack spacing="78px" w="full" alignItems="flex-start">
           <FormControl>
             <JoinInput
-              label="name"
+              label="username"
               name="이름"
               placeholder="김인코스런"
               register={register}
@@ -183,8 +149,9 @@ function Join() {
                 required: true,
                 minLength: 2,
               }}
+              defaultValue={user?.username}
             ></JoinInput>
-            {errors.name && (
+            {errors.username && (
               <Box {...ErrorStyle}>최소 2자 이상 입력해주세요.</Box>
             )}
           </FormControl>
@@ -199,6 +166,7 @@ function Join() {
                 minLength: 2,
                 maxLength: 5,
               }}
+              defaultValue={user?.nickname}
             />
             {errors.nickname && (
               <Box {...ErrorStyle}>
@@ -216,6 +184,7 @@ function Join() {
                 required: true,
                 pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
               }}
+              defaultValue={user?.phone}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
@@ -232,6 +201,7 @@ function Join() {
                 pattern:
                   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
               }}
+              defaultValue={user?.email}
             />
             {errors.email && (
               <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
@@ -251,9 +221,10 @@ function Join() {
               fontSize="16px"
               placeholder="성별을 선택하세요"
               {...register('gender')}
+              defaultValue={user?.gender}
             >
-              <option value="male">남</option>
-              <option value="female">여</option>
+              <option value="남성">남</option>
+              <option value="여성">여</option>
             </Select>
           </FormControl>
           <FormControl>
@@ -268,6 +239,7 @@ function Join() {
               placeholder="연령대를 선택하세요"
               _selected={{ color: '#1A1A1A' }}
               {...register('age')}
+              defaultValue={user?.age}
             >
               <option value="10대">10대</option>
               <option value="20대">20대</option>{' '}
