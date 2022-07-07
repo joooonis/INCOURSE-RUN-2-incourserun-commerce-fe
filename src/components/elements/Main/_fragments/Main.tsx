@@ -2,7 +2,11 @@ import React from 'react';
 
 import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 
+import { useRootState } from '@components/hooks/useRootState';
+
 function Main() {
+  const { isLogin } = useRootState((state) => state.LOGIN);
+  console.log(isLogin);
   return (
     <>
       <Box
