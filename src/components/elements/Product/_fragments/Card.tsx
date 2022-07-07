@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
-import priceToString from '@components/hooks/priceToString';
+import { priceToString } from '@components/hooks';
 
 import { ProductType } from './types';
 
