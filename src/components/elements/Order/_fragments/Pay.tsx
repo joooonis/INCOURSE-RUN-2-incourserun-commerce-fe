@@ -1,20 +1,15 @@
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 import axios from 'axios';
 
 import {
-  Avatar,
-  AvatarBadge,
   Box,
   Button,
   Checkbox,
   Flex,
-  FormControl,
-  FormLabel,
   HStack,
-  Heading,
   Image,
   Input,
   Text,
@@ -28,7 +23,7 @@ import SinglePay from './SinglePay';
 import { FormValues, OrdererType, ProductType } from './types';
 
 function Pay() {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
@@ -56,7 +51,7 @@ function Pay() {
     });
   }, []);
 
-  const onChange = (event: any) => {
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setOrderer({
       ...orderer,
@@ -64,7 +59,15 @@ function Pay() {
     });
   };
 
-  console.log(orderer);
+  const checkboxHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      if (orderer?.name) setValue('name', orderer?.name);
+      if (orderer?.phone) setValue('phone', orderer?.phone);
+      if (orderer?.address) setValue('address', orderer?.address);
+      if (orderer?.addressDetail)
+        setValue('addressDetail', orderer?.addressDetail);
+    } else reset();
+  };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
@@ -159,7 +162,11 @@ function Pay() {
           >
             <Box {...SubTitleText}>배송지 정보</Box>
             <HStack spacing="10px" alignItems="center">
-              <Checkbox size="lg" colorScheme="primary" />
+              <Checkbox
+                size="lg"
+                colorScheme="primary"
+                onChange={checkboxHandler}
+              />
               <Box color="gray.600">주문자 정보와 동일</Box>
             </HStack>
           </Flex>
@@ -170,7 +177,7 @@ function Pay() {
               <Input
                 {...InputStyle}
                 placeholder="김인코스런"
-                // {...register(label, { ...options })}
+                {...register('name', { required: true })}
               />
             </Box>
             <Box w="full">
@@ -178,7 +185,7 @@ function Pay() {
               <Input
                 {...InputStyle}
                 placeholder="010-1234-1234"
-                // {...register(label, { ...options })}
+                {...register('phone', { required: true })}
               />
             </Box>
             <Box w="full">
@@ -188,7 +195,7 @@ function Pay() {
                   {...InputStyle}
                   w="249px"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  // {...register(label, { ...options })}
+                  {...register('address', { required: true })}
                 />
                 <Button
                   colorScheme="primary"
@@ -205,7 +212,7 @@ function Pay() {
                 w="full"
                 mt="10px"
                 placeholder="성산빌딩 B동 302호"
-                // {...register(label, { ...options })}
+                {...register('addressDetail', { required: true })}
               />
             </Box>
             <Box w="full">
@@ -213,7 +220,7 @@ function Pay() {
               <Input
                 {...InputStyle}
                 placeholder="문 앞에 두고 가주세요"
-                // {...register(label, { ...options })}
+                {...register('shippingRequest')}
               />
             </Box>
           </VStack>
@@ -224,7 +231,11 @@ function Pay() {
             결제수단
           </Box>
           <HStack spacing="16px" w="full" h="90px" alignItems="center">
-            <Checkbox size="lg" colorScheme="primary" />
+            <Checkbox
+              size="lg"
+              colorScheme="primary"
+              {...register('payMethod')}
+            />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>
           </HStack>
@@ -239,7 +250,7 @@ function Pay() {
               <Box>{priceToString(total)} 원</Box>
             </Flex>
             <Flex w="full" color="gray.600" justify="space-between">
-              <Box>총 배송비</Box>{' '}
+              <Box>총 배송비</Box>
               <Box>{total >= 30000 ? '0 원' : '3,000 원'} </Box>
             </Flex>
           </VStack>

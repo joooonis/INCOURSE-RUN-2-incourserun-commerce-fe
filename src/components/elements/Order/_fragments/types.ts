@@ -62,19 +62,6 @@ type payProductType = {
   price: number;
 };
 
-export type User = {
-  avatar: File;
-  name: string;
-  address: string;
-  addressDetail: string;
-  username: string;
-  nickname: string;
-  email: string;
-  phone: string;
-  gender: string;
-  age: string;
-};
-
 export type OrdererType = {
   name?: string;
   phone?: string;
