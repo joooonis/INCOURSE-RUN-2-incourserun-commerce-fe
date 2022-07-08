@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React from 'react';
 
 import {
@@ -14,6 +15,10 @@ import {
 import { LAYOUT } from '@constants/layout';
 
 function Success() {
+  const router = useRouter();
+  const gotoProduct = () => {
+    router.replace('/products');
+  };
   return (
     <Container maxW={LAYOUT.SIZE.WIDTH}>
       <VStack w="100%" py="80px" px="16px" h="812px" justify="space-between">
@@ -34,6 +39,7 @@ function Success() {
             borderRadius="25px"
             size="sd"
             py="12px"
+            onClick={gotoProduct}
           >
             시작하기
           </Button>

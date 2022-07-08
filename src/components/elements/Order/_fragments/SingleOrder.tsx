@@ -1,3 +1,5 @@
+import Router from 'next/router';
+
 import { Box, Button, Flex, Image, VStack } from '@chakra-ui/react';
 
 import priceToString from '@components/hooks/priceToString';
@@ -5,12 +7,26 @@ import priceToString from '@components/hooks/priceToString';
 import { SingleOrderProps } from './types';
 
 function SingleOrder({
+  id,
+  createdAt,
   product,
   quantity,
   shippingStatus,
   hasReview,
-  isFreeOrder,
+  isFreeDelivery,
 }: SingleOrderProps) {
+  const SendQuery = () => {
+    Router.push({
+      pathname: '/review',
+      query: {
+        id: id,
+        createdAt: createdAt,
+        product: product.id,
+        quantity: quantity,
+        isfreedelivery: isFreeDelivery,
+      },
+    });
+  };
   return (
     <>
       <Flex py="10px" justify="space-between" alignItems="center">
@@ -35,9 +51,9 @@ function SingleOrder({
           <Box {...TitleText} color="primary.500">
             {shippingStatus}
           </Box>
-          {isFreeOrder ? (
+          {isFreeDelivery ? (
             <Box {...SubText} color="#1A1A1A">
-              무료 배송
+              무료배송
             </Box>
           ) : (
             <Box {...SubText} color="#1A1A1A">
@@ -69,6 +85,7 @@ function SingleOrder({
             p="0px 15px"
             colorScheme="primary"
             variant="outline"
+            onClick={SendQuery}
             {...TitleText}
           >
             리뷰작성

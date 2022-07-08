@@ -27,7 +27,7 @@ export function Item({
   const [quantity, setQunatity] = useState(item.quantity);
   const [total, setTotal] = useState(item?.quantity * product?.price);
   const [visible, setVisible] = useState(true);
-  const url = SERVER_URL.LOCAL + '/v1/users/cart/';
+  const url = SERVER_URL.LOCAL + '/v1/carts/';
 
   const deleteCart = () => {
     axios.delete(url + item.id).then((res) => console.log(res));

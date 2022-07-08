@@ -4,17 +4,26 @@ import axios from 'axios';
 
 import { Box, VStack } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+
 import { SERVER_URL } from '@components/elements/urls';
 
 import Card from './Card';
 import { ProductType } from './types';
 
-function Product() {
+function Products() {
   const [products, setProducts] = useState<ProductType[]>();
   const url = SERVER_URL.LOCAL + '/v1/products';
 
   useEffect(() => {
-    axios.get(url).then((res) => setProducts(res.data));
+    axios
+      .get(url, {
+        // withCredentials: true,
+        // headers: {
+        //   access_token: localStorage.getItem('token'),
+        // },
+      })
+      .then((res) => setProducts(res.data));
   }, []);
 
   return (
@@ -30,4 +39,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default Products;

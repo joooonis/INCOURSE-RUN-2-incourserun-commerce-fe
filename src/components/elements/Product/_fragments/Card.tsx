@@ -20,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
-import priceToString from '@components/hooks/priceToString';
+import { priceToString } from '@components/hooks';
 
 import { ProductType } from './types';
 
@@ -47,7 +47,7 @@ function Card({ product }: CardProps) {
   };
 
   const postCart = () => {
-    const url = SERVER_URL.LOCAL + '/v1/users/cart';
+    const url = SERVER_URL.LOCAL + '/v1/carts';
     axios
       .post(url, {
         user: 1,

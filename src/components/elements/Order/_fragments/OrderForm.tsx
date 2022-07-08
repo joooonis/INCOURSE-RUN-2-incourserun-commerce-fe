@@ -53,7 +53,7 @@ function OrderForm() {
         <Box {...SubTitleText} w="full">
           주문상품
         </Box>
-        <SingleOrder product={testP} quantity={2}></SingleOrder>
+        <SingleOrder id={1} product={testP} quantity={2}></SingleOrder>
         <VStack spacing="78px" w="full" alignItems="flex-start"></VStack>
         <Flex justify="space-between" w="100%" pt="81px" pb="30px">
           <Button

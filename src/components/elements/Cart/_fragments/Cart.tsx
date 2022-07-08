@@ -6,7 +6,7 @@ import axios from 'axios';
 import { Box, Button, Checkbox, Flex, VStack } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
-import priceToString from '@components/hooks/priceToString';
+import { findProduct, priceToString } from '@components/hooks';
 
 import { Item } from './Item';
 import { ItemType, ProductType } from './types';
@@ -27,20 +27,12 @@ function Cart() {
     setItemCounter((counter) => counter - 1);
   };
 
-  console.log(items);
-
-  function findItem(products: ProductType[], id: number): ProductType {
-    const targetIndex = products.findIndex((e) => e.id === id);
-    // targetIndex === -1 인 케이스 예외처리
-    return products[targetIndex];
-  }
-
   const calculateTotalPrice = (products: ProductType[], items: ItemType[]) => {
     if (!products || !items) return;
     else {
       let totalPrice = 0;
       items.forEach((item) => {
-        const price = item.quantity * findItem(products, item.product).price;
+        const price = item.quantity * findProduct(products, item.product).price;
         totalPrice += price;
       });
       setTotal(totalPrice);
@@ -51,7 +43,7 @@ function Cart() {
     const fetchURL = async () => {
       try {
         const res1 = await axios.get(SERVER_URL.LOCAL + '/v1/products');
-        const res2 = await axios.get(SERVER_URL.LOCAL + '/v1/users/cart', {
+        const res2 = await axios.get(SERVER_URL.LOCAL + '/v1/carts', {
           params: {
             user: 1, //여기에서 user id 를 수정합니다.
           },
@@ -102,7 +94,7 @@ function Cart() {
             {items &&
               products &&
               items.map((item: ItemType, index) => {
-                const targeProduct = findItem(products, item.product);
+                const targeProduct = findProduct(products, item.product);
                 return (
                   <Item
                     key={index}

@@ -1,3 +1,4 @@
+import Detail from './_fragments/DetailPage';
 import Product from './_fragments/ProductPage';
 
-export default Product;
+export { Product, Detail };
