@@ -25,10 +25,10 @@ import {
 import CheckBox from '@components/common/CheckBox';
 import { SERVER_URL } from '@components/elements/urls';
 
-import SinglePayment from './SinglePayment';
+import SinglePay from './SinglePay';
 import { FormValues, User } from './types';
 
-function Payment() {
+function Pay() {
   const {
     register,
     handleSubmit,
@@ -64,7 +64,7 @@ function Payment() {
           <Box {...SubTitleText} w="full" pt="80px" pb="11px">
             주문상품
           </Box>
-          <SinglePayment id={1} product={testP} quantity={2}></SinglePayment>
+          <SinglePay id={1} product={testP} quantity={2}></SinglePay>
         </Box>
         <Box w="full">
           <Box {...SubTitleText} pt="45px" pb="40px" w="full">
@@ -230,7 +230,7 @@ function Payment() {
   );
 }
 
-export default Payment;
+export default Pay;
 
 const TitleText = {
   fontWeight: 700,

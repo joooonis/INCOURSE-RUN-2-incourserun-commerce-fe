@@ -39,7 +39,7 @@ export interface SingleOrderProps {
   createdAt?: string;
 }
 
-export interface SinglePaymentProps {
+export interface SinglePayProps {
   id: number;
   product: ProductType;
   quantity: number;

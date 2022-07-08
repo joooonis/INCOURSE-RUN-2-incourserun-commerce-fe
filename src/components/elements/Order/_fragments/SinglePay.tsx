@@ -2,9 +2,9 @@ import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 
 import priceToString from '@components/hooks/priceToString';
 
-import { SinglePaymentProps } from './types';
+import { SinglePayProps } from './types';
 
-function SinglePayment({ id, product, quantity }: SinglePaymentProps) {
+function SinglePay({ id, product, quantity }: SinglePayProps) {
   return (
     <>
       <Flex
@@ -37,7 +37,7 @@ function SinglePayment({ id, product, quantity }: SinglePaymentProps) {
   );
 }
 
-export default SinglePayment;
+export default SinglePay;
 
 const TitleText = {
   fontWeight: 700,
