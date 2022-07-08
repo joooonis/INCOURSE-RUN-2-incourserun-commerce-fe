@@ -20,10 +20,11 @@ import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
 import SinglePay from './SinglePay';
-import { FormValues, OrdererType, ProductType } from './types';
+import { FormValues, OrdererType, ProductType, payProductType } from './types';
 
 function Pay() {
-  const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
+  const { register, handleSubmit, setValue, getValues, reset, formState } =
+    useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
@@ -67,6 +68,21 @@ function Pay() {
       if (orderer?.addressDetail)
         setValue('addressDetail', orderer?.addressDetail);
     } else reset();
+  };
+
+  const [isPayButtonActive, setIsPayButtonActive] = useState(false);
+
+  const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsPayButtonActive(e.target.checked);
+    setValue('totalPrice', total);
+    if (getValues('payMethod')) setValue('payMethod', '신용카드');
+
+    const SingleOrderProduct: payProductType = {
+      product: Number(product),
+      quantity: Number(quantity),
+      price: order.price,
+    };
+    setValue('orderProducts', [SingleOrderProduct]);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -263,7 +279,11 @@ function Pay() {
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>
           <HStack spacing="10px" w="full" py="20px" alignItems="center">
-            <Checkbox size="lg" colorScheme="primary" />
+            <Checkbox
+              size="lg"
+              colorScheme="primary"
+              onChange={agreementHandler}
+            />
             <Box color="gray.600">개인정보 수집 이용 동의(필수)</Box>
           </HStack>
         </Box>
@@ -277,6 +297,7 @@ function Pay() {
             h="50px"
             py="12px"
             type="submit"
+            disabled={!isPayButtonActive}
           >
             결제하기
           </Button>

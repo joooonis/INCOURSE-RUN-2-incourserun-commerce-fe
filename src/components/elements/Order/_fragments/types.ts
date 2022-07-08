@@ -13,7 +13,7 @@ type Hashtag = {
   name: string;
 };
 
-interface orderProductType {
+export interface orderProductType {
   id: number;
   product: number;
   quantity: number;
@@ -56,9 +56,9 @@ export interface FormValues {
   orderProducts: payProductType[];
 }
 
-type payProductType = {
+export type payProductType = {
   product: number;
-  quantitu: number;
+  quantity: number;
   price: number;
 };
 
