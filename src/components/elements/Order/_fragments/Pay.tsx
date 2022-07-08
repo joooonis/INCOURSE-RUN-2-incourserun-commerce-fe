@@ -17,12 +17,10 @@ import {
   Heading,
   Image,
   Input,
-  Select,
   Text,
   VStack,
 } from '@chakra-ui/react';
 
-import CheckBox from '@components/common/CheckBox';
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
@@ -31,11 +29,7 @@ import { FormValues, User } from './types';
 import { ProductType } from './types';
 
 function Pay() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
@@ -54,6 +48,7 @@ function Pay() {
   }, []);
 
   const order = findProduct(products, Number(product));
+  const total = order?.price * Number(quantity);
 
   console.log(user);
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -136,9 +131,20 @@ function Pay() {
         </Box>
         <Box w="full" h="1px" bg="gray.200"></Box>
         <Box w="full">
-          <Box {...SubTitleText} pt="50px" pb="40px" w="full">
-            배송지 정보
-          </Box>
+          <Flex
+            w="full"
+            pt="50px"
+            pb="40px"
+            justify="space-between"
+            alignItems="center"
+          >
+            <Box {...SubTitleText}>배송지 정보</Box>
+            <HStack spacing="10px" alignItems="center">
+              <Checkbox size="lg" colorScheme="primary" />
+              <Box color="gray.600">주문자 정보와 동일</Box>
+            </HStack>
+          </Flex>
+
           <VStack spacing="50px" w="full" alignItems="flex-start">
             <Box w="full">
               <Text {...NameStyle}>이름</Text>
@@ -210,17 +216,19 @@ function Pay() {
           </Box>
           <VStack {...PayText} spacing="10px" w="full" pb="20px">
             <Flex w="full" color="gray.600" justify="space-between">
-              <Box>총 상품금액</Box> <Box>54,000 원</Box>
+              <Box>총 상품금액</Box>
+              <Box>{priceToString(total)} 원</Box>
             </Flex>
             <Flex w="full" color="gray.600" justify="space-between">
-              <Box>총 배송비</Box> <Box>0 원</Box>
+              <Box>총 배송비</Box>{' '}
+              <Box>{total >= 30000 ? '0 원' : '3,000 원'} </Box>
             </Flex>
           </VStack>
           <Box w="full" h="1px" bg="gray.200"></Box>
           <Flex py="20px" justify="space-between">
-            <Box>결제금액</Box>{' '}
+            <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              54,000원
+              {priceToString(total)}
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>

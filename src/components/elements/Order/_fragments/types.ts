@@ -43,20 +43,24 @@ export interface SinglePayProps {
   product: ProductType;
   quantity: number;
 }
-
 export interface FormValues {
-  avatar: File;
-  username: string;
-  nickname: string;
-  email: string;
+  name: string;
   phone: string;
-  gender: string;
-  age: string;
-  agreeAllTerms: boolean;
-  requiredTerms: boolean;
-  privateInfoTerms: boolean;
-  marketingTerms: boolean;
+  address: string;
+  addressDetail: string;
+  shippingRequest: string;
+  payMethod: string;
+  totalPrice: number;
+  deliveryFee: number;
+  totalPaid: number;
+  orderProducts: payProductType[];
 }
+
+type payProductType = {
+  product: number;
+  quantitu: number;
+  price: number;
+};
 
 export type User = {
   avatar: File;
