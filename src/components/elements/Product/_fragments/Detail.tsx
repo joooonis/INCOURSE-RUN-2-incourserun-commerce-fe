@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
@@ -234,6 +235,16 @@ function Detail() {
         quantity: quantity,
       })
       .then((res) => console.log(res));
+  };
+
+  const SendQuery = () => {
+    Router.push({
+      pathname: '/order/pay',
+      query: {
+        product: detail?.id,
+        quantity: quantity,
+      },
+    });
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -630,6 +641,7 @@ function Detail() {
                       borderRadius="25px"
                       size="sd"
                       py="12px"
+                      onClick={SendQuery}
                     >
                       바로구매
                     </Button>

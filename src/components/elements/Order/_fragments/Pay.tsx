@@ -44,6 +44,8 @@ function Pay() {
 
   const router = useRouter();
 
+  const { product, quantity } = router.query;
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
