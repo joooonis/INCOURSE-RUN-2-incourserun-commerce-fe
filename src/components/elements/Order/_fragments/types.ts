@@ -74,3 +74,10 @@ export type User = {
   gender: string;
   age: string;
 };
+
+export type OrdererType = {
+  name?: string;
+  phone?: string;
+  address?: string;
+  addressDetail?: string;
+};

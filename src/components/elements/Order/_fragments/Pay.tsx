@@ -25,8 +25,7 @@ import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
 import SinglePay from './SinglePay';
-import { FormValues, User } from './types';
-import { ProductType } from './types';
+import { FormValues, OrdererType, ProductType } from './types';
 
 function Pay() {
   const { register, handleSubmit } = useForm<FormValues>();
@@ -35,7 +34,11 @@ function Pay() {
   const { product, quantity } = router.query;
 
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [user, setUser] = useState<User>();
+
+  const order = findProduct(products, Number(product));
+  const total = order?.price * Number(quantity);
+
+  const [orderer, setOrderer] = useState<OrdererType>();
 
   useEffect(() => {
     axios
@@ -43,14 +46,26 @@ function Pay() {
       .then((res) => setProducts(res.data));
 
     axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
-      setUser(res.data);
+      setOrderer({
+        ...orderer,
+        name: res.data.name,
+        phone: res.data.phone,
+        address: res.data.address,
+        addressDetail: res.data.addressDetail,
+      });
     });
   }, []);
 
-  const order = findProduct(products, Number(product));
-  const total = order?.price * Number(quantity);
+  const onChange = (event: any) => {
+    const { value, name } = event.target;
+    setOrderer({
+      ...orderer,
+      [name]: value,
+    });
+  };
 
-  console.log(user);
+  console.log(orderer);
+
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
@@ -83,19 +98,21 @@ function Pay() {
             <Box w="full">
               <Text {...NameStyle}>이름</Text>
               <Input
+                name="name"
                 {...InputStyle}
                 placeholder="김인코스런"
-                defaultValue={user?.name}
-                // {...register(label, { ...options })}
+                value={orderer?.name}
+                onChange={onChange}
               />
             </Box>
             <Box w="full">
               <Text {...NameStyle}>핸드폰 번호</Text>
               <Input
                 {...InputStyle}
+                name="phone"
                 placeholder="010-1234-1234"
-                defaultValue={user?.phone}
-                // {...register(label, { ...options })}
+                value={orderer?.phone}
+                onChange={onChange}
               />
             </Box>
             <Box w="full">
@@ -104,9 +121,10 @@ function Pay() {
                 <Input
                   {...InputStyle}
                   w="249px"
+                  name="address"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  defaultValue={user?.address}
-                  // {...register(label, { ...options })}
+                  value={orderer?.address}
+                  onChange={onChange}
                 />
                 <Button
                   colorScheme="primary"
@@ -122,9 +140,10 @@ function Pay() {
                 {...InputStyle}
                 w="full"
                 mt="10px"
+                name="addressDetail"
                 placeholder="성산빌딩 B동 302호"
-                defaultValue={user?.addressDetail}
-                // {...register(label, { ...options })}
+                value={orderer?.addressDetail}
+                onChange={onChange}
               />
             </Box>
           </VStack>
