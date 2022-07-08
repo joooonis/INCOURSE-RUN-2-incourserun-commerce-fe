@@ -3,9 +3,9 @@ export type ProductType = {
   name: string;
   capacity: number;
   price: number;
-  hashtags: Hashtag[];
-  avgRating: number;
-  reviewCount: number;
+  hashtags?: Hashtag[];
+  avgRating?: number;
+  reviewCount?: number;
 };
 
 type Hashtag = {
@@ -32,7 +32,7 @@ export type OrderType = {
 export interface SingleOrderProps {
   product: ProductType;
   quantity: number;
-  shippingStatus: string;
-  hasReview: boolean;
-  isFreeOrder: boolean;
+  shippingStatus?: string;
+  hasReview?: boolean;
+  isFreeOrder?: boolean;
 }
