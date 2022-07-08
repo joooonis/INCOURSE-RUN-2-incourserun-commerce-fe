@@ -40,7 +40,6 @@ export interface SingleOrderProps {
 }
 
 export interface SinglePayProps {
-  id: number;
   product: ProductType;
   quantity: number;
 }

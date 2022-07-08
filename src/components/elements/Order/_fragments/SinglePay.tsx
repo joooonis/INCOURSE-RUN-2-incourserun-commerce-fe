@@ -4,7 +4,7 @@ import priceToString from '@components/hooks/priceToString';
 
 import { SinglePayProps } from './types';
 
-function SinglePay({ id, product, quantity }: SinglePayProps) {
+function SinglePay({ product, quantity }: SinglePayProps) {
   return (
     <>
       <Flex

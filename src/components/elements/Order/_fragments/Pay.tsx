@@ -24,9 +24,11 @@ import {
 
 import CheckBox from '@components/common/CheckBox';
 import { SERVER_URL } from '@components/elements/urls';
+import { findProduct, priceToString } from '@components/hooks';
 
 import SinglePay from './SinglePay';
 import { FormValues, User } from './types';
+import { ProductType } from './types';
 
 function Pay() {
   const {
@@ -43,9 +45,19 @@ function Pay() {
   };
 
   const router = useRouter();
+  const [products, setProducts] = useState<ProductType[]>([]);
 
   const { product, quantity } = router.query;
 
+  useEffect(() => {
+    axios
+      .get(SERVER_URL.LOCAL + '/v1/products')
+      .then((res) => setProducts(res.data));
+  }, []);
+
+  const order = findProduct(products, Number(product));
+
+  console.log(order);
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
@@ -66,7 +78,9 @@ function Pay() {
           <Box {...SubTitleText} w="full" pt="80px" pb="11px">
             주문상품
           </Box>
-          <SinglePay id={1} product={testP} quantity={2}></SinglePay>
+          {order && quantity && (
+            <SinglePay product={order} quantity={Number(quantity)}></SinglePay>
+          )}
         </Box>
         <Box w="full">
           <Box {...SubTitleText} pt="45px" pb="40px" w="full">
