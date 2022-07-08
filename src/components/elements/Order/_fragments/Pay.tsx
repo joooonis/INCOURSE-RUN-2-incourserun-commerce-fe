@@ -37,27 +37,25 @@ function Pay() {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const testP = {
-    id: 1,
-    name: '오일',
-    capacity: 200,
-    price: 15000,
-  };
-
   const router = useRouter();
-  const [products, setProducts] = useState<ProductType[]>([]);
-
   const { product, quantity } = router.query;
+
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     axios
       .get(SERVER_URL.LOCAL + '/v1/products')
       .then((res) => setProducts(res.data));
+
+    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+      setUser(res.data);
+    });
   }, []);
 
   const order = findProduct(products, Number(product));
 
-  console.log(order);
+  console.log(user);
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
   };
@@ -92,6 +90,7 @@ function Pay() {
               <Input
                 {...InputStyle}
                 placeholder="김인코스런"
+                defaultValue={user?.name}
                 // {...register(label, { ...options })}
               />
             </Box>
@@ -100,6 +99,7 @@ function Pay() {
               <Input
                 {...InputStyle}
                 placeholder="010-1234-1234"
+                defaultValue={user?.phone}
                 // {...register(label, { ...options })}
               />
             </Box>
@@ -110,6 +110,7 @@ function Pay() {
                   {...InputStyle}
                   w="249px"
                   placeholder="울특별시 마포구 성산동  123-3"
+                  defaultValue={user?.address}
                   // {...register(label, { ...options })}
                 />
                 <Button
@@ -127,6 +128,7 @@ function Pay() {
                 w="full"
                 mt="10px"
                 placeholder="성산빌딩 B동 302호"
+                defaultValue={user?.addressDetail}
                 // {...register(label, { ...options })}
               />
             </Box>

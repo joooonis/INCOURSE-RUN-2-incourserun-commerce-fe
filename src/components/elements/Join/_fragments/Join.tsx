@@ -40,7 +40,6 @@ function Join() {
   useEffect(() => {
     axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
       setUser(res.data);
-
       if (res.data.avatar) setPreview(res.data.avatar);
     });
   }, []);

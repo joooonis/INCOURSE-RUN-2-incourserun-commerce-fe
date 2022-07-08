@@ -60,6 +60,9 @@ export interface FormValues {
 
 export type User = {
   avatar: File;
+  name: string;
+  address: string;
+  addressDetail: string;
   username: string;
   nickname: string;
   email: string;
