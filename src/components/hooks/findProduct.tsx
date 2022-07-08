@@ -12,9 +12,9 @@ type ProductType = {
   name: string;
   capacity: number;
   price: number;
-  hashtags: Hashtag[];
-  avgRating: number;
-  reviewCount: number;
+  hashtags?: Hashtag[];
+  avgRating?: number;
+  reviewCount?: number;
 };
 
 type Hashtag = {

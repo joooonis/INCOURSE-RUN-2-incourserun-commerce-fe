@@ -38,3 +38,33 @@ export interface SingleOrderProps {
   isFreeDelivery?: boolean;
   createdAt?: string;
 }
+
+export interface SinglePaymentProps {
+  id: number;
+  product: ProductType;
+  quantity: number;
+}
+
+export interface FormValues {
+  avatar: File;
+  username: string;
+  nickname: string;
+  email: string;
+  phone: string;
+  gender: string;
+  age: string;
+  agreeAllTerms: boolean;
+  requiredTerms: boolean;
+  privateInfoTerms: boolean;
+  marketingTerms: boolean;
+}
+
+export type User = {
+  avatar: File;
+  username: string;
+  nickname: string;
+  email: string;
+  phone: string;
+  gender: string;
+  age: string;
+};
