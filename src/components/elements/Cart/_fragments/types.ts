@@ -3,9 +3,9 @@ export type ProductType = {
   name: string;
   capacity: number;
   price: number;
-  hashtags: Hashtag[];
-  avgRating: number;
-  reviewCount: number;
+  hashtags?: Hashtag[];
+  avgRating?: number;
+  reviewCount?: number;
 };
 
 export type ItemType = {
@@ -19,3 +19,11 @@ type Hashtag = {
   id: number;
   name: string;
 };
+export interface ItemPropsType {
+  product: ProductType;
+  item: ItemType;
+  incTotal: Function;
+  decTotal: Function;
+  deleteItem: Function;
+  checkItem: Function;
+}

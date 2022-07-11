@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import axios from 'axios';
 
@@ -6,27 +7,25 @@ import { Box, Checkbox, Flex, Image, Input, VStack } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
+import { useRootState } from '@components/hooks/useRootState';
 
-import { ItemType, ProductType } from './types';
+import { ItemPropsType } from './types';
 
-interface ItemPropsType {
-  product: ProductType;
-  item: ItemType;
-  incTotal: Function;
-  decTotal: Function;
-  deleteItem: Function;
-}
-
-export function Item({
+function Item({
   product,
   item,
   incTotal,
   decTotal,
   deleteItem,
+  checkItem,
 }: ItemPropsType) {
   const [quantity, setQunatity] = useState(item.quantity);
   const [total, setTotal] = useState(item?.quantity * product?.price);
   const [visible, setVisible] = useState(true);
+  const dispatch = useDispatch();
+  const { itemCheckers } = useRootState((state) => state.ITEM);
+  const target = itemCheckers.find((x) => x.id === item.id);
+
   const url = SERVER_URL.LOCAL + '/v1/carts/';
 
   const deleteCart = () => {
@@ -57,7 +56,12 @@ export function Item({
       });
     }
   };
-  if (visible)
+
+  const onChange = (e: any) => {
+    dispatch(checkItem(item.id));
+  };
+
+  if (visible && target)
     return (
       <VStack
         w="full"
@@ -86,6 +90,7 @@ export function Item({
           position="absolute"
           left="16px"
           top="20px"
+          onChange={onChange}
         ></Checkbox>
         <Box
           position="absolute"
@@ -212,6 +217,8 @@ export function Item({
     );
   else return <Box></Box>;
 }
+
+export default Item;
 
 const TitleText = {
   fontWeight: 700,

@@ -1,14 +1,23 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import axios from 'axios';
 
 import { Box, Button, Checkbox, Flex, VStack } from '@chakra-ui/react';
 
+import {
+  addItem,
+  checkAllItem,
+  checkItem,
+  unCheckAllItem,
+} from '@features/Item/itemSlice';
+
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
+import { useRootState } from '@components/hooks/useRootState';
 
-import { Item } from './Item';
+import Item from './Item';
 import { ItemType, ProductType } from './types';
 
 function Cart() {
@@ -17,7 +26,17 @@ function Cart() {
   const [products, setProducts] = useState<ProductType[]>();
   const [itemCounter, setItemCounter] = useState<number>(0);
 
+  const { itemCheckers } = useRootState((state) => state.ITEM);
+
   const router = useRouter();
+  const dispatch = useDispatch();
+
+  console.log(itemCheckers);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target && e.target.checked) dispatch(checkAllItem);
+    else dispatch(unCheckAllItem);
+  };
 
   const gotoProduct = () => {
     router.replace('./products');
@@ -68,6 +87,14 @@ function Cart() {
     setTotal((total) => total - price);
   };
 
+  useEffect(() => {
+    if (items) {
+      items.forEach((item: ItemType) => {
+        dispatch(addItem(item.id));
+      });
+    }
+  }, [items]);
+
   return (
     <Box pt="80px" pb="50px">
       {itemCounter !== 0 ? (
@@ -85,6 +112,7 @@ function Cart() {
                 colorScheme="primary"
                 pr="10px"
                 alignSelf="center"
+                // onChange={onChange}
               ></Checkbox>
               모두선택
             </Flex>
@@ -103,6 +131,7 @@ function Cart() {
                     incTotal={incTotal}
                     decTotal={decTotal}
                     deleteItem={deleteItem}
+                    checkItem={checkItem}
                   ></Item>
                 );
               })}
