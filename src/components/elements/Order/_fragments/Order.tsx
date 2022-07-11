@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import { SERVER_URL } from '@components/elements/urls';
-import { findProduct } from '@components/hooks';
+import { dateToString, findProduct } from '@components/hooks';
 
 import SingleOrder from './SingleOrder';
 import { OrderType, ProductType } from './types';
@@ -38,25 +38,10 @@ function Order() {
         <TabPanels>
           {orders &&
             orders.map((order) => {
-              const dateToString = (createdAt: string) => {
-                const d = new Date(createdAt);
-                const year = String(d.getFullYear());
-                let month = String(d.getMonth());
-                let date = String(d.getDate());
-
-                if (Number(month) < 10) {
-                  month = '0' + month;
-                }
-
-                if (Number(date) < 10) {
-                  date = '0' + date;
-                }
-                return { year, month, date };
-              };
               const date = dateToString(order.createdAt);
               const dateString = date.year + date.month + date.date;
               return (
-                <TabPanel key={order.id}>
+                <TabPanel key={order.id} py={0}>
                   <Box {...TitleText} w="full" py="19px">
                     [{date.year} - {date.month} - {date.date}]
                   </Box>

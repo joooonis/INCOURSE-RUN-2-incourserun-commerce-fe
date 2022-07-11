@@ -25,6 +25,15 @@ export type OrderType = {
   id: number;
   user: number;
   createdAt: string;
+  shippingName: string;
+  shippingPhone: string;
+  shippingZipcode: string;
+  shippingAddress: string;
+  shippingAddressDetail: string;
+  shippingRequest: string;
+  payMethod: string;
+  deliveryFee: number;
+  totalPaid: number;
   orderProducts: orderProductType[];
   totalPrice: number;
 };
@@ -42,12 +51,31 @@ export interface SingleOrderProps {
 export interface SinglePayProps {
   product: ProductType;
   quantity: number;
+  isPayCompleted?: boolean;
 }
 export interface FormValues {
-  name: string;
-  phone: string;
-  address: string;
-  addressDetail: string;
+  user: number;
+  shippingName: string;
+  shippingPhone: string;
+  shippingZipcode: string;
+  shippingAddress: string;
+  shippingAddressDetail: string;
+  shippingRequest: string;
+  payMethod: string;
+  totalPrice: number;
+  deliveryFee: number;
+  totalPaid: number;
+  orderProducts: payProductType[];
+}
+
+export interface PayDataType {
+  user: number;
+  shippingName: string;
+  shippingPhone: string;
+  merchantUid: string;
+  shippingZipcode: string;
+  shippingAddress: string;
+  shippingAddressDetail: string;
   shippingRequest: string;
   payMethod: string;
   totalPrice: number;
