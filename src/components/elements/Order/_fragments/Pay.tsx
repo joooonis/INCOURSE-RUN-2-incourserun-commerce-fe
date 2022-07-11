@@ -94,9 +94,11 @@ function Pay() {
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsPayButtonActive(e.target.checked);
     setValue('shippingZipcode', '04015');
-
+    setValue('shippingName', '박태준');
+    setValue('shippingPhone', '010-4690-6756');
     setValue('totalPrice', 100);
     setValue('deliveryFee', 0);
+    setValue('payMethod', '신용카드');
     setValue('totalPaid', 100);
 
     setValue('user', 5);
@@ -153,12 +155,26 @@ function Pay() {
       };
       axios
         .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', data)
-        .then((res) => console.log(res.data));
-      alert('결제 성공');
+        .then((res) => {
+          if (res.data.status === 'paid')
+            router.push(`/order/pay/complete/${res.data.order.id}`);
+        });
     } else {
       alert(`결제 실패: ${error_msg}`);
     }
   }
+
+  const test = () => {
+    axios
+      .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', {
+        imp_uid: 'imp_328484503989',
+        merchant_uid: 'ORD220711-000049',
+      })
+      .then((res) => {
+        if (res.data.status === 'paid')
+          router.push(`/order/pay/complete/${res.data.order.id}`);
+      });
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,6 +185,7 @@ function Pay() {
         pb="80px"
         px="16px"
       >
+        <Button onClick={test}>테스트</Button>
         <Box {...TitleText} w="full">
           주문결제
         </Box>
