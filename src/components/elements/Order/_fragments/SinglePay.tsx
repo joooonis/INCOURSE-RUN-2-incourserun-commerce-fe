@@ -4,36 +4,39 @@ import priceToString from '@components/hooks/priceToString';
 
 import { SinglePayProps } from './types';
 
-function SinglePay({ product, quantity }: SinglePayProps) {
+function SinglePay({ product, quantity, isPayCompleted }: SinglePayProps) {
   return (
-    <>
-      <Flex
-        w="full"
-        py="10px"
-        justify="space-between"
-        alignItems="center"
-        borderTop="1px solid #F2F3F4"
-        borderBottom="1px solid #F2F3F4"
-      >
-        <Flex>
-          <Image
-            src="/images/order/product.png"
-            w="60px"
-            h="60px"
-            mr="10px"
-          ></Image>
-          <VStack spacing={0} alignItems="flex-start">
-            <Box {...TitleText}>{product.name}</Box>
-            <Box {...SubText}>
-              {product.name} | {product.capacity}ml
-            </Box>
-            <Box {...TitleText} color="primary.500">
-              {priceToString(product.price * quantity)}원 / {quantity}개
-            </Box>
-          </VStack>
-        </Flex>
+    <Flex
+      w="full"
+      py="10px"
+      justify="space-between"
+      alignItems="center"
+      borderTop={isPayCompleted ? 'none' : '1px solid #F2F3F4'}
+      borderBottom={isPayCompleted ? 'none' : '1px solid #F2F3F4'}
+    >
+      <Flex>
+        <Image
+          src="/images/order/product.png"
+          w="60px"
+          h="60px"
+          mr="10px"
+        ></Image>
+        <VStack spacing={0} alignItems="flex-start">
+          <Box {...TitleText}>{product.name}</Box>
+          <Box {...SubText}>
+            {product.name} | {product.capacity}ml
+          </Box>
+          <Box {...TitleText} color="primary.500">
+            {priceToString(product.price * quantity)}원 / {quantity}개
+          </Box>
+        </VStack>
       </Flex>
-    </>
+      {isPayCompleted && (
+        <Box {...TitleText} color="primary.500">
+          결제완료
+        </Box>
+      )}
+    </Flex>
   );
 }
 

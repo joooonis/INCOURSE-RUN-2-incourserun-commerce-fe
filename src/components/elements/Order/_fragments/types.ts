@@ -42,6 +42,7 @@ export interface SingleOrderProps {
 export interface SinglePayProps {
   product: ProductType;
   quantity: number;
+  isPayCompleted?: boolean;
 }
 export interface FormValues {
   user: number;
