@@ -24,6 +24,7 @@ function Item({
   const [visible, setVisible] = useState(true);
   const dispatch = useDispatch();
   const { itemCheckers } = useRootState((state) => state.ITEM);
+
   const target = itemCheckers.find((x) => x.id === item.id);
 
   const url = SERVER_URL.LOCAL + '/v1/carts/';
@@ -57,7 +58,7 @@ function Item({
     }
   };
 
-  const onChange = (e: any) => {
+  const onChange = () => {
     dispatch(checkItem(item.id));
   };
 
@@ -91,6 +92,7 @@ function Item({
           left="16px"
           top="20px"
           onChange={onChange}
+          isChecked={target?.checked}
         ></Checkbox>
         <Box
           position="absolute"

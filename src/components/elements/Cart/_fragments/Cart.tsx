@@ -34,8 +34,9 @@ function Cart() {
   console.log(itemCheckers);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target && e.target.checked) dispatch(checkAllItem);
-    else dispatch(unCheckAllItem);
+    if (e.target.checked) {
+      dispatch(checkAllItem());
+    } else dispatch(unCheckAllItem());
   };
 
   const gotoProduct = () => {
@@ -112,7 +113,7 @@ function Cart() {
                 colorScheme="primary"
                 pr="10px"
                 alignSelf="center"
-                // onChange={onChange}
+                onChange={onChange}
               ></Checkbox>
               모두선택
             </Flex>
