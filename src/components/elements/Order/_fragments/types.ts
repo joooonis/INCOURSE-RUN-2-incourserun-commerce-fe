@@ -44,10 +44,28 @@ export interface SinglePayProps {
   quantity: number;
 }
 export interface FormValues {
-  name: string;
-  phone: string;
-  address: string;
-  addressDetail: string;
+  user: number;
+  shippingName: string;
+  shippingPhone: string;
+  shippingZipcode: string;
+  shippingAddress: string;
+  shippingAddressDetail: string;
+  shippingRequest: string;
+  payMethod: string;
+  totalPrice: number;
+  deliveryFee: number;
+  totalPaid: number;
+  orderProducts: payProductType[];
+}
+
+export interface PayDataType {
+  user: number;
+  shippingName: string;
+  shippingPhone: string;
+  merchantUid: string;
+  shippingZipcode: string;
+  shippingAddress: string;
+  shippingAddressDetail: string;
   shippingRequest: string;
   payMethod: string;
   totalPrice: number;
