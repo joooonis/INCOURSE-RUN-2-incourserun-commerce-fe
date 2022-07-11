@@ -29,7 +29,7 @@ function SingleOrder({
   };
   return (
     <>
-      <Flex py="10px" justify="space-between" alignItems="center">
+      <Flex w="full" py="10px" justify="space-between" alignItems="center">
         <Flex>
           <Image
             src="/images/order/product.png"

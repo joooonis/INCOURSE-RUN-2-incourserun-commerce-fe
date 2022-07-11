@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Router from 'next/router';
 import React, { useState } from 'react';
 
 import axios from 'axios';
@@ -55,6 +56,16 @@ function Card({ product }: CardProps) {
         quantity: quantity,
       })
       .then((res) => console.log(res));
+  };
+
+  const SendQuery = () => {
+    Router.push({
+      pathname: '/order/pay',
+      query: {
+        product: product.id,
+        quantity: quantity,
+      },
+    });
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -291,6 +302,7 @@ function Card({ product }: CardProps) {
                   borderRadius="25px"
                   size="sd"
                   py="12px"
+                  onClick={SendQuery}
                 >
                   바로구매
                 </Button>

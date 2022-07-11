@@ -1,3 +1,4 @@
 import Order from './_fragments/OrderPage';
+import Pay from './_fragments/PayPage';
 
-export default Order;
+export { Order, Pay };
