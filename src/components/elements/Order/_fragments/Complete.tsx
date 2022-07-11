@@ -3,17 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import axios from 'axios';
 
-import {
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  HStack,
-  Image,
-  Input,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react';
 
 import { dateToString, findProduct, priceToString } from '@components/hooks';
 
@@ -30,7 +20,6 @@ function Complete() {
   useEffect(() => {
     if (id && id > 0) {
       axios.get(`${SERVER_URL.LOCAL + '/v1/orders'}/${id}`).then((res) => {
-        console.log(res.data);
         setOrder(res.data);
       });
     }
@@ -213,14 +202,6 @@ const PayText = {
   fontWeight: 400,
   fontSize: '16px',
   lineHeight: '28px',
-};
-
-const NameStyle = {
-  fontSize: '12px',
-  color: 'primary.500',
-  fontWeight: 700,
-  lineheight: '18px',
-  pb: '10px',
 };
 
 const ButtonText = {

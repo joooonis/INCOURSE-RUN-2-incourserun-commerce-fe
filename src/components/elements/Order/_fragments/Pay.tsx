@@ -45,8 +45,6 @@ function Pay() {
     deliveryFee = 0;
   } else deliveryFee = 3000;
 
-  console.log(deliveryFee);
-
   const [orderer, setOrderer] = useState<OrdererType>();
 
   useEffect(() => {
@@ -114,10 +112,7 @@ function Pay() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
-
     axios.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
-      console.log(res);
       onClickPayment(res.data);
     });
   };
@@ -148,7 +143,6 @@ function Pay() {
   function callback(response: any) {
     const { success, merchant_uid, imp_uid, error_msg } = response;
     if (success) {
-      console.log(response);
       const data = {
         imp_uid: imp_uid,
         merchant_uid: merchant_uid,
