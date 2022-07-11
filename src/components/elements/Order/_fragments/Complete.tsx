@@ -1,6 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
+import axios from 'axios';
+
 import {
   Box,
   Button,
@@ -13,29 +15,77 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import { dateToString, findProduct, priceToString } from '@components/hooks';
+
+import { SERVER_URL } from '../../urls';
 import SinglePay from './SinglePay';
+import { OrderType, ProductType } from './types';
 
 function Complete() {
+  const router = useRouter();
+  const id = Number(router.query.id);
+  const [order, setOrder] = useState<OrderType>();
+  const [products, setProducts] = useState<ProductType[]>();
+
+  useEffect(() => {
+    if (id && id > 0) {
+      axios.get(`${SERVER_URL.LOCAL + '/v1/orders'}/${id}`).then((res) => {
+        console.log(res.data);
+        setOrder(res.data);
+      });
+    }
+
+    axios
+      .get(SERVER_URL.LOCAL + '/v1/products')
+      .then((res) => setProducts(res.data));
+  }, [id]);
+
+  let date;
+  if (order) {
+    date = dateToString(order.createdAt);
+  }
+
+  const goToMain = () => {
+    router.push('/');
+  };
+
+  const goToOrder = () => {
+    router.push('/order');
+  };
+
   return (
     <>
       <VStack spacing={0} alignItems="flex-start" pt="130px" px="16px">
         <Box {...TitleText} w="full" pb="80px">
           결제내역
         </Box>
-        <Box
-          {...DateText}
-          w="full"
-          py="19px"
-          borderTop="1px solid #F9F9F9"
-          borderBottom="1px solid #F9F9F9"
-        >
-          [2021 - 04 - 01]
-        </Box>
-        <SinglePay
-          product={{ id: 3, name: '샴푸 & 바디', capacity: 120, price: 27000 }}
-          quantity={1}
-          isPayCompleted
-        ></SinglePay>
+
+        {order && date && (
+          <Box
+            {...DateText}
+            w="full"
+            py="19px"
+            borderTop="1px solid #F9F9F9"
+            borderBottom="1px solid #F9F9F9"
+          >
+            [{date.year} - {date.month} - {date.date}]
+          </Box>
+        )}
+
+        {order?.orderProducts &&
+          products &&
+          order.orderProducts.map((orderProduct) => {
+            const targeProduct = findProduct(products, orderProduct.product);
+            return (
+              <SinglePay
+                key={orderProduct.id}
+                product={targeProduct}
+                quantity={orderProduct.quantity}
+                isPayCompleted
+              ></SinglePay>
+            );
+          })}
+
         <Box w="full" h="10px" bg="gray.100"></Box>
         <Flex {...SubTitleText} w="full" h="55px" alignItems="center">
           배송지 정보
@@ -50,26 +100,28 @@ function Complete() {
         >
           <HStack spacing="10px" w="full">
             <Box w="92px">이름</Box>
-            <Box color="gray.700">김인코스런</Box>
+            <Box color="gray.700">{order?.shippingName}</Box>
           </HStack>
           <HStack spacing="10px" w="full">
             <Box w="92px">핸드폰 번호</Box>
-            <Box color="gray.700">010-1234-1234</Box>
+            <Box color="gray.700">{order?.shippingPhone}</Box>
           </HStack>
           <HStack spacing="10px" w="full">
             <Box w="92px">우편번호</Box>
-            <Box color="gray.700">01234</Box>
+            <Box color="gray.700">{order?.shippingZipcode}</Box>
           </HStack>
-          <HStack spacing="10px" w="full">
+          <HStack spacing="10px" w="full" alignItems="flex-start">
             <Box w="92px">주소</Box>
             <Box w="214px" color="gray.700">
-              서울특별시 마포구 성산동 123-3 성산빌딩 B동 502호
+              {order?.shippingAddress} {order?.shippingAddressDetail}
             </Box>
           </HStack>
-          <HStack spacing="10px" w="full">
-            <Box w="92px">배송요청사항</Box>
-            <Box color="gray.700">문앞에 두고 가주세요</Box>
-          </HStack>
+          {order?.shippingRequest && (
+            <HStack spacing="10px" w="full">
+              <Box w="92px">배송요청사항</Box>
+              <Box color="gray.700">{order?.shippingRequest}</Box>
+            </HStack>
+          )}
         </VStack>
       </VStack>
       <Box w="full" h="10px" bg="gray.100"></Box>
@@ -88,20 +140,20 @@ function Complete() {
         >
           <HStack w="full" justify="space-between">
             <Box>총 상품금액</Box>
-            <Box>27,000 원</Box>
+            <Box>{priceToString(order?.totalPrice)} 원</Box>
           </HStack>
           <HStack w="full" justify="space-between">
             <Box>총 배송비</Box>
-            <Box>2,500 원</Box>
+            <Box>{priceToString(order?.deliveryFee)} 원</Box>
           </HStack>
           <HStack w="full" justify="space-between">
             <Box>결제수단</Box>
-            <Box fontWeight="700">신용카드 결제</Box>
+            <Box fontWeight="700">{order?.payMethod} 결제</Box>
           </HStack>
           <HStack w="full" pt="35px" justify="space-between">
             <Box color="#1A1A1A">결제금액</Box>
             <Box color="primary.500" fontWeight="700">
-              29,500 원
+              {priceToString(order?.totalPaid)} 원
             </Box>
           </HStack>
         </VStack>
@@ -115,6 +167,7 @@ function Complete() {
             h="50px"
             py="12px"
             type="submit"
+            onClick={goToMain}
           >
             메인화면 이동
           </Button>
@@ -126,6 +179,7 @@ function Complete() {
             h="50px"
             py="12px"
             type="submit"
+            onClick={goToOrder}
           >
             주문내역 이동
           </Button>
