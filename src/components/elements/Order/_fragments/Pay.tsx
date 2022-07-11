@@ -35,15 +35,19 @@ function Pay() {
   const router = useRouter();
   const { product, quantity } = router.query;
 
+  const [order, setOrder] = useState<ProductType>();
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [total, setTotal] = useState<number>();
+  const [deliveryFee, setDeliveryFee] = useState<number>();
 
-  const order = findProduct(products, Number(product));
-  const total = order?.price * Number(quantity);
+  useEffect(() => {
+    const order = findProduct(products, Number(product));
+    setOrder(order);
+    setTotal(order?.price * Number(quantity));
 
-  let deliveryFee: number;
-  if (total >= 30000) {
-    deliveryFee = 0;
-  } else deliveryFee = 3000;
+    if (order?.price * Number(quantity) >= 30000) setDeliveryFee(0);
+    else setDeliveryFee(3000);
+  }, [products]);
 
   const [orderer, setOrderer] = useState<OrdererType>();
 
@@ -101,14 +105,15 @@ function Pay() {
 
     setValue('user', 5);
 
-    if (getValues('payMethod')) setValue('payMethod', '신용카드');
-
-    const SingleOrderProduct: payProductType = {
-      product: Number(product),
-      quantity: Number(quantity),
-      price: order.price,
-    };
-    setValue('orderProducts', [SingleOrderProduct]);
+    // if (getValues('payMethod')) setValue('payMethod', '신용카드');
+    if (order) {
+      const SingleOrderProduct: payProductType = {
+        product: Number(product),
+        quantity: Number(quantity),
+        price: order.price,
+      };
+      setValue('orderProducts', [SingleOrderProduct]);
+    }
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -347,18 +352,18 @@ function Pay() {
           <VStack {...PayText} spacing="10px" w="full" pb="20px">
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 상품금액</Box>
-              <Box>{priceToString(total)} 원</Box>
+              <Box>{total && priceToString(total)} 원</Box>
             </Flex>
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 배송비</Box>
-              <Box>{priceToString(deliveryFee)} 원 </Box>
+              <Box>{deliveryFee && priceToString(deliveryFee)} 원 </Box>
             </Flex>
           </VStack>
           <Box w="full" h="1px" bg="gray.200"></Box>
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {priceToString(total)}
+              {total && deliveryFee && priceToString(total + deliveryFee)} 원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>
