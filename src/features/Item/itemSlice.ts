@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 type ItemChecker = {
   id: number;
   checked: boolean;
+  product: number;
   price: number;
   quantity: number;
 };
@@ -19,6 +20,7 @@ const initialState: ItemState = {
 
 type ItemSliceActionType = {
   id: number;
+  product: number;
   price: number;
   quantity: number;
 };
@@ -31,6 +33,7 @@ export const itemSlice = createSlice({
       const newItem = {
         id: action.payload.id,
         checked: false,
+        product: action.payload.product,
         price: action.payload.price,
         quantity: action.payload.quantity,
       };

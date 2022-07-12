@@ -20,12 +20,11 @@ import { findProduct, priceToString } from '@components/hooks';
 import { useRootState } from '@components/hooks/useRootState';
 
 import Item from './Item';
-import { ItemType, ProductType } from './types';
+import { ItemType, ProductType, QueryType } from './types';
 
 function Cart() {
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [products, setProducts] = useState<ProductType[]>();
-
   const { itemCheckers, total } = useRootState((state) => state.ITEM);
 
   const router = useRouter();
@@ -38,7 +37,36 @@ function Cart() {
   };
 
   const gotoProduct = () => {
-    router.replace('./products');
+    router.push('/products');
+  };
+
+  const goToCartPay = async () => {
+    if (!itemCheckers.find((item) => item.checked)) return;
+
+    const makeQueries = async () => {
+      const queries: QueryType[] = [];
+      await itemCheckers.forEach((item) => {
+        if (item.checked) {
+          const checkedItem = {
+            product: item.product,
+            quantity: item.quantity,
+          };
+          queries.push(checkedItem);
+        }
+      });
+
+      return queries;
+    };
+
+    const queries = await makeQueries();
+
+    router.push(
+      {
+        pathname: 'cart/pay',
+        query: { checked: JSON.stringify(queries) },
+      },
+      // 'cart/pay/checked',
+    );
   };
 
   const calculateTotalPrice = (products: ProductType[], items: ItemType[]) => {
@@ -89,6 +117,7 @@ function Cart() {
         dispatch(
           addItem({
             id: item.id,
+            product: targeProduct.id,
             price: targeProduct.price,
             quantity: item.quantity,
           }),
@@ -187,6 +216,7 @@ function Cart() {
               p="0px 15px"
               borderRadius="25px"
               size="lg"
+              onClick={goToCartPay}
             >
               결제하기
             </Button>

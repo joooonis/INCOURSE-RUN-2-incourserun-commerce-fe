@@ -26,6 +26,11 @@ type Hashtag = {
   id: number;
   name: string;
 };
+
+export type QueryType = {
+  product: number;
+  quantity: number;
+};
 export interface ItemPropsType {
   product: ProductType;
   item: ItemChecker;
