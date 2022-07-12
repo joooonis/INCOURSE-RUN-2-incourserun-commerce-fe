@@ -15,15 +15,22 @@ export type ItemType = {
   quantity: number;
 };
 
+export type ItemChecker = {
+  id: number;
+  checked: boolean;
+  price: number;
+  quantity: number;
+};
+
 type Hashtag = {
   id: number;
   name: string;
 };
 export interface ItemPropsType {
   product: ProductType;
-  item: ItemType;
+  item: ItemChecker;
   incTotal: Function;
   decTotal: Function;
-  deleteItem: Function;
+  // deleteItem: Function;
   checkItem: Function;
 }
