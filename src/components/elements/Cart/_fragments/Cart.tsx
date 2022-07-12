@@ -40,6 +40,14 @@ function Cart() {
     router.push('/products');
   };
 
+  useEffect(() => {
+    let total = 0;
+    itemCheckers.forEach((item) => {
+      if (item.checked) total += item.price * item.quantity;
+    });
+    dispatch(setTotal(total));
+  }, [itemCheckers]);
+
   const goToCartPay = async () => {
     if (!itemCheckers.find((item) => item.checked)) return;
 
@@ -60,25 +68,10 @@ function Cart() {
 
     const queries = await makeQueries();
 
-    router.push(
-      {
-        pathname: 'cart/pay',
-        query: { checked: JSON.stringify(queries) },
-      },
-      // 'cart/pay/checked',
-    );
-  };
-
-  const calculateTotalPrice = (products: ProductType[], items: ItemType[]) => {
-    if (!products || !items) return;
-    else {
-      let totalPrice = 0;
-      items.forEach((item) => {
-        const price = item.quantity * findProduct(products, item.product).price;
-        totalPrice += price;
-      });
-      dispatch(setTotal(totalPrice));
-    }
+    router.push({
+      pathname: 'cart/pay',
+      query: { checked: JSON.stringify(queries) },
+    });
   };
 
   useEffect(() => {
@@ -93,7 +86,6 @@ function Cart() {
 
         setProducts(res1.data);
         setItems(res2.data);
-        calculateTotalPrice(res1.data, res2.data);
       } catch (err) {
         console.log(err);
       }
@@ -143,7 +135,7 @@ function Cart() {
 
   return (
     <Box pt="80px" pb="50px">
-      {total !== 0 ? (
+      {itemCheckers.length !== 0 ? (
         <>
           <Flex
             {...TextStyle}

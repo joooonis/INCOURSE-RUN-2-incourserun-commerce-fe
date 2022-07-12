@@ -18,7 +18,6 @@ import {
 
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
-import { useRootState } from '@components/hooks/useRootState';
 
 import SinglePay from './SinglePay';
 import {
@@ -34,22 +33,41 @@ function CartPay() {
 
   const router = useRouter();
   const { checked } = router.query;
-  if (typeof checked === 'string') console.log(JSON.parse(checked));
 
-  const [order, setOrder] = useState<ProductType>();
+  const [orders, setOrders] = useState<ProductType[]>([]);
+  const [quantities, setQuantities] = useState<number[]>([]);
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [total, setTotal] = useState<number>(0);
+
   const [deliveryFee, setDeliveryFee] = useState<number>();
-  const { itemCheckers, total } = useRootState((state) => state.ITEM);
 
-  // console.log(itemCheckers);
-  // useEffect(() => {
-  //   const order = findProduct(products, Number(product));
-  //   setOrder(order);
-  //   setTotal(order?.price * Number(quantity));
+  useEffect(() => {
+    if (typeof checked === 'string') {
+      const queries = JSON.parse(checked);
+      if (queries) {
+        queries?.forEach((query: any) => {
+          const order = findProduct(products, Number(query.product));
+          if (order) {
+            setOrders((orders) => [...orders, order]);
+            setQuantities((quantities) => [...quantities, query.quantity]);
+          }
+        });
+      }
+    }
+  }, [products]);
 
-  //   if (order?.price * Number(quantity) >= 30000) setDeliveryFee(0);
-  //   else setDeliveryFee(3000);
-  // }, [products]);
+  useEffect(() => {
+    if (orders && quantities) {
+      let sum = 0;
+      for (let i = 0; i < orders.length; i++) {
+        sum += +orders[i].price * quantities[i];
+      }
+      setTotal(sum);
+
+      if (sum >= 30000) setDeliveryFee(0);
+      else setDeliveryFee(3000);
+    }
+  }, [orders, quantities]);
 
   const [orderer, setOrderer] = useState<OrdererType>();
 
@@ -194,9 +212,17 @@ function CartPay() {
           <Box {...SubTitleText} w="full" pt="80px" pb="11px">
             주문상품
           </Box>
-          {/* {order && quantity && (
-            <SinglePay product={order} quantity={Number(quantity)}></SinglePay>
-          )} */}
+          {orders &&
+            quantities &&
+            orders.map((order, index) => {
+              return (
+                <SinglePay
+                  key={index}
+                  product={order}
+                  quantity={quantities[index]}
+                ></SinglePay>
+              );
+            })}
         </Box>
         <Box w="full">
           <Box {...SubTitleText} pt="45px" pb="40px" w="full">
@@ -354,7 +380,7 @@ function CartPay() {
           <VStack {...PayText} spacing="10px" w="full" pb="20px">
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 상품금액</Box>
-              {/* <Box>{total && priceToString(total)} 원</Box> */}
+              <Box>{total && priceToString(total)} 원</Box>
             </Flex>
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 배송비</Box>
@@ -365,7 +391,7 @@ function CartPay() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {/* {total && deliveryFee && priceToString(total + deliveryFee)} 원 */}
+              {total && deliveryFee && priceToString(total + deliveryFee)} 원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>
