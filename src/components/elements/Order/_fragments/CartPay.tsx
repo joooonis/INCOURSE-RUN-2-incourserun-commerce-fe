@@ -18,6 +18,7 @@ import {
 
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
+import { useRootState } from '@components/hooks/useRootState';
 
 import SinglePay from './SinglePay';
 import {
@@ -28,25 +29,27 @@ import {
   payProductType,
 } from './types';
 
-function Pay() {
+function CartPay() {
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
-  const { product, quantity } = router.query;
+  const { checked } = router.query;
+  if (typeof checked === 'string') console.log(JSON.parse(checked));
 
   const [order, setOrder] = useState<ProductType>();
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [total, setTotal] = useState<number>();
   const [deliveryFee, setDeliveryFee] = useState<number>();
+  const { itemCheckers, total } = useRootState((state) => state.ITEM);
 
-  useEffect(() => {
-    const order = findProduct(products, Number(product));
-    setOrder(order);
-    setTotal(order?.price * Number(quantity));
+  // console.log(itemCheckers);
+  // useEffect(() => {
+  //   const order = findProduct(products, Number(product));
+  //   setOrder(order);
+  //   setTotal(order?.price * Number(quantity));
 
-    if (order?.price * Number(quantity) >= 30000) setDeliveryFee(0);
-    else setDeliveryFee(3000);
-  }, [products]);
+  //   if (order?.price * Number(quantity) >= 30000) setDeliveryFee(0);
+  //   else setDeliveryFee(3000);
+  // }, [products]);
 
   const [orderer, setOrderer] = useState<OrdererType>();
 
@@ -105,14 +108,14 @@ function Pay() {
     setValue('user', 5);
 
     // if (getValues('payMethod')) setValue('payMethod', '신용카드');
-    if (order) {
-      const SingleOrderProduct: payProductType = {
-        product: Number(product),
-        quantity: Number(quantity),
-        price: order.price,
-      };
-      setValue('orderProducts', [SingleOrderProduct]);
-    }
+    // if (order) {
+    //   const SingleOrderProduct: payProductType = {
+    //     product: Number(product),
+    //     quantity: Number(quantity),
+    //     price: order.price,
+    //   };
+    //   setValue('orderProducts', [SingleOrderProduct]);
+    // }
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -191,9 +194,9 @@ function Pay() {
           <Box {...SubTitleText} w="full" pt="80px" pb="11px">
             주문상품
           </Box>
-          {order && quantity && (
+          {/* {order && quantity && (
             <SinglePay product={order} quantity={Number(quantity)}></SinglePay>
-          )}
+          )} */}
         </Box>
         <Box w="full">
           <Box {...SubTitleText} pt="45px" pb="40px" w="full">
@@ -351,7 +354,7 @@ function Pay() {
           <VStack {...PayText} spacing="10px" w="full" pb="20px">
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 상품금액</Box>
-              <Box>{total && priceToString(total)} 원</Box>
+              {/* <Box>{total && priceToString(total)} 원</Box> */}
             </Flex>
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 배송비</Box>
@@ -362,7 +365,7 @@ function Pay() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {/* {total && deliveryFee && priceToString(total + deliveryFee)} 원 */}
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>
@@ -395,7 +398,7 @@ function Pay() {
   );
 }
 
-export default Pay;
+export default CartPay;
 
 const TitleText = {
   fontWeight: 700,

@@ -10,40 +10,63 @@ import {
   addItem,
   checkAllItem,
   checkItem,
+  setTotal,
   unCheckAllItem,
 } from '@features/Item/itemSlice';
+import { removeItem } from '@features/Item/itemSlice';
 
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 import { useRootState } from '@components/hooks/useRootState';
 
 import Item from './Item';
-import { ItemType, ProductType } from './types';
+import { ItemType, ProductType, QueryType } from './types';
 
 function Cart() {
   const [items, setItems] = useState<ItemType[] | null>(null);
-  const [total, setTotal] = useState<number>(0);
   const [products, setProducts] = useState<ProductType[]>();
-  const [itemCounter, setItemCounter] = useState<number>(0);
-
-  const { itemCheckers } = useRootState((state) => state.ITEM);
+  const { itemCheckers, total } = useRootState((state) => state.ITEM);
 
   const router = useRouter();
   const dispatch = useDispatch();
 
-  console.log(itemCheckers);
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target && e.target.checked) dispatch(checkAllItem);
-    else dispatch(unCheckAllItem);
+    if (e.target.checked) {
+      dispatch(checkAllItem());
+    } else dispatch(unCheckAllItem());
   };
 
   const gotoProduct = () => {
-    router.replace('./products');
+    router.push('/products');
   };
 
-  const deleteItem = () => {
-    setItemCounter((counter) => counter - 1);
+  const goToCartPay = async () => {
+    if (!itemCheckers.find((item) => item.checked)) return;
+
+    const makeQueries = async () => {
+      const queries: QueryType[] = [];
+      await itemCheckers.forEach((item) => {
+        if (item.checked) {
+          const checkedItem = {
+            product: item.product,
+            quantity: item.quantity,
+          };
+          queries.push(checkedItem);
+        }
+      });
+
+      return queries;
+    };
+
+    const queries = await makeQueries();
+
+    router.push(
+      {
+        pathname: 'cart/pay',
+        query: { checked: JSON.stringify(queries) },
+      },
+      // 'cart/pay/checked',
+    );
   };
 
   const calculateTotalPrice = (products: ProductType[], items: ItemType[]) => {
@@ -54,7 +77,7 @@ function Cart() {
         const price = item.quantity * findProduct(products, item.product).price;
         totalPrice += price;
       });
-      setTotal(totalPrice);
+      dispatch(setTotal(totalPrice));
     }
   };
 
@@ -70,7 +93,6 @@ function Cart() {
 
         setProducts(res1.data);
         setItems(res2.data);
-        setItemCounter(res2.data.length);
         calculateTotalPrice(res1.data, res2.data);
       } catch (err) {
         console.log(err);
@@ -79,25 +101,49 @@ function Cart() {
     fetchURL();
   }, []);
 
-  const incTotal = (price: number) => {
-    setTotal((total) => total + price);
+  const incTotal = (price: number, t: number = total) => {
+    dispatch(setTotal(t + price));
   };
 
-  const decTotal = (price: number) => {
-    setTotal((total) => total - price);
+  const decTotal = (price: number, t: number = total) => {
+    dispatch(setTotal(t - price));
   };
 
   useEffect(() => {
-    if (items) {
+    if (items && products) {
       items.forEach((item: ItemType) => {
-        dispatch(addItem(item.id));
+        const targeProduct = findProduct(products, item.product);
+
+        dispatch(
+          addItem({
+            id: item.id,
+            product: targeProduct.id,
+            price: targeProduct.price,
+            quantity: item.quantity,
+          }),
+        );
       });
     }
   }, [items]);
 
+  const deleteSelectedItem = () => {
+    let dec = 0;
+    for (const item of itemCheckers.filter((item) => item.checked)) {
+      dec += item.quantity * item.price;
+    }
+    decTotal(dec);
+
+    for (const item of itemCheckers.filter((item) => item.checked)) {
+      axios
+        .delete(SERVER_URL.LOCAL + '/v1/carts/' + item.id)
+        .then((res) => console.log(res));
+      dispatch(removeItem(item.id));
+    }
+  };
+
   return (
     <Box pt="80px" pb="50px">
-      {itemCounter !== 0 ? (
+      {total !== 0 ? (
         <>
           <Flex
             {...TextStyle}
@@ -112,28 +158,31 @@ function Cart() {
                 colorScheme="primary"
                 pr="10px"
                 alignSelf="center"
-                // onChange={onChange}
+                onChange={onChange}
               ></Checkbox>
               모두선택
             </Flex>
-            <Box>선택삭제</Box>
+            <Box _hover={{ cursor: 'pointer' }} onClick={deleteSelectedItem}>
+              선택삭제
+            </Box>
           </Flex>
           <VStack mt="10px" spacing="30px">
             {items &&
               products &&
               items.map((item: ItemType, index) => {
                 const targeProduct = findProduct(products, item.product);
-                return (
-                  <Item
-                    key={index}
-                    product={targeProduct}
-                    item={item}
-                    incTotal={incTotal}
-                    decTotal={decTotal}
-                    deleteItem={deleteItem}
-                    checkItem={checkItem}
-                  ></Item>
-                );
+                const targetItem = itemCheckers.find((x) => x.id === item.id);
+                if (targeProduct && targetItem)
+                  return (
+                    <Item
+                      key={index}
+                      product={targeProduct}
+                      item={targetItem}
+                      incTotal={incTotal}
+                      decTotal={decTotal}
+                      checkItem={checkItem}
+                    ></Item>
+                  );
               })}
           </VStack>
           <VStack spacing={0} px="16px" pt="20px" mt="10px" pb="30px">
@@ -143,7 +192,7 @@ function Cart() {
             </Flex>
             <Flex {...TextStyle} pt="10px" w="full" justify="space-between">
               <Box>총 배송비</Box>
-              <Box>0 원</Box>
+              <Box>{total > 30000 ? '0 원' : '3,000 원'}</Box>
             </Flex>
             <Flex
               {...TextStyle}
@@ -155,7 +204,10 @@ function Cart() {
             >
               <Box>결제금액</Box>
               <Box color="primary.500" fontWeight="700">
-                {priceToString(total)} 원
+                {total > 30000
+                  ? priceToString(total)
+                  : priceToString(total + 3000)}
+                원
               </Box>
             </Flex>
             <Button
@@ -164,6 +216,7 @@ function Cart() {
               p="0px 15px"
               borderRadius="25px"
               size="lg"
+              onClick={goToCartPay}
             >
               결제하기
             </Button>
