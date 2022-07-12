@@ -101,7 +101,6 @@ function Pay() {
     setValue('deliveryFee', 0);
     setValue('payMethod', '신용카드');
     setValue('totalPaid', 100);
-
     setValue('user', 5);
 
     // if (getValues('payMethod')) setValue('payMethod', '신용카드');
@@ -117,12 +116,14 @@ function Pay() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     axios.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
+      console.log(res.data);
       onClickPayment(res.data);
     });
   };
 
   function onClickPayment(payData: PayDataType) {
     /* 1. 가맹점 식별하기 */
+
     const { IMP } = window;
     IMP.init('imp39787589');
 
@@ -338,7 +339,7 @@ function Pay() {
             <Checkbox
               size="lg"
               colorScheme="primary"
-              {...register('payMethod')}
+              // {...register('payMethod')}
             />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>
