@@ -163,7 +163,7 @@ function Cart() {
             </Flex>
             <Flex {...TextStyle} pt="10px" w="full" justify="space-between">
               <Box>총 배송비</Box>
-              <Box>0 원</Box>
+              <Box>{total > 30000 ? '0 원' : '3,000 원'}</Box>
             </Flex>
             <Flex
               {...TextStyle}
@@ -175,7 +175,10 @@ function Cart() {
             >
               <Box>결제금액</Box>
               <Box color="primary.500" fontWeight="700">
-                {priceToString(total)} 원
+                {total > 30000
+                  ? priceToString(total)
+                  : priceToString(total + 3000)}
+                원
               </Box>
             </Flex>
             <Button

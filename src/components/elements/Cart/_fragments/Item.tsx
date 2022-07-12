@@ -9,10 +9,13 @@ import { decItem, incItem, removeItem } from '@features/Item/itemSlice';
 
 import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
+import { useRootState } from '@components/hooks/useRootState';
 
 import { ItemPropsType } from './types';
 
 function Item({ product, item, incTotal, decTotal, checkItem }: ItemPropsType) {
+  const { total } = useRootState((state) => state.ITEM);
+
   const dispatch = useDispatch();
 
   const url = SERVER_URL.LOCAL + '/v1/carts/';
@@ -195,7 +198,7 @@ function Item({ product, item, incTotal, decTotal, checkItem }: ItemPropsType) {
       </VStack>
       <Flex justify="space-between" w="full" pt="15px">
         <Box {...SubText} color="black">
-          배송비 무료
+          {total > 30000 ? '배송비 무료' : ''}
         </Box>
         <Box {...PriceText}>{priceToString(item.quantity * item.price)}원</Box>
       </Flex>
