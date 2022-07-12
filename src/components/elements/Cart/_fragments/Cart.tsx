@@ -31,13 +31,13 @@ function Cart() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  console.log(itemCheckers);
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       dispatch(checkAllItem());
     } else dispatch(unCheckAllItem());
   };
+
+  console.log(itemCheckers);
 
   const gotoProduct = () => {
     router.replace('./products');
@@ -96,6 +96,14 @@ function Cart() {
     }
   }, [items]);
 
+  const deleteSelectedItem = () => {
+    for (const x of itemCheckers.filter((x) => x.checked)) {
+      axios
+        .delete(SERVER_URL.LOCAL + '/v1/carts/' + x.id)
+        .then((res) => console.log(res));
+    }
+  };
+
   return (
     <Box pt="80px" pb="50px">
       {itemCounter !== 0 ? (
@@ -117,7 +125,9 @@ function Cart() {
               ></Checkbox>
               모두선택
             </Flex>
-            <Box>선택삭제</Box>
+            <Box _hover={{ cursor: 'pointer' }} onClick={deleteSelectedItem}>
+              선택삭제
+            </Box>
           </Flex>
           <VStack mt="10px" spacing="30px">
             {items &&

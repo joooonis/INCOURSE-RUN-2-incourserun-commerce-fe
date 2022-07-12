@@ -5,6 +5,8 @@ import axios from 'axios';
 
 import { Box, Checkbox, Flex, Image, Input, VStack } from '@chakra-ui/react';
 
+import { removeItem } from '@features/Item/itemSlice';
+
 import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 import { useRootState } from '@components/hooks/useRootState';
@@ -34,6 +36,7 @@ function Item({
     setVisible((visible) => !visible);
     decTotal(quantity * product.price);
     deleteItem();
+    dispatch(removeItem(item.id));
   };
 
   const decQuantity = () => {
