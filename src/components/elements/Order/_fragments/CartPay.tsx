@@ -99,13 +99,7 @@ function CartPay() {
     if (e.target.checked) {
       if (orderer?.name) setValue('shippingName', orderer?.name);
       if (orderer?.phone) setValue('shippingPhone', orderer?.phone);
-      // if (orderer?.address)
-      //   setValue(
-      //     'shippingAddress',
-      //     '서울특별시 마포구 망원동 398-9 (동광탑스빌)',
-      //   );
       if (orderer?.addressDetail) {
-        // setValue('shippingAddress', '502호');
         setValue('shippingZipcode', '04015');
       }
     } else reset();
@@ -122,21 +116,23 @@ function CartPay() {
     setValue('deliveryFee', 0);
     setValue('payMethod', '신용카드');
     setValue('totalPaid', 100);
-
     setValue('user', 5);
-
-    // if (getValues('payMethod')) setValue('payMethod', '신용카드');
-    // if (order) {
-    //   const SingleOrderProduct: payProductType = {
-    //     product: Number(product),
-    //     quantity: Number(quantity),
-    //     price: order.price,
-    //   };
-    //   setValue('orderProducts', [SingleOrderProduct]);
-    // }
+    if (orders && quantities) {
+      const orderProducts = [];
+      for (let i = 0; i < orders.length; i++) {
+        const SingleOrderProduct: payProductType = {
+          product: orders[i].id,
+          quantity: quantities[i],
+          price: orders[i].price,
+        };
+        orderProducts.push(SingleOrderProduct);
+      }
+      setValue('orderProducts', orderProducts);
+    }
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    console.log(data);
     axios.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
       onClickPayment(res.data);
     });
@@ -175,8 +171,8 @@ function CartPay() {
       axios
         .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', data)
         .then((res) => {
-          if (res.data.status === 'paid')
-            router.push(`/order/pay/complete/${res.data.order.id}`);
+          if (res.data.status === 'paid') console.log(res.data);
+          router.push(`/order/pay/complete/${res.data.order.id}`);
         });
     } else {
       alert(`결제 실패: ${error_msg}`);
@@ -204,7 +200,9 @@ function CartPay() {
         pb="80px"
         px="16px"
       >
-        <Button onClick={test}>테스트</Button>
+        <Button display="none" onClick={test}>
+          테스트
+        </Button>
         <Box {...TitleText} w="full">
           주문결제
         </Box>
@@ -367,7 +365,7 @@ function CartPay() {
             <Checkbox
               size="lg"
               colorScheme="primary"
-              {...register('payMethod')}
+              // {...register('payMethod')}
             />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>
