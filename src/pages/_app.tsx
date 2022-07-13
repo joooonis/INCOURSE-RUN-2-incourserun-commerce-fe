@@ -52,7 +52,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ToggleColorModeButton />
           <Component {...pageProps} />
         </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </Provider>
   );
