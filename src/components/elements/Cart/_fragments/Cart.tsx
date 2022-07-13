@@ -62,7 +62,6 @@ function Cart() {
           queries.push(checkedItem);
         }
       });
-
       return queries;
     };
 
@@ -83,7 +82,6 @@ function Cart() {
             user: 1, //여기에서 user id 를 수정합니다.
           },
         });
-
         setProducts(res1.data);
         setItems(res2.data);
       } catch (err) {
@@ -105,7 +103,6 @@ function Cart() {
     if (items && products) {
       items.forEach((item: ItemType) => {
         const targeProduct = findProduct(products, item.product);
-
         dispatch(
           addItem({
             id: item.id,
