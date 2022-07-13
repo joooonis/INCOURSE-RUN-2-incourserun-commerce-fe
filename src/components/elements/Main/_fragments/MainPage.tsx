@@ -6,7 +6,7 @@ import Main from './Main';
 import MainHeader from './MainHeader';
 
 function MainPage() {
-  return <Layout header={<MainHeader />} content={<Main />} />;
+  return <Layout content={<Main />} />;
 }
 
 export default MainPage;

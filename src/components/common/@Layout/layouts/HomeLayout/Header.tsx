@@ -3,13 +3,11 @@ import React from 'react';
 
 import {
   Box,
-  Button,
   Container,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerFooter,
   DrawerOverlay,
   Flex,
   Image,
@@ -22,10 +20,17 @@ import { LAYOUT } from '@constants/layout';
 function Header() {
   const router = useRouter();
   const gotoCart = () => {
-    router.replace(`/cart`);
+    router.push(`/cart`);
   };
   const gotoMain = () => {
-    router.replace(`/`);
+    router.push(`/`);
+  };
+  const gotoMyPage = () => {
+    router.push('/mypage');
+  };
+
+  const gotoProduct = () => {
+    router.push('/products');
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,9 +80,15 @@ function Header() {
               pt="46px"
               alignItems="flex-start"
             >
-              <Box>마이페이지</Box>
-              <Box>홈</Box>
-              <Box>상품보기</Box>
+              <Box onClick={gotoMyPage} _hover={{ cursor: 'pointer' }}>
+                마이페이지
+              </Box>
+              <Box onClick={gotoMain} _hover={{ cursor: 'pointer' }}>
+                홈
+              </Box>
+              <Box onClick={gotoProduct} _hover={{ cursor: 'pointer' }}>
+                상품보기
+              </Box>
             </VStack>
             <Flex {...TitleText} position="absolute" bottom="25px">
               <Image
