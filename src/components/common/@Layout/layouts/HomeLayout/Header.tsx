@@ -80,14 +80,14 @@ function Header() {
               pt="46px"
               alignItems="flex-start"
             >
-              <Box onClick={gotoMyPage} _hover={{ cursor: 'pointer' }}>
-                마이페이지
-              </Box>
               <Box onClick={gotoMain} _hover={{ cursor: 'pointer' }}>
                 홈
               </Box>
               <Box onClick={gotoProduct} _hover={{ cursor: 'pointer' }}>
                 상품보기
+              </Box>
+              <Box onClick={gotoMyPage} _hover={{ cursor: 'pointer' }}>
+                마이페이지
               </Box>
             </VStack>
             <Flex {...TitleText} position="absolute" bottom="25px">
