@@ -2,10 +2,10 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type ItemChecker = {
   id: number;
-  checked: boolean;
   product: number;
-  price: number;
   quantity: number;
+  price: number;
+  checked: boolean;
 };
 
 export interface ItemState {
