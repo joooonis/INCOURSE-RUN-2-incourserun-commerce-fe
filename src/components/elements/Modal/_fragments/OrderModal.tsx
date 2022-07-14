@@ -1,5 +1,3 @@
-import { useRouter } from 'next/router';
-
 import {
   Box,
   Flex,
@@ -10,34 +8,49 @@ import {
   ModalOverlay,
 } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+
 import PrimaryButton from '@components/common/Button';
 
 interface MyModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+interface OrderModalProps extends MyModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  merchantUid: string;
+}
 
-function CartModal({ isOpen, onClose }: MyModalProps) {
-  const router = useRouter();
-  const gotoCart = () => {
-    router.push('/cart');
+function OrderModal({ isOpen, onClose, merchantUid }: OrderModalProps) {
+  const cancelOrder = () => {
+    instance.post('/v1/orders/payment/cancel', {
+      merchantUid: merchantUid,
+      reason: '주문최소',
+    });
+    onClose();
   };
   return (
     <>
-      <Modal onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal
+        onClose={onClose}
+        isOpen={isOpen}
+        isCentered
+        closeOnOverlayClick={false}
+      >
         <ModalOverlay />
         <ModalContent w="343px">
           <ModalCloseButton size="lg" color="gray.600" top="25px" />
           <ModalBody pt={0} px="11px" pb="33px">
             <Box {...MessageStyle} textAlign="center" pt="110px" pb="80px">
-              장바구니에 상품이 담겼습니다.
+              주문취소 하시겠습니까?
             </Box>
             <Flex justify="space-between">
-              <PrimaryButton onClick={gotoCart} variant="outline" w="155px">
-                장바구니 이동
+              <PrimaryButton onClick={onClose} variant="outline" w="155px">
+                취소
               </PrimaryButton>
-              <PrimaryButton onClick={onClose} w="155px">
-                쇼핑 계속하기
+              <PrimaryButton onClick={cancelOrder} w="155px">
+                확인
               </PrimaryButton>
             </Flex>
           </ModalBody>
@@ -47,7 +60,7 @@ function CartModal({ isOpen, onClose }: MyModalProps) {
   );
 }
 
-export default CartModal;
+export default OrderModal;
 
 const MessageStyle = {
   fontWeight: 700,

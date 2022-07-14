@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { SERVER_URL } from '@components/elements/urls';
+
 import { CONFIG } from '@config';
 import { apiLogger } from '@utils/apiLogger';
 import { getToken } from '@utils/localStorage/token';
@@ -8,14 +10,12 @@ import styledConsole from '@utils/styledConsole';
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 5000,
+  // baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  baseURL: SERVER_URL.LOCAL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
-
-instance.defaults.withCredentials = true;
 
 const setAuthHeader = (token: string) => {
   if (token) {
