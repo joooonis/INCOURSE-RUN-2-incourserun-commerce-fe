@@ -10,11 +10,13 @@ import {
   Input,
   Textarea,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
+import { ReviewModal } from '@components/elements/Modal';
 import { findProduct, priceToString } from '@components/hooks';
 
 import {
@@ -143,7 +145,10 @@ function Review() {
 
     const formData = await buildFormDate(data);
 
-    instance.post('/v1/reviews', formData).then((res) => console.log(res));
+    instance.post('/v1/reviews', formData).then((res) => {
+      console.log(res);
+      onOpen();
+    });
   };
 
   useEffect(() => {
@@ -151,12 +156,15 @@ function Review() {
     setValue('rating', 0); // 별점 초기화
   }, []);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   if (products) {
     setValue('orderProduct', Number(id));
     setValue('user', 1);
     const targetProduct = findProduct(products, Number(product));
     return (
       <>
+        <ReviewModal isOpen={isOpen} onClose={onClose}></ReviewModal>
         <Box pt="130px" px="16px" pb="50px">
           <Box {...TitleStyle} w="full">
             리뷰작성

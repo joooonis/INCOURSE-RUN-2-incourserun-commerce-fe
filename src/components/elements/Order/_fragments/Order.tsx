@@ -59,6 +59,7 @@ function Order() {
                           hasReview={orderProduct.hasReview}
                           shippingStatus={orderProduct.shippingStatus}
                           isFreeDelivery={order.totalPrice >= 30000}
+                          merchantUid={order.merchantUid}
                         ></SingleOrder>
                       );
                     })}
