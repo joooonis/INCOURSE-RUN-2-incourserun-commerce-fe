@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
 import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import { SERVER_URL } from '@components/elements/urls';
 
@@ -77,7 +77,7 @@ function SingleReview({ review }: SingleReviewProps) {
 function MyReview() {
   const [myReviews, setMyReviews] = useState<ReviewType[]>();
   useEffect(() => {
-    axios
+    instance
       .get(SERVER_URL.LOCAL + '/v1/reviews', { params: { user: 1 } })
       .then((res) => {
         setMyReviews(res.data.results);

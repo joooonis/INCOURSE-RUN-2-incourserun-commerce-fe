@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import axios from 'axios';
-
 import {
   Box,
   Button,
@@ -15,6 +13,8 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
@@ -51,11 +51,11 @@ function Pay() {
   const [orderer, setOrderer] = useState<OrdererType>();
 
   useEffect(() => {
-    axios
+    instance
       .get(SERVER_URL.LOCAL + '/v1/products')
       .then((res) => setProducts(res.data));
 
-    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+    instance.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
       setOrderer({
         ...orderer,
         name: res.data.name,
@@ -115,7 +115,7 @@ function Pay() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    axios.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
+    instance.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
       console.log(res.data);
       onClickPayment(res.data);
     });
@@ -152,7 +152,7 @@ function Pay() {
         imp_uid: imp_uid,
         merchant_uid: merchant_uid,
       };
-      axios
+      instance
         .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', data)
         .then((res) => {
           if (res.data.status === 'paid')
@@ -164,7 +164,7 @@ function Pay() {
   }
 
   const test = () => {
-    axios
+    instance
       .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', {
         imp_uid: 'imp_328484503989',
         merchant_uid: 'ORD220711-000049',

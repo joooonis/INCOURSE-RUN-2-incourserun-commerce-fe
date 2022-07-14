@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import Router from 'next/router';
 import React, { useState } from 'react';
 
-import axios from 'axios';
-
 import {
   Box,
   Button,
@@ -52,7 +50,7 @@ function Card({ product }: CardProps) {
 
   const postCart = () => {
     const url = SERVER_URL.LOCAL + '/v1/carts';
-    axios
+    instance
       .post(url, {
         user: 1,
         product: product.id,

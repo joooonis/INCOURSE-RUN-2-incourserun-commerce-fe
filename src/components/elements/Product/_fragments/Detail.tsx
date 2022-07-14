@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import Router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
 import {
   Accordion,
   AccordionButton,
@@ -25,6 +23,8 @@ import {
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import { priceToString } from '@components/hooks';
 
@@ -165,11 +165,11 @@ function Detail() {
 
   useEffect(() => {
     if (id && id > 0) {
-      axios
+      instance
         .get(`${SERVER_URL.LOCAL + '/v1/products'}/${id}`)
         .then((res) => setDetail(res.data));
 
-      axios
+      instance
         .get(SERVER_URL.LOCAL + '/v1/reviews', {
           params: { product: id, ordering: 'created_at' },
         })
@@ -199,13 +199,13 @@ function Detail() {
 
   useEffect(() => {
     if (id && id > 0 && hasPhoto) {
-      axios
+      instance
         .get(SERVER_URL.LOCAL + '/v1/reviews', {
           params: { product: id, ordering: ordering, has_photo: true },
         })
         .then((res) => setReviews(res.data.results));
     } else if (id && id > 0 && !hasPhoto) {
-      axios
+      instance
         .get(SERVER_URL.LOCAL + '/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
@@ -228,7 +228,7 @@ function Detail() {
 
   const postCart = () => {
     const url = SERVER_URL.LOCAL + '/v1/carts';
-    axios
+    instance
       .post(url, {
         user: 1,
         product: detail?.id,

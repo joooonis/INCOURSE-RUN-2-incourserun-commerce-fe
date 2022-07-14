@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import axios from 'axios';
-
 import {
   Box,
   Flex,
@@ -13,6 +11,8 @@ import {
   Textarea,
   VStack,
 } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
 import { SERVER_URL } from '@components/elements/urls';
@@ -144,13 +144,13 @@ function Review() {
 
     const formData = await buildFormDate(data);
 
-    axios
+    instance
       .post(SERVER_URL.LOCAL + '/v1/reviews', formData)
       .then((res) => console.log(res));
   };
 
   useEffect(() => {
-    axios
+    instance
       .get(SERVER_URL.LOCAL + '/v1/products')
       .then((res) => setProducts(res.data));
     setValue('rating', 0); // 별점 초기화

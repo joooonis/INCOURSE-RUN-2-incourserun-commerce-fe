@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
 import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import { SERVER_URL } from '@components/elements/urls';
 import { dateToString, findProduct } from '@components/hooks';
@@ -15,7 +15,7 @@ function Order() {
   const [products, setProducts] = useState<ProductType[]>();
 
   useEffect(() => {
-    axios
+    instance
       .get(SERVER_URL.LOCAL + '/v1/orders', {
         params: {
           user: 1, //여기에서 user id 를 수정합니다.
@@ -23,7 +23,7 @@ function Order() {
       })
       .then((res) => setOrders(res.data));
 
-    axios
+    instance
       .get(SERVER_URL.LOCAL + '/v1/products')
       .then((res) => setProducts(res.data));
   }, []);

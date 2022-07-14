@@ -1,7 +1,7 @@
 import router from 'next/router';
 import React, { useEffect } from 'react';
 
-import axios from 'axios';
+import instance from '@apis/_axios/instance';
 
 import { SERVER_URL } from '@components/elements/urls';
 
@@ -9,7 +9,7 @@ const Kakao = () => {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
 
-    axios
+    instance
       .post(SERVER_URL.LOCAL + '/v1/users/social_login', {
         code: code,
         state: 'kakao',

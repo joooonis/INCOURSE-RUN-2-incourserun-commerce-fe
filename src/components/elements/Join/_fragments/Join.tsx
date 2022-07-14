@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import axios from 'axios';
-
 import {
   Avatar,
   AvatarBadge,
@@ -22,6 +20,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+
 import { SERVER_URL } from '@components/elements/urls';
 
 import JoinInput from './JoinInput';
@@ -38,7 +38,7 @@ function Join() {
 
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+    instance.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
       setUser(res.data);
       if (res.data.avatar) setPreview(res.data.avatar);
     });
@@ -71,13 +71,13 @@ function Join() {
       (img && data.agreeAllTerms) ||
       (img && data.requiredTerms && data.marketingTerms)
     ) {
-      axios
+      instance
         .patch(SERVER_URL.LOCAL + '/v1/users/5', data)
         .then((res) => console.log(res.data));
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
-      axios
+      instance
         .patch(SERVER_URL.LOCAL + '/v1/users/5', formData)
         .then((res) => console.log(res.data));
       router.replace('join/success');
@@ -85,7 +85,7 @@ function Join() {
       data.agreeAllTerms ||
       (img && data.requiredTerms && data.marketingTerms)
     ) {
-      axios
+      instance
         .patch(SERVER_URL.LOCAL + '/v1/users/5', data)
         .then((res) => console.log(res.data));
       router.replace('join/success');

@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
 import { Box, Flex, Image } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import { SERVER_URL } from '@components/elements/urls';
 
@@ -15,7 +15,7 @@ type User = {
 function My() {
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+    instance.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
       setUser(res.data);
     });
   }, []);
