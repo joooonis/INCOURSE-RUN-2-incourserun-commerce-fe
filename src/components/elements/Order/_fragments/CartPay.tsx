@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import axios from 'axios';
-
 import {
   Box,
   Button,
@@ -16,7 +14,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { SERVER_URL } from '@components/elements/urls';
+import instance from '@apis/_axios/instance';
+
 import { findProduct, priceToString } from '@components/hooks';
 
 import SinglePay from './SinglePay';
@@ -72,11 +71,9 @@ function CartPay() {
   const [orderer, setOrderer] = useState<OrdererType>();
 
   useEffect(() => {
-    axios
-      .get(SERVER_URL.LOCAL + '/v1/products')
-      .then((res) => setProducts(res.data));
+    instance.get('/v1/products').then((res) => setProducts(res.data));
 
-    axios.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+    instance.get('/v1/users/5').then((res) => {
       setOrderer({
         ...orderer,
         name: res.data.name,
@@ -133,7 +130,7 @@ function CartPay() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
-    axios.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
+    instance.post('/v1/orders', data).then((res) => {
       onClickPayment(res.data);
     });
   };
@@ -168,20 +165,18 @@ function CartPay() {
         imp_uid: imp_uid,
         merchant_uid: merchant_uid,
       };
-      axios
-        .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', data)
-        .then((res) => {
-          if (res.data.status === 'paid') console.log(res.data);
-          router.push(`/order/pay/complete/${res.data.order.id}`);
-        });
+      instance.post('/v1/orders/payment/complete', data).then((res) => {
+        if (res.data.status === 'paid') console.log(res.data);
+        router.push(`/order/pay/complete/${res.data.order.id}`);
+      });
     } else {
       alert(`결제 실패: ${error_msg}`);
     }
   }
 
   const test = () => {
-    axios
-      .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', {
+    instance
+      .post('/v1/orders/payment/complete', {
         imp_uid: 'imp_328484503989',
         merchant_uid: 'ORD220711-000049',
       })

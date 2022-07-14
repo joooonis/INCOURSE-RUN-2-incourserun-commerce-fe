@@ -2,8 +2,6 @@ import { useRouter } from 'next/router';
 import Router from 'next/router';
 import React, { useState } from 'react';
 
-import axios from 'axios';
-
 import {
   Box,
   Button,
@@ -23,7 +21,6 @@ import {
 import instance from '@apis/_axios/instance';
 
 import { CartModal } from '@components/elements/Modal';
-import { SERVER_URL } from '@components/elements/urls';
 import { priceToString } from '@components/hooks';
 
 import { ProductType } from './types';
@@ -51,9 +48,8 @@ function Card({ product }: CardProps) {
   };
 
   const postCart = () => {
-    const url = SERVER_URL.LOCAL + '/v1/carts';
-    axios
-      .post(url, {
+    instance
+      .post('/v1/carts', {
         user: 1,
         product: product.id,
         quantity: quantity,

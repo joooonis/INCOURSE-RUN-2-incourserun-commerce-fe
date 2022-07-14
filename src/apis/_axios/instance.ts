@@ -15,6 +15,8 @@ const instance = axios.create({
   },
 });
 
+instance.defaults.withCredentials = true;
+
 const setAuthHeader = (token: string) => {
   if (token) {
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;

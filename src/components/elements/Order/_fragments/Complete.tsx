@@ -1,13 +1,12 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
 import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
 
 import { dateToString, findProduct, priceToString } from '@components/hooks';
 
-import { SERVER_URL } from '../../urls';
 import SinglePay from './SinglePay';
 import { OrderType, ProductType } from './types';
 
@@ -19,14 +18,12 @@ function Complete() {
 
   useEffect(() => {
     if (id && id > 0) {
-      axios.get(`${SERVER_URL.LOCAL + '/v1/orders'}/${id}`).then((res) => {
+      instance.get(`${'/v1/orders'}/${id}`).then((res) => {
         setOrder(res.data);
       });
     }
 
-    axios
-      .get(SERVER_URL.LOCAL + '/v1/products')
-      .then((res) => setProducts(res.data));
+    instance.get('/v1/products').then((res) => setProducts(res.data));
   }, [id]);
 
   let date;

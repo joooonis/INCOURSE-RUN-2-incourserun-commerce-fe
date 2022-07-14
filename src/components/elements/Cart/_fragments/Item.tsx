@@ -1,13 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 
-import axios from 'axios';
-
 import { Box, Checkbox, Flex, Image, Input, VStack } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
 import { decItem, incItem, removeItem } from '@features/Item/itemSlice';
 
-import { SERVER_URL } from '@components/elements/urls';
 import priceToString from '@components/hooks/priceToString';
 import { useRootState } from '@components/hooks/useRootState';
 
@@ -18,10 +16,8 @@ function Item({ product, item, incTotal, decTotal, checkItem }: ItemPropsType) {
 
   const dispatch = useDispatch();
 
-  const url = SERVER_URL.LOCAL + '/v1/carts/';
-
   const deleteCart = () => {
-    axios.delete(url + item.id).then((res) => console.log(res));
+    instance.delete('/v1/carts/' + item.id).then((res) => console.log(res));
     decTotal(item.price * item.quantity);
     dispatch(removeItem(item.id));
   };
@@ -30,7 +26,7 @@ function Item({ product, item, incTotal, decTotal, checkItem }: ItemPropsType) {
     if (item.quantity) {
       dispatch(incItem(item.id));
       incTotal(product.price);
-      axios.patch(url + item.id, {
+      instance.patch('/v1/carts/' + item.id, {
         quantity: item.quantity + 1,
       });
     }
@@ -40,7 +36,7 @@ function Item({ product, item, incTotal, decTotal, checkItem }: ItemPropsType) {
     if (item.quantity > 1) {
       dispatch(decItem(item.id));
       decTotal(product.price);
-      axios.patch(url + item.id, {
+      instance.patch('/v1/carts/' + item.id, {
         quantity: item.quantity - 1,
       });
     }

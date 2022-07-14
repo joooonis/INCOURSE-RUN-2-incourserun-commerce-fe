@@ -1,16 +1,14 @@
 import router from 'next/router';
 import React, { useEffect } from 'react';
 
-import axios from 'axios';
-
-import { SERVER_URL } from '@components/elements/urls';
+import instance from '@apis/_axios/instance';
 
 const Kakao = () => {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
 
-    axios
-      .post(SERVER_URL.LOCAL + '/v1/users/social_login', {
+    instance
+      .post('/v1/users/social_login', {
         code: code,
         state: 'kakao',
         redirectUri: 'http://172.30.1.17:3000/login/kakao/callback',
