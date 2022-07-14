@@ -10,8 +10,7 @@ import styledConsole from '@utils/styledConsole';
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  baseURL: SERVER_URL.LOCAL,
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
