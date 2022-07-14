@@ -20,6 +20,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+
 import { CartModal } from '@components/elements/Modal';
 import { SERVER_URL } from '@components/elements/urls';
 import { priceToString } from '@components/hooks';
