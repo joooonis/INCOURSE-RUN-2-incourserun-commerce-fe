@@ -36,6 +36,7 @@ export type OrderType = {
   totalPaid: number;
   orderProducts: orderProductType[];
   totalPrice: number;
+  merchantUid: string;
 };
 
 export interface SingleOrderProps {
@@ -46,6 +47,7 @@ export interface SingleOrderProps {
   hasReview?: boolean;
   isFreeDelivery?: boolean;
   createdAt?: string;
+  merchantUid: string;
 }
 
 export interface SinglePayProps {

@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { SERVER_URL } from '@components/elements/urls';
+
 import { CONFIG } from '@config';
 import { apiLogger } from '@utils/apiLogger';
 import { getToken } from '@utils/localStorage/token';
@@ -9,7 +11,6 @@ const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },
