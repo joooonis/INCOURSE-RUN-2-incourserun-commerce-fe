@@ -13,15 +13,8 @@ import instance from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button';
 
-interface MyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-interface OrderModalProps extends MyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  merchantUid: string;
-}
+import { MyModalProps, OrderModalProps } from './types';
+
 function OrderCanceledModal({ isOpen, onClose }: MyModalProps) {
   return (
     <>

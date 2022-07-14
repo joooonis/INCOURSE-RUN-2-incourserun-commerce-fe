@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import OrderModal from '@components/elements/Modal/_fragments/OrderModal';
+import { OrderModal } from '@components/elements/Modal';
 import priceToString from '@components/hooks/priceToString';
 
 import { SingleOrderProps } from './types';
