@@ -4,8 +4,6 @@ import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
-import { SERVER_URL } from '@components/elements/urls';
-
 import { ReviewType, SingleReviewProps, StarRatingProps } from './types';
 
 function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
@@ -77,11 +75,9 @@ function SingleReview({ review }: SingleReviewProps) {
 function MyReview() {
   const [myReviews, setMyReviews] = useState<ReviewType[]>();
   useEffect(() => {
-    instance
-      .get(SERVER_URL.LOCAL + '/v1/reviews', { params: { user: 1 } })
-      .then((res) => {
-        setMyReviews(res.data.results);
-      });
+    instance.get('/v1/reviews', { params: { user: 1 } }).then((res) => {
+      setMyReviews(res.data.results);
+    });
   }, []);
 
   return (

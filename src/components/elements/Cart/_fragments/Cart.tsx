@@ -14,7 +14,6 @@ import {
 } from '@features/Item/itemSlice';
 import { removeItem } from '@features/Item/itemSlice';
 
-import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 import { useRootState } from '@components/hooks/useRootState';
 
@@ -75,8 +74,8 @@ function Cart() {
   useEffect(() => {
     const fetchURL = async () => {
       try {
-        const res1 = await instance.get(SERVER_URL.LOCAL + '/v1/products');
-        const res2 = await instance.get(SERVER_URL.LOCAL + '/v1/carts', {
+        const res1 = await instance.get('/v1/products');
+        const res2 = await instance.get('/v1/carts', {
           params: {
             user: 1, //여기에서 user id 를 수정합니다.
           },
@@ -122,9 +121,7 @@ function Cart() {
     decTotal(dec);
 
     for (const item of itemCheckers.filter((item) => item.checked)) {
-      instance
-        .delete(SERVER_URL.LOCAL + '/v1/carts/' + item.id)
-        .then((res) => console.log(res));
+      instance.delete('/v1/carts/' + item.id).then((res) => console.log(res));
       dispatch(removeItem(item.id));
     }
   };

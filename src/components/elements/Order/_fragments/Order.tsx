@@ -4,7 +4,6 @@ import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
-import { SERVER_URL } from '@components/elements/urls';
 import { dateToString, findProduct } from '@components/hooks';
 
 import SingleOrder from './SingleOrder';
@@ -16,16 +15,14 @@ function Order() {
 
   useEffect(() => {
     instance
-      .get(SERVER_URL.LOCAL + '/v1/orders', {
+      .get('/v1/orders', {
         params: {
           user: 1, //여기에서 user id 를 수정합니다.
         },
       })
       .then((res) => setOrders(res.data));
 
-    instance
-      .get(SERVER_URL.LOCAL + '/v1/products')
-      .then((res) => setProducts(res.data));
+    instance.get('/v1/products').then((res) => setProducts(res.data));
   }, []);
 
   return (

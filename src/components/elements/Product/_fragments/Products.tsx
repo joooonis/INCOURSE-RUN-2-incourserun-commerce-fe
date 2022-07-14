@@ -4,14 +4,11 @@ import { Box, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
-import { SERVER_URL } from '@components/elements/urls';
-
 import Card from './Card';
 import { ProductType } from './types';
 
 function Products() {
   const [products, setProducts] = useState<ProductType[]>();
-  const url = SERVER_URL.LOCAL + '/v1/products';
 
   useEffect(() => {
     instance

@@ -18,8 +18,6 @@ import {
 
 import instance from '@apis/_axios/instance';
 
-import { SERVER_URL } from '@components/elements/urls';
-
 import EditInput from './EditInput';
 import { FormValues, User } from './types';
 
@@ -32,7 +30,7 @@ function Edit() {
 
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    instance.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+    instance.get('/v1/users/5').then((res) => {
       setUser(res.data);
 
       if (res.data.avatar) setPreview(res.data.avatar);
@@ -64,20 +62,16 @@ function Edit() {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
     if (data && img) {
-      instance
-        .patch(SERVER_URL.LOCAL + '/v1/users/5', data)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/5', data).then((res) => console.log(res.data));
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
       instance
-        .patch(SERVER_URL.LOCAL + '/v1/users/5', formData)
+        .patch('/v1/users/5', formData)
         .then((res) => console.log(res.data));
       router.push('/');
     } else if (data) {
-      instance
-        .patch(SERVER_URL.LOCAL + '/v1/users/5', data)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/5', data).then((res) => console.log(res.data));
       router.push('/');
     }
   };

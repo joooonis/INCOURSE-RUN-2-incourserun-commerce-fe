@@ -28,7 +28,6 @@ import instance from '@apis/_axios/instance';
 
 import { priceToString } from '@components/hooks';
 
-import { SERVER_URL } from '../../urls';
 import reviewAnalysis from './reviewAnalysis';
 import {
   DetailType,
@@ -165,12 +164,10 @@ function Detail() {
 
   useEffect(() => {
     if (id && id > 0) {
-      instance
-        .get(`${SERVER_URL.LOCAL + '/v1/products'}/${id}`)
-        .then((res) => setDetail(res.data));
+      instance.get(`'/v1/products'/${id}`).then((res) => setDetail(res.data));
 
       instance
-        .get(SERVER_URL.LOCAL + '/v1/reviews', {
+        .get('/v1/reviews', {
           params: { product: id, ordering: 'created_at' },
         })
         .then((res) => {
@@ -200,13 +197,13 @@ function Detail() {
   useEffect(() => {
     if (id && id > 0 && hasPhoto) {
       instance
-        .get(SERVER_URL.LOCAL + '/v1/reviews', {
+        .get('/v1/reviews', {
           params: { product: id, ordering: ordering, has_photo: true },
         })
         .then((res) => setReviews(res.data.results));
     } else if (id && id > 0 && !hasPhoto) {
       instance
-        .get(SERVER_URL.LOCAL + '/v1/reviews', {
+        .get('/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
         .then((res) => setReviews(res.data.results));
@@ -227,7 +224,7 @@ function Detail() {
   };
 
   const postCart = () => {
-    const url = SERVER_URL.LOCAL + '/v1/carts';
+    const url = '/v1/carts';
     instance
       .post(url, {
         user: 1,

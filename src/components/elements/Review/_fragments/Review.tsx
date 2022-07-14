@@ -15,7 +15,6 @@ import {
 import instance from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
-import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 
 import {
@@ -144,15 +143,11 @@ function Review() {
 
     const formData = await buildFormDate(data);
 
-    instance
-      .post(SERVER_URL.LOCAL + '/v1/reviews', formData)
-      .then((res) => console.log(res));
+    instance.post('/v1/reviews', formData).then((res) => console.log(res));
   };
 
   useEffect(() => {
-    instance
-      .get(SERVER_URL.LOCAL + '/v1/products')
-      .then((res) => setProducts(res.data));
+    instance.get('/v1/products').then((res) => setProducts(res.data));
     setValue('rating', 0); // 별점 초기화
   }, []);
 
