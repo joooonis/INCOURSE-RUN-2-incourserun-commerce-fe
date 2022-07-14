@@ -8,7 +8,7 @@ import styledConsole from '@utils/styledConsole';
 const isDev = CONFIG.ENV === 'development';
 
 const instance = axios.create({
-  baseURL: CONFIG.API_BASE_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',

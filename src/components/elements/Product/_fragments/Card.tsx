@@ -20,6 +20,9 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import instance from '@apis/_axios/instance';
+
+import { CartModal } from '@components/elements/Modal';
 import { SERVER_URL } from '@components/elements/urls';
 import { priceToString } from '@components/hooks';
 
@@ -55,7 +58,11 @@ function Card({ product }: CardProps) {
         product: product.id,
         quantity: quantity,
       })
-      .then((res) => console.log(res));
+      .then((res) => {
+        console.log(res);
+        onClose();
+        ModalOpen();
+      });
   };
 
   const SendQuery = () => {
@@ -69,6 +76,12 @@ function Card({ product }: CardProps) {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isModalOpen,
+    onOpen: ModalOpen,
+    onClose: ModalClose,
+  } = useDisclosure();
+
   return (
     <>
       <Box
@@ -323,6 +336,7 @@ function Card({ product }: CardProps) {
           </DrawerBody>
         </DrawerContent>
       </Drawer>
+      <CartModal isOpen={isModalOpen} onClose={ModalClose} />
     </>
   );
 }
