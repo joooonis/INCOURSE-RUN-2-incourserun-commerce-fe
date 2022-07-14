@@ -4,14 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import axios from 'axios';
 
-import {
-  Box,
-  Button,
-  Checkbox,
-  Flex,
-  VStack,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box, Button, Checkbox, Flex, VStack } from '@chakra-ui/react';
 
 import {
   addItem,
@@ -22,7 +15,6 @@ import {
 } from '@features/Item/itemSlice';
 import { removeItem } from '@features/Item/itemSlice';
 
-import { CartModal } from '@components/elements/Modal';
 import { SERVER_URL } from '@components/elements/urls';
 import { findProduct, priceToString } from '@components/hooks';
 import { useRootState } from '@components/hooks/useRootState';
@@ -37,8 +29,6 @@ function Cart() {
 
   const router = useRouter();
   const dispatch = useDispatch();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -143,7 +133,6 @@ function Cart() {
   return (
     <>
       <Box pt="80px" pb="50px">
-        <Button onClick={onOpen}>Test</Button>
         {itemCheckers.length !== 0 ? (
           <>
             <Flex
@@ -247,7 +236,6 @@ function Cart() {
           </VStack>
         )}
       </Box>
-      <CartModal isOpen={isOpen} onClose={onClose} />
     </>
   );
 }

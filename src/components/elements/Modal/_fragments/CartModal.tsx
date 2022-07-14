@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import {
   Box,
   Button,
@@ -6,7 +8,6 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
 
@@ -18,6 +19,10 @@ interface MyModalProps {
 }
 
 function CartModal({ isOpen, onClose }: MyModalProps) {
+  const router = useRouter();
+  const gotoCart = () => {
+    router.push('/cart');
+  };
   return (
     <>
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
@@ -29,7 +34,7 @@ function CartModal({ isOpen, onClose }: MyModalProps) {
               장바구니에 상품이 담겼습니다.
             </Box>
             <Flex justify="space-between">
-              <PrimaryButton onClick={onClose} variant="outline" w="155px">
+              <PrimaryButton onClick={gotoCart} variant="outline" w="155px">
                 장바구니 이동
               </PrimaryButton>
               <PrimaryButton onClick={onClose} w="155px">
