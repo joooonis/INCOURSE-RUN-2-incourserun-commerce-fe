@@ -14,9 +14,12 @@ import {
   Input,
   Select,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+
+import { EditModal } from '@components/elements/Modal';
 
 import EditInput from './EditInput';
 import { FormValues, User } from './types';
@@ -60,24 +63,28 @@ function Edit() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
     if (data && img) {
-      instance.patch('/v1/users/5', data).then((res) => console.log(res.data));
+      instance.patch('/v1/users/5', data);
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
-      instance
-        .patch('/v1/users/5', formData)
-        .then((res) => console.log(res.data));
-      router.push('/');
+      instance.patch('/v1/users/5', formData).then(() => {
+        onOpen();
+        router.push('/');
+      });
     } else if (data) {
-      instance.patch('/v1/users/5', data).then((res) => console.log(res.data));
-      router.push('/');
+      instance.patch('/v1/users/5', data).then(() => {
+        onOpen();
+        router.push('/');
+      });
     }
   };
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <EditModal isOpen={isOpen} onClose={onClose} />
       <VStack spacing={0} alignItems="flex-start" pt="130px" px="16px">
         <Box>
           <Heading size="sm">회원정보수정</Heading>
@@ -120,7 +127,6 @@ function Edit() {
             accept="image/*"
             ref={avatarRef}
             onChange={handleAvatarOnChange}
-            // {...register('photos')}
           ></Input>
         </Box>
         <VStack spacing="78px" w="full" alignItems="flex-start">
@@ -272,10 +278,4 @@ const ErrorStyle = {
   lineHeight: '18px',
   color: '#FF001A',
   pt: '10px',
-};
-
-const ButtonStyle = {
-  fontWeight: 700,
-  fontSize: '16px',
-  lineHeight: '28px',
 };

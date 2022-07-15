@@ -18,16 +18,16 @@ import instance from '@apis/_axios/instance';
 
 import { findProduct, priceToString } from '@components/hooks';
 
-import SinglePay from './SinglePay';
+import SinglePayment from './SinglePayment';
 import {
   FormValues,
   OrdererType,
-  PayDataType,
+  PaymentDataType,
+  PaymentProductType,
   ProductType,
-  payProductType,
 } from './types';
 
-function CartPay() {
+function CartPayMent() {
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
@@ -117,7 +117,7 @@ function CartPay() {
     if (orders && quantities) {
       const orderProducts = [];
       for (let i = 0; i < orders.length; i++) {
-        const SingleOrderProduct: payProductType = {
+        const SingleOrderProduct: PaymentProductType = {
           product: orders[i].id,
           quantity: quantities[i],
           price: orders[i].price,
@@ -135,7 +135,7 @@ function CartPay() {
     });
   };
 
-  function onClickPayment(payData: PayDataType) {
+  function onClickPayment(payData: PaymentDataType) {
     /* 1. 가맹점 식별하기 */
     const { IMP } = window;
     IMP.init('imp39787589');
@@ -209,11 +209,11 @@ function CartPay() {
             quantities &&
             orders.map((order, index) => {
               return (
-                <SinglePay
+                <SinglePayment
                   key={index}
                   product={order}
                   quantity={quantities[index]}
-                ></SinglePay>
+                ></SinglePayment>
               );
             })}
         </Box>
@@ -417,7 +417,7 @@ function CartPay() {
   );
 }
 
-export default CartPay;
+export default CartPayMent;
 
 const TitleText = {
   fontWeight: 700,

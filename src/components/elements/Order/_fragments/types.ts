@@ -50,10 +50,10 @@ export interface SingleOrderProps {
   merchantUid: string;
 }
 
-export interface SinglePayProps {
+export interface SinglePaymentProps {
   product: ProductType;
   quantity: number;
-  isPayCompleted?: boolean;
+  isPaymentCompleted?: boolean;
 }
 export interface FormValues {
   user: number;
@@ -67,10 +67,10 @@ export interface FormValues {
   totalPrice: number;
   deliveryFee: number;
   totalPaid: number;
-  orderProducts: payProductType[];
+  orderProducts: PaymentProductType[];
 }
 
-export interface PayDataType {
+export interface PaymentDataType {
   user: number;
   shippingName: string;
   shippingPhone: string;
@@ -83,10 +83,10 @@ export interface PayDataType {
   totalPrice: number;
   deliveryFee: number;
   totalPaid: number;
-  orderProducts: payProductType[];
+  orderProducts: PaymentProductType[];
 }
 
-export type payProductType = {
+export type PaymentProductType = {
   product: number;
   quantity: number;
   price: number;
