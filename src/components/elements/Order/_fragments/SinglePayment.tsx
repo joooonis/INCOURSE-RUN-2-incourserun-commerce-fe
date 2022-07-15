@@ -2,17 +2,21 @@ import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 
 import priceToString from '@components/hooks/priceToString';
 
-import { SinglePayProps } from './types';
+import { SinglePaymentProps } from './types';
 
-function SinglePay({ product, quantity, isPayCompleted }: SinglePayProps) {
+function SinglementPay({
+  product,
+  quantity,
+  isPaymentCompleted,
+}: SinglePaymentProps) {
   return (
     <Flex
       w="full"
       py="10px"
       justify="space-between"
       alignItems="center"
-      borderTop={isPayCompleted ? 'none' : '1px solid #F2F3F4'}
-      borderBottom={isPayCompleted ? 'none' : '1px solid #F2F3F4'}
+      borderTop={isPaymentCompleted ? 'none' : '1px solid #F2F3F4'}
+      borderBottom={isPaymentCompleted ? 'none' : '1px solid #F2F3F4'}
     >
       <Flex>
         <Image
@@ -31,7 +35,7 @@ function SinglePay({ product, quantity, isPayCompleted }: SinglePayProps) {
           </Box>
         </VStack>
       </Flex>
-      {isPayCompleted && (
+      {isPaymentCompleted && (
         <Box {...TitleText} color="primary.500">
           결제완료
         </Box>
@@ -40,7 +44,7 @@ function SinglePay({ product, quantity, isPayCompleted }: SinglePayProps) {
   );
 }
 
-export default SinglePay;
+export default SinglementPay;
 
 const TitleText = {
   fontWeight: 700,

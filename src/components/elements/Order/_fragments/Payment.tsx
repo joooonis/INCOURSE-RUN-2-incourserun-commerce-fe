@@ -12,23 +12,24 @@ import {
   Input,
   Text,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
-import { SERVER_URL } from '@components/elements/urls';
+import { PayMentModal } from '@components/elements/Modal';
 import { findProduct, priceToString } from '@components/hooks';
 
-import SinglePay from './SinglePay';
+import SinglePayment from './SinglePayment';
 import {
   FormValues,
   OrdererType,
-  PayDataType,
+  PaymentDataType,
+  PaymentProductType,
   ProductType,
-  payProductType,
 } from './types';
 
-function Pay() {
+function Payment() {
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
@@ -51,11 +52,9 @@ function Pay() {
   const [orderer, setOrderer] = useState<OrdererType>();
 
   useEffect(() => {
-    instance
-      .get(SERVER_URL.LOCAL + '/v1/products')
-      .then((res) => setProducts(res.data));
+    instance.get('/v1/products').then((res) => setProducts(res.data));
 
-    instance.get(SERVER_URL.LOCAL + '/v1/users/5').then((res) => {
+    instance.get('/v1/users/5').then((res) => {
       setOrderer({
         ...orderer,
         name: res.data.name,
@@ -90,10 +89,10 @@ function Pay() {
     } else reset();
   };
 
-  const [isPayButtonActive, setIsPayButtonActive] = useState(false);
+  const [isPaymentButtonActive, setIsPaymentButtonActive] = useState(false);
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPayButtonActive(e.target.checked);
+    setIsPaymentButtonActive(e.target.checked);
     setValue('shippingZipcode', '04015');
     setValue('shippingName', '박태준');
     setValue('shippingPhone', '010-4690-6756');
@@ -103,9 +102,9 @@ function Pay() {
     setValue('totalPaid', 100);
     setValue('user', 5);
 
-    // if (getValues('payMethod')) setValue('payMethod', '신용카드');
+    // if (getValues('PaymentMethod')) setValue('PaymentMethod', '신용카드');
     if (order) {
-      const SingleOrderProduct: payProductType = {
+      const SingleOrderProduct: PaymentProductType = {
         product: Number(product),
         quantity: Number(quantity),
         price: order.price,
@@ -115,13 +114,13 @@ function Pay() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    instance.post(SERVER_URL.LOCAL + '/v1/orders', data).then((res) => {
+    instance.post('/v1/orders', data).then((res) => {
       console.log(res.data);
       onClickPayment(res.data);
     });
   };
 
-  function onClickPayment(payData: PayDataType) {
+  function onClickPayment(PaymentData: PaymentDataType) {
     /* 1. 가맹점 식별하기 */
 
     const { IMP } = window;
@@ -131,14 +130,14 @@ function Pay() {
     const data = {
       pg: 'html5_inicis', // PG사
       pay_method: 'card', // 결제수단
-      merchant_uid: payData.merchantUid, // 주문번호
+      merchant_uid: PaymentData.merchantUid, // 주문번호
       amount: 100, // 결제금액
       name: '아임포트 결제 데이터 분석', // 주문명
-      buyer_name: payData.shippingName, // 구매자 이름
-      buyer_tel: payData.shippingPhone, // 구매자 전화번호
+      buyer_name: PaymentData.shippingName, // 구매자 이름
+      buyer_tel: PaymentData.shippingPhone, // 구매자 전화번호
       buyer_email: 'example@example', // 구매자 이메일
-      buyer_addr: payData.shippingAddress, // 구매자 주소
-      buyer_postcode: payData.shippingZipcode, // 구매자 우편번호
+      buyer_addr: PaymentData.shippingAddress, // 구매자 주소
+      buyer_postcode: PaymentData.shippingZipcode, // 구매자 우편번호
     };
 
     /* 4. 결제 창 호출하기 */
@@ -152,12 +151,15 @@ function Pay() {
         imp_uid: imp_uid,
         merchant_uid: merchant_uid,
       };
-      instance
-        .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', data)
-        .then((res) => {
-          if (res.data.status === 'paid')
-            router.push(`/order/pay/complete/${res.data.order.id}`);
-        });
+      instance.post('/v1/orders/payment/complete', data).then((res) => {
+        if (res.data.status === 'paid') {
+          onOpen();
+          setTimeout(
+            () => router.push(`/order/payment/complete/${res.data.order.id}`),
+            3000,
+          );
+        }
+      });
     } else {
       alert(`결제 실패: ${error_msg}`);
     }
@@ -165,18 +167,20 @@ function Pay() {
 
   const test = () => {
     instance
-      .post(SERVER_URL.LOCAL + '/v1/orders/payment/complete', {
+      .post('/v1/orders/Payment/complete', {
         imp_uid: 'imp_328484503989',
         merchant_uid: 'ORD220711-000049',
       })
       .then((res) => {
         if (res.data.status === 'paid')
-          router.push(`/order/pay/complete/${res.data.order.id}`);
+          router.push(`/order/Payment/complete/${res.data.order.id}`);
       });
   };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
+      <PayMentModal isOpen={isOpen} onClose={onClose} />
       <VStack
         spacing={0}
         alignItems="flex-start"
@@ -193,7 +197,10 @@ function Pay() {
             주문상품
           </Box>
           {order && quantity && (
-            <SinglePay product={order} quantity={Number(quantity)}></SinglePay>
+            <SinglePayment
+              product={order}
+              quantity={Number(quantity)}
+            ></SinglePayment>
           )}
         </Box>
         <Box w="full">
@@ -339,7 +346,7 @@ function Pay() {
             <Checkbox
               size="lg"
               colorScheme="primary"
-              // {...register('payMethod')}
+              // {...register('PaymentMethod')}
             />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>
@@ -349,7 +356,7 @@ function Pay() {
           <Box {...SubTitleText} w="full" pt="30px" pb="40px">
             최종 결제 금액
           </Box>
-          <VStack {...PayText} spacing="10px" w="full" pb="20px">
+          <VStack {...PaymentText} spacing="10px" w="full" pb="20px">
             <Flex w="full" color="gray.600" justify="space-between">
               <Box>총 상품금액</Box>
               <Box>{total && priceToString(total)} 원</Box>
@@ -386,7 +393,7 @@ function Pay() {
             h="50px"
             py="12px"
             type="submit"
-            disabled={!isPayButtonActive}
+            disabled={!isPaymentButtonActive}
           >
             결제하기
           </Button>
@@ -396,7 +403,7 @@ function Pay() {
   );
 }
 
-export default Pay;
+export default Payment;
 
 const TitleText = {
   fontWeight: 700,
@@ -424,7 +431,7 @@ const InputStyle = {
   _placeholder: { color: 'gray.400' },
 };
 
-const PayText = {
+const PaymentText = {
   fontWeight: 400,
   fontSize: '16px',
   lineHeight: '28px',

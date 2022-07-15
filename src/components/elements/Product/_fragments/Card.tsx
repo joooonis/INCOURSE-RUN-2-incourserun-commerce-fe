@@ -63,7 +63,7 @@ function Card({ product }: CardProps) {
 
   const SendQuery = () => {
     Router.push({
-      pathname: '/order/pay',
+      pathname: '/order/payment',
       query: {
         product: product.id,
         quantity: quantity,

@@ -1,8 +1,15 @@
 import CartModal from './_fragments/CartModal';
 import EditModal from './_fragments/EditModal';
-import LogOutModal from './_fragments/LogoutModal';
-import Modal from './_fragments/Modal';
+import LogOutModal from './_fragments/LogOutModal';
 import OrderModal from './_fragments/OrderModal';
+import PayMentModal from './_fragments/PaymentModal';
 import ReviewModal from './_fragments/ReviewModal';
 
-export { Modal, LogOutModal, EditModal, CartModal, OrderModal, ReviewModal };
+export {
+  PayMentModal,
+  LogOutModal,
+  EditModal,
+  CartModal,
+  OrderModal,
+  ReviewModal,
+};
