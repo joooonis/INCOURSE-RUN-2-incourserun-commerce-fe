@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Image } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 type User = {
   username: string;
@@ -11,6 +12,14 @@ type User = {
 };
 
 function My() {
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+
   const [user, setUser] = useState<User>();
   useEffect(() => {
     instance.get('/v1/users/5').then((res) => {
