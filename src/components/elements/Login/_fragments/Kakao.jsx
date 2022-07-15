@@ -1,19 +1,19 @@
 import router from 'next/router';
 import React, { useEffect } from 'react';
 
-import { Container, Spinner } from '@chakra-ui/react';
+import axios from 'axios';
 
-import instance from '@apis/_axios/instance';
+import { Container, Spinner } from '@chakra-ui/react';
 
 const Kakao = () => {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
 
-    instance
-      .post('/v1/users/social_login', {
+    axios
+      .post('https://api.incourserun.cf/v1/users/social_login', {
         code: code,
         state: 'kakao',
-        redirectUri: 'http://incourserun.cf/login/kakao/callback',
+        redirectUri: 'https://localhost:3000/login/kakao/callback',
       })
       .then((res) => {
         const token = res.data.access;
@@ -23,7 +23,7 @@ const Kakao = () => {
           localStorage.setItem('token', token);
         }
 
-        if (isRegister) router.replace('/products');
+        if (isRegister) router.push('/products');
         else router.replace('/join');
       })
       .catch((err) => {
