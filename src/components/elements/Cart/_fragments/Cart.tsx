@@ -66,7 +66,7 @@ function Cart() {
     const queries = await makeQueries();
 
     router.push({
-      pathname: 'cart/pay',
+      pathname: 'cart/payment',
       query: { checked: JSON.stringify(queries) },
     });
   };

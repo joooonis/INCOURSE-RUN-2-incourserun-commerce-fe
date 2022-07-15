@@ -7,7 +7,7 @@ import instance from '@apis/_axios/instance';
 
 import { dateToString, findProduct, priceToString } from '@components/hooks';
 
-import SinglePay from './SinglePay';
+import SinglePayment from './SinglePayment';
 import { OrderType, ProductType } from './types';
 
 function Complete() {
@@ -63,12 +63,12 @@ function Complete() {
           order.orderProducts.map((orderProduct) => {
             const targeProduct = findProduct(products, orderProduct.product);
             return (
-              <SinglePay
+              <SinglePayment
                 key={orderProduct.id}
                 product={targeProduct}
                 quantity={orderProduct.quantity}
-                isPayCompleted
-              ></SinglePay>
+                isPaymentCompleted
+              ></SinglePayment>
             );
           })}
 

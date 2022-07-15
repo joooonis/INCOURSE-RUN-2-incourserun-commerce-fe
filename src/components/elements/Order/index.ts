@@ -1,6 +1,6 @@
-import CartPay from './_fragments/CartPayPage';
+import CartPayment from './_fragments/CartPaymentPage';
 import Complete from './_fragments/CompletePage';
 import Order from './_fragments/OrderPage';
-import Pay from './_fragments/PayPage';
+import Payment from './_fragments/PaymentPage';
 
-export { Order, Pay, Complete, CartPay };
+export { Order, Payment, Complete, CartPayment };

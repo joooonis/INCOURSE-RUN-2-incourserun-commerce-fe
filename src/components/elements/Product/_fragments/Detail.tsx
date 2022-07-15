@@ -26,6 +26,7 @@ import {
 
 import instance from '@apis/_axios/instance';
 
+import { CartModal } from '@components/elements/Modal';
 import { priceToString } from '@components/hooks';
 
 import reviewAnalysis from './reviewAnalysis';
@@ -164,7 +165,7 @@ function Detail() {
 
   useEffect(() => {
     if (id && id > 0) {
-      instance.get(`'/v1/products'/${id}`).then((res) => setDetail(res.data));
+      instance.get(`/v1/products/${id}`).then((res) => setDetail(res.data));
 
       instance
         .get('/v1/reviews', {
@@ -224,19 +225,22 @@ function Detail() {
   };
 
   const postCart = () => {
-    const url = '/v1/carts';
     instance
-      .post(url, {
+      .post('/v1/carts', {
         user: 1,
         product: detail?.id,
         quantity: quantity,
       })
-      .then((res) => console.log(res));
+      .then((res) => {
+        console.log(res);
+        onClose();
+        ModalOpen();
+      });
   };
 
   const SendQuery = () => {
     Router.push({
-      pathname: '/order/pay',
+      pathname: '/order/payment',
       query: {
         product: detail?.id,
         quantity: quantity,
@@ -245,6 +249,11 @@ function Detail() {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isModalOpen,
+    onOpen: ModalOpen,
+    onClose: ModalClose,
+  } = useDisclosure();
 
   return (
     <Box pt="120px" pb="80px">
@@ -633,7 +642,7 @@ function Detail() {
                   <Flex justify="space-between" w="100%" pt="15px" pb="10px">
                     <Button
                       colorScheme="primary"
-                      w="165px"
+                      w="calc(50% - 6.5px)"
                       h="50px"
                       borderRadius="25px"
                       size="sd"
@@ -645,7 +654,7 @@ function Detail() {
                     <Button
                       variant="outline"
                       colorScheme="primary"
-                      w="165px"
+                      w="calc(50% - 6.5px)"
                       h="50px"
                       borderRadius="25px"
                       size="sd"
@@ -661,6 +670,7 @@ function Detail() {
           </Drawer>
         </>
       )}
+      <CartModal isOpen={isModalOpen} onClose={ModalClose} />
     </Box>
   );
 }
