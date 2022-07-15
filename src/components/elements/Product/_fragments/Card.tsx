@@ -306,7 +306,7 @@ function Card({ product }: CardProps) {
               <Flex justify="space-between" w="100%" pt="15px" pb="10px">
                 <Button
                   colorScheme="primary"
-                  w="165px"
+                  w="calc(50% - 6.5px)"
                   h="50px"
                   borderRadius="25px"
                   size="sd"
@@ -318,7 +318,7 @@ function Card({ product }: CardProps) {
                 <Button
                   variant="outline"
                   colorScheme="primary"
-                  w="165px"
+                  w="calc(50% - 6.5px)"
                   h="50px"
                   borderRadius="25px"
                   size="sd"
