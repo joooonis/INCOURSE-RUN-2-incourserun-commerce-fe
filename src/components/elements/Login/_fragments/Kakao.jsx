@@ -1,6 +1,8 @@
 import router from 'next/router';
 import React, { useEffect } from 'react';
 
+import { Container, Spinner } from '@chakra-ui/react';
+
 import instance from '@apis/_axios/instance';
 
 const Kakao = () => {
@@ -30,7 +32,11 @@ const Kakao = () => {
       });
   }, []);
 
-  return <div>로그인중입니다.</div>;
+  return (
+    <Container>
+      <Spinner />
+    </Container>
+  );
 };
 
 export default Kakao;
