@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   Box,
@@ -28,7 +28,12 @@ function Header() {
   const gotoMyPage = () => {
     router.push('/mypage');
   };
-  const accessToken = localStorage.getItem('token');
+
+  const [accessToken, setAccessToken] = useState<string | null>();
+
+  useEffect(() => {
+    setAccessToken(localStorage.getItem('token'));
+  });
 
   const gotoProduct = () => {
     router.push('/products');
