@@ -66,6 +66,13 @@ function Payment() {
     });
   }, []);
 
+  const { handleClick, fullAddress, zonecode } = usePostcode();
+  const {
+    handleClick: shippingHandleClick,
+    fullAddress: shippingFullAddress,
+    zonecode: shippingZonecode,
+  } = usePostcode();
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setOrderer({
@@ -83,6 +90,7 @@ function Payment() {
 
       if (orderer?.addressDetail)
         setValue('shippingAddressDetail', orderer?.addressDetail);
+      if (zonecode) setValue('shippingZipcode', zonecode);
     } else reset();
   };
 
@@ -95,24 +103,24 @@ function Payment() {
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsPaymentButtonActive(e.target.checked);
-    setValue('shippingZipcode', '04015');
-    setValue('shippingName', '박태준');
-    setValue('shippingPhone', '010-4690-6756');
-    if (total && deliveryFee) {
-      setValue('totalPrice', total);
-      setValue('deliveryFee', deliveryFee);
-      setValue('totalPaid', total + deliveryFee);
-    }
-    if (isCard) setValue('payMethod', '신용카드');
-    setValue('user', 5);
 
-    if (order) {
-      const SingleOrderProduct: PaymentProductType = {
-        product: Number(product),
-        quantity: Number(quantity),
-        price: order.price,
-      };
-      setValue('orderProducts', [SingleOrderProduct]);
+    if (e.target.checked) {
+      if (total && deliveryFee) {
+        setValue('totalPrice', total);
+        setValue('deliveryFee', deliveryFee);
+        setValue('totalPaid', total + deliveryFee);
+      }
+      if (isCard) setValue('payMethod', '신용카드');
+      if (shippingFullAddress) setValue('shippingAddress', shippingFullAddress);
+      if (shippingZonecode) setValue('shippingZipcode', shippingZonecode);
+      if (order) {
+        const SingleOrderProduct: PaymentProductType = {
+          product: Number(product),
+          quantity: Number(quantity),
+          price: order.price,
+        };
+        setValue('orderProducts', [SingleOrderProduct]);
+      }
     }
   };
 
@@ -198,8 +206,6 @@ function Payment() {
       });
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { handleClick, fullAddress, zonecode } = usePostcode();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -331,6 +337,7 @@ function Payment() {
                   {...InputStyle}
                   w="249px"
                   placeholder="울특별시 마포구 성산동  123-3"
+                  value={shippingFullAddress}
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button
@@ -339,6 +346,7 @@ function Payment() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
+                  onClick={shippingHandleClick}
                 >
                   우편번호 검색
                 </Button>

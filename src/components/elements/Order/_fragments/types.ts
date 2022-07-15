@@ -97,4 +97,5 @@ export type OrdererType = {
   phone?: string;
   address?: string;
   addressDetail?: string;
+  zoncode?: string;
 };
