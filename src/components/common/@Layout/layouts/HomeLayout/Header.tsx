@@ -28,6 +28,7 @@ function Header() {
   const gotoMyPage = () => {
     router.push('/mypage');
   };
+  const accessToken = localStorage.getItem('token');
 
   const gotoProduct = () => {
     router.push('/products');
@@ -90,15 +91,18 @@ function Header() {
                 마이페이지
               </Box>
             </VStack>
-            <Flex {...TitleText} position="absolute" bottom="25px">
-              <Image
-                src="/icons/svg/main/logout.svg"
-                alt="logout"
-                _hover={{ cursor: 'pointer' }}
-                mr="4px"
-              />
-              <Box>로그아웃</Box>
-            </Flex>
+
+            {accessToken && (
+              <Flex {...TitleText} position="absolute" bottom="25px">
+                <Image
+                  src="/icons/svg/main/logout.svg"
+                  alt="logout"
+                  _hover={{ cursor: 'pointer' }}
+                  mr="4px"
+                />
+                <Box>로그아웃</Box>
+              </Flex>
+            )}
           </DrawerBody>
         </DrawerContent>
       </Drawer>
