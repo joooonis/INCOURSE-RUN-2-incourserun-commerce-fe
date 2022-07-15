@@ -28,6 +28,7 @@ import {
   PaymentProductType,
   ProductType,
 } from './types';
+import usePostcode from './usePostCode';
 
 function Payment() {
   const { register, handleSubmit, setValue, getValues, reset } =
@@ -54,7 +55,6 @@ function Payment() {
 
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
-
     instance.get('/v1/users/5').then((res) => {
       setOrderer({
         ...orderer,
@@ -74,23 +74,24 @@ function Payment() {
     });
   };
 
-  const checkboxHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const matchShippingOrderer = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       if (orderer?.name) setValue('shippingName', orderer?.name);
       if (orderer?.phone) setValue('shippingPhone', orderer?.phone);
-      // if (orderer?.address)
-      //   setValue(
-      //     'shippingAddress',
-      //     '서울특별시 마포구 망원동 398-9 (동광탑스빌)',
-      //   );
-      if (orderer?.addressDetail) {
-        // setValue('shippingAddress', '502호');
-        setValue('shippingZipcode', '04015');
-      }
+      if (orderer?.address) setValue('shippingAddress', orderer?.address);
+      else if (fullAddress) setValue('shippingAddress', fullAddress);
+
+      if (orderer?.addressDetail)
+        setValue('shippingAddressDetail', orderer?.addressDetail);
     } else reset();
   };
 
   const [isPaymentButtonActive, setIsPaymentButtonActive] = useState(false);
+  const [isCard, setIsCard] = useState(false);
+
+  const checkPayMethod = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCard(e.target.checked);
+  };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsPaymentButtonActive(e.target.checked);
@@ -102,7 +103,7 @@ function Payment() {
       setValue('deliveryFee', deliveryFee);
       setValue('totalPaid', total + deliveryFee);
     }
-    if (getValues('payMethod')) setValue('payMethod', '신용카드');
+    if (isCard) setValue('payMethod', '신용카드');
     setValue('user', 5);
 
     if (order) {
@@ -123,14 +124,24 @@ function Payment() {
   };
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
-    document.body.appendChild(script);
-    () => document.body.removeChild(script);
+    const script1 = document.createElement('script');
+    script1.type = 'text/javascript';
+    script1.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+    document.body.appendChild(script1);
+
+    const script2 = document.createElement('script');
+
+    script2.src =
+      '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    document.body.appendChild(script2);
+
+    () => {
+      document.body.removeChild(script1);
+      document.body.removeChild(script2);
+    };
   }, []);
 
-  function onClickPayment(PaymentData: PaymentDataType) {
+  const onClickPayment = (PaymentData: PaymentDataType) => {
     /* 1. 가맹점 식별하기 */
 
     const { IMP } = window;
@@ -152,9 +163,9 @@ function Payment() {
 
     /* 4. 결제 창 호출하기 */
     IMP.request_pay(data, callback);
-  }
+  };
 
-  function callback(response: any) {
+  const callback = (response: any) => {
     const { success, merchant_uid, imp_uid, error_msg } = response;
     if (success) {
       const data = {
@@ -173,7 +184,7 @@ function Payment() {
     } else {
       alert(`결제 실패: ${error_msg}`);
     }
-  }
+  };
 
   const test = () => {
     instance
@@ -188,6 +199,8 @@ function Payment() {
   };
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { handleClick, fullAddress, zonecode } = usePostcode();
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <PayMentModal isOpen={isOpen} onClose={onClose} />
@@ -198,7 +211,9 @@ function Payment() {
         pb="80px"
         px="16px"
       >
-        <Button onClick={test}>테스트</Button>
+        <Button display="none" onClick={test}>
+          테스트
+        </Button>
         <Box {...TitleText} w="full">
           주문결제
         </Box>
@@ -246,7 +261,7 @@ function Payment() {
                   w="249px"
                   name="address"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  value={orderer?.address}
+                  value={fullAddress ? fullAddress : orderer?.address}
                   onChange={onChange}
                 />
                 <Button
@@ -255,6 +270,7 @@ function Payment() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
+                  onClick={handleClick}
                 >
                   우편번호 검색
                 </Button>
@@ -285,7 +301,7 @@ function Payment() {
               <Checkbox
                 size="lg"
                 colorScheme="primary"
-                onChange={checkboxHandler}
+                onChange={matchShippingOrderer}
               />
               <Box color="gray.600">주문자 정보와 동일</Box>
             </HStack>
@@ -315,7 +331,6 @@ function Payment() {
                   {...InputStyle}
                   w="249px"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  defaultValue="서울특별시 마포구 망원동 398-9 (동광탑스빌)"
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button
@@ -333,7 +348,6 @@ function Payment() {
                 w="full"
                 mt="10px"
                 placeholder="성산빌딩 B동 302호"
-                defaultValue="502호"
                 {...register('shippingAddressDetail', { required: true })}
               />
             </Box>
@@ -356,7 +370,7 @@ function Payment() {
             <Checkbox
               size="lg"
               colorScheme="primary"
-              {...register('payMethod')}
+              onChange={checkPayMethod}
             />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>
