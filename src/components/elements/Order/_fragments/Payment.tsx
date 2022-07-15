@@ -122,6 +122,14 @@ function Payment() {
     });
   };
 
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+    document.body.appendChild(script);
+    () => document.body.removeChild(script);
+  }, []);
+
   function onClickPayment(PaymentData: PaymentDataType) {
     /* 1. 가맹점 식별하기 */
 
