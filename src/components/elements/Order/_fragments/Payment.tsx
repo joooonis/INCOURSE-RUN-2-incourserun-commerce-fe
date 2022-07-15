@@ -30,7 +30,8 @@ import {
 } from './types';
 
 function Payment() {
-  const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
+  const { register, handleSubmit, setValue, getValues, reset } =
+    useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
@@ -96,13 +97,14 @@ function Payment() {
     setValue('shippingZipcode', '04015');
     setValue('shippingName', '박태준');
     setValue('shippingPhone', '010-4690-6756');
-    setValue('totalPrice', 100);
-    setValue('deliveryFee', 0);
-    setValue('payMethod', '신용카드');
-    setValue('totalPaid', 100);
+    if (total && deliveryFee) {
+      setValue('totalPrice', total);
+      setValue('deliveryFee', deliveryFee);
+      setValue('totalPaid', total + deliveryFee);
+    }
+    if (getValues('payMethod')) setValue('payMethod', '신용카드');
     setValue('user', 5);
 
-    // if (getValues('PaymentMethod')) setValue('PaymentMethod', '신용카드');
     if (order) {
       const SingleOrderProduct: PaymentProductType = {
         product: Number(product),
@@ -346,7 +348,7 @@ function Payment() {
             <Checkbox
               size="lg"
               colorScheme="primary"
-              // {...register('PaymentMethod')}
+              {...register('payMethod')}
             />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>
