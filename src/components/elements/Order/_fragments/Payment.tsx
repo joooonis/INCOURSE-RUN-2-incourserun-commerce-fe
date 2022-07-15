@@ -31,8 +31,7 @@ import {
 import usePostcode from './usePostCode';
 
 function Payment() {
-  const { register, handleSubmit, setValue, getValues, reset } =
-    useForm<FormValues>();
+  const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
@@ -103,32 +102,34 @@ function Payment() {
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsPaymentButtonActive(e.target.checked);
-
-    if (e.target.checked) {
-      if (total && deliveryFee) {
-        setValue('totalPrice', total);
-        setValue('deliveryFee', deliveryFee);
-        setValue('totalPaid', total + deliveryFee);
-      }
-      if (isCard) setValue('payMethod', '신용카드');
-      if (shippingFullAddress) setValue('shippingAddress', shippingFullAddress);
-      if (shippingZonecode) setValue('shippingZipcode', shippingZonecode);
-      if (order) {
-        const SingleOrderProduct: PaymentProductType = {
-          product: Number(product),
-          quantity: Number(quantity),
-          price: order.price,
-        };
-        setValue('orderProducts', [SingleOrderProduct]);
-      }
-    }
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    instance.post('/v1/orders', data).then((res) => {
-      console.log(res.data);
-      onClickPayment(res.data);
-    });
+    const shippingData = { ...data };
+    if (total && deliveryFee) {
+      shippingData.totalPrice = total;
+      shippingData.deliveryFee = deliveryFee;
+      shippingData.totalPaid = total + deliveryFee;
+    }
+    if (isCard) data.payMethod = '신용카드';
+
+    if (shippingFullAddress) data.shippingAddress = shippingFullAddress;
+    if (shippingZonecode) data.shippingZipcode = shippingZonecode;
+
+    if (order) {
+      const SingleOrderProduct: PaymentProductType = {
+        product: Number(product),
+        quantity: Number(quantity),
+        price: order.price,
+      };
+      shippingData.orderProducts = [SingleOrderProduct];
+    }
+    shippingData.user = 5;
+
+    console.log(shippingData);
+
+    // const res = await instance.post('/v1/orders', data);
+    // onClickPayment(res.data);
   };
 
   useEffect(() => {
