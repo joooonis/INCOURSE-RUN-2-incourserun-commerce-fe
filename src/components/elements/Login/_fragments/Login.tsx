@@ -18,7 +18,7 @@ function Login() {
       <SocialButton
         data={{
           social: 'kakao',
-          link: 'http://172.30.1.18:8000/v1/users/login/kakao',
+          link: 'https://api.incourserun.cf/v1/users/login/kakao',
         }}
         size="md"
       />
