@@ -23,7 +23,7 @@ function LogOutModal({ isOpen, onClose }: MyModalProps) {
   const logOut = () => {
     if (typeof window !== 'undefined' && localStorage.getItem('token')) {
       localStorage.removeItem('token');
-      router.push('/');
+      router.push('/login');
     }
   };
   return (
