@@ -43,10 +43,15 @@ function Join() {
     setValue,
   } = useForm<FormValues>();
 
-  const [user, setUser] = useState<UserType>();
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
-      setUser(res.data);
+      if (res.data.name) setValue('name', res.data.name);
+      if (res.data.nickname) setValue('nickname', res.data.nickname);
+      if (res.data.email) setValue('email', res.data.email);
+      if (res.data.phone) setValue('phone', res.data.phone);
+      if (res.data.gender) setValue('gender', res.data.gender);
+      if (res.data.age) setValue('age', res.data.age);
+
       if (res.data.avatar) setPreview(res.data.avatar);
     });
   }, []);
@@ -143,6 +148,14 @@ function Join() {
     } else setIsJoinButtonActive(false);
   }, [toggle]);
 
+  const validateNickname = (text: string) => {
+    const patter1 = /[a-zA-Z]/;
+    const patter2 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
+    if (patter1.test(text)) return text.length >= 1 && text.length <= 5;
+    else if (patter2.test(text)) return text.length >= 2 && text.length <= 10;
+    else return false;
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <VStack spacing={0} alignItems="flex-start">
@@ -195,7 +208,7 @@ function Join() {
         <VStack spacing="78px" w="full" alignItems="flex-start">
           <FormControl>
             <JoinInput
-              label="username"
+              label="name"
               name="이름"
               placeholder="김인코스런"
               register={register}
@@ -203,9 +216,8 @@ function Join() {
                 required: true,
                 minLength: 2,
               }}
-              defaultValue={user?.name}
             ></JoinInput>
-            {errors.username && (
+            {errors.name && (
               <Box {...ErrorStyle}>최소 2자 이상 입력해주세요.</Box>
             )}
           </FormControl>
@@ -217,10 +229,8 @@ function Join() {
               register={register}
               options={{
                 required: true,
-                minLength: 2,
-                maxLength: 5,
+                validate: (nickname: string) => validateNickname(nickname),
               }}
-              defaultValue={user?.nickname}
             />
             {errors.nickname && (
               <Box {...ErrorStyle}>
@@ -238,7 +248,6 @@ function Join() {
                 required: true,
                 pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
               }}
-              defaultValue={user?.phone}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
@@ -255,7 +264,6 @@ function Join() {
                 pattern:
                   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
               }}
-              defaultValue={user?.email}
             />
             {errors.email && (
               <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
@@ -275,7 +283,6 @@ function Join() {
               fontSize="16px"
               placeholder="성별을 선택하세요"
               {...register('gender')}
-              defaultValue={user?.gender}
             >
               <option value="남성">남</option>
               <option value="여성">여</option>
@@ -293,7 +300,6 @@ function Join() {
               placeholder="연령대를 선택하세요"
               _selected={{ color: '#1A1A1A' }}
               {...register('age')}
-              defaultValue={user?.age}
             >
               <option value="10대">10대</option>
               <option value="20대">20대</option>{' '}
