@@ -130,21 +130,28 @@ function Payment() {
       .then((res) => onClickPayment(res.data));
   };
 
+  // 모듈 import
   useEffect(() => {
-    const script1 = document.createElement('script');
-    script1.type = 'text/javascript';
-    script1.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
-    document.body.appendChild(script1);
+    const jQuery = document.createElement('script');
+    jQuery.type = 'text/javascript';
+    jQuery.src = 'https://code.jquery.com/jquery-1.12.4.min.js';
+    document.body.appendChild(jQuery);
 
-    const script2 = document.createElement('script');
+    const payModule = document.createElement('script');
+    payModule.type = 'text/javascript';
+    payModule.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+    document.body.appendChild(payModule);
 
-    script2.src =
+    const postCode = document.createElement('script');
+
+    postCode.src =
       '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    document.body.appendChild(script2);
+    document.body.appendChild(postCode);
 
     () => {
-      document.body.removeChild(script1);
-      document.body.removeChild(script2);
+      document.body.removeChild(jQuery);
+      document.body.removeChild(payModule);
+      document.body.removeChild(postCode);
     };
   }, []);
 
