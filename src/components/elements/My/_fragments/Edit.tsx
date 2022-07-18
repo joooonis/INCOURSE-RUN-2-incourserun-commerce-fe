@@ -28,13 +28,20 @@ function Edit() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>();
 
-  const [user, setUser] = useState<UserType>();
+  // const [user, setUser] = useState<UserType>();
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
-      setUser(res.data);
+      // setUser(res.data);
+      if (res.data.name) setValue('name', res.data.name);
+      if (res.data.nickname) setValue('nickname', res.data.nickname);
+      if (res.data.email) setValue('email', res.data.email);
+      if (res.data.phone) setValue('phone', res.data.phone);
+      if (res.data.gender) setValue('gender', res.data.gender);
+      if (res.data.ageRange) setValue('ageRange', res.data.age);
 
       if (res.data.avatar) setPreview(res.data.avatar);
     });
@@ -81,6 +88,14 @@ function Edit() {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const validateNickname = (text: string) => {
+    const patter1 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
+    const patter2 = /[a-zA-Z]/;
+    if (patter1.test(text)) return text.length >= 1 && text.length <= 5;
+    else if (patter2.test(text)) return text.length >= 2 && text.length <= 10;
+    else return false;
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -132,7 +147,7 @@ function Edit() {
         <VStack spacing="78px" w="full" alignItems="flex-start">
           <FormControl>
             <EditInput
-              label="username"
+              label="name"
               name="이름"
               placeholder="김인코스런"
               register={register}
@@ -140,9 +155,8 @@ function Edit() {
                 required: true,
                 minLength: 2,
               }}
-              defaultValue={user?.name}
             ></EditInput>
-            {errors.username && (
+            {errors.name && (
               <Box {...ErrorStyle}>최소 2자 이상 입력해주세요.</Box>
             )}
           </FormControl>
@@ -154,10 +168,8 @@ function Edit() {
               register={register}
               options={{
                 required: true,
-                minLength: 2,
-                maxLength: 5,
+                validate: (nickname: string) => validateNickname(nickname),
               }}
-              defaultValue={user?.nickname}
             />
             {errors.nickname && (
               <Box {...ErrorStyle}>
@@ -175,7 +187,6 @@ function Edit() {
                 required: true,
                 pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
               }}
-              defaultValue={user?.phone}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
@@ -192,7 +203,6 @@ function Edit() {
                 pattern:
                   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
               }}
-              defaultValue={user?.email}
             />
             {errors.email && (
               <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
@@ -212,7 +222,6 @@ function Edit() {
               fontSize="16px"
               placeholder="성별을 선택하세요"
               {...register('gender')}
-              defaultValue={user?.gender}
             >
               <option value="남성">남</option>
               <option value="여성">여</option>
@@ -229,8 +238,7 @@ function Edit() {
               fontSize="16px"
               placeholder="연령대를 선택하세요"
               _selected={{ color: '#1A1A1A' }}
-              {...register('age')}
-              defaultValue={user?.age}
+              {...register('ageRange')}
             >
               <option value="10대">10대</option>
               <option value="20대">20대</option>{' '}

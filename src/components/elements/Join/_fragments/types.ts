@@ -17,7 +17,7 @@ export interface FormValues {
   email: string;
   phone: string;
   gender: string;
-  age: string;
+  ageRange: string;
   agreeAllTerms: boolean;
   requiredTerms: boolean;
   privateInfoTerms: boolean;
