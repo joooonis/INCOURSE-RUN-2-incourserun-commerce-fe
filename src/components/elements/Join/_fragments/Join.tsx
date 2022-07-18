@@ -129,6 +129,13 @@ function Join() {
     }
   };
 
+  const [isJoinButtonActive, setIsJoinButtonActive] = useState(false);
+  useEffect(() => {
+    if (getValues('requiredTerms') && getValues('privateInfoTerms')) {
+      setIsJoinButtonActive(true);
+    } else setIsJoinButtonActive(false);
+  }, [toggle]);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <VStack spacing={0} alignItems="flex-start">
@@ -393,6 +400,7 @@ function Join() {
             h="50px"
             borderRadius="25px"
             py="11px"
+            disabled={!isJoinButtonActive}
           >
             회원가입 완료
           </Button>
