@@ -22,20 +22,19 @@ import instance from '@apis/_axios/instance';
 import { EditModal } from '@components/elements/Modal';
 
 import EditInput from './EditInput';
-import { FormValues, UserType } from './types';
+import { FormValues } from './types';
 
 function Edit() {
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<FormValues>();
 
-  // const [user, setUser] = useState<UserType>();
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
-      // setUser(res.data);
       if (res.data.name) setValue('name', res.data.name);
       if (res.data.nickname) setValue('nickname', res.data.nickname);
       if (res.data.email) setValue('email', res.data.email);
@@ -89,13 +88,13 @@ function Edit() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const validateNickname = (text: string) => {
-    const patter1 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
-    const patter2 = /[a-zA-Z]/;
-    if (patter1.test(text)) return text.length >= 1 && text.length <= 5;
-    else if (patter2.test(text)) return text.length >= 2 && text.length <= 10;
-    else return false;
-  };
+  function validateWithByte(str: string) {
+    let byte = 0;
+    for (let i = 0; i < str.length; ++i) {
+      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
+    }
+    return byte >= 2 && byte <= 10;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -168,7 +167,7 @@ function Edit() {
               register={register}
               options={{
                 required: true,
-                validate: (nickname: string) => validateNickname(nickname),
+                validate: (nickname: string) => validateWithByte(nickname),
               }}
             />
             {errors.nickname && (
@@ -223,8 +222,12 @@ function Edit() {
               placeholder="성별을 선택하세요"
               {...register('gender')}
             >
-              <option value="남성">남</option>
-              <option value="여성">여</option>
+              <option value="남성" selected={getValues('gender') === '남성'}>
+                남
+              </option>
+              <option value="여성" selected={getValues('gender') === '여성'}>
+                여
+              </option>
             </Select>
           </FormControl>
           <FormControl>
@@ -240,12 +243,24 @@ function Edit() {
               _selected={{ color: '#1A1A1A' }}
               {...register('ageRange')}
             >
-              <option value="10대">10대</option>
-              <option value="20대">20대</option>{' '}
-              <option value="30대">30대</option>
-              <option value="40대">40대</option>
-              <option value="50대">50대</option>
-              <option value="60대">60대</option>
+              <option value="10대" selected={getValues('ageRange') === '10대'}>
+                10대
+              </option>
+              <option value="20대" selected={getValues('ageRange') === '20대'}>
+                20대
+              </option>{' '}
+              <option value="30대" selected={getValues('ageRange') === '30대'}>
+                30대
+              </option>
+              <option value="40대" selected={getValues('ageRange') === '40대'}>
+                40대
+              </option>
+              <option value="50대" selected={getValues('ageRange') === '50대'}>
+                50대
+              </option>
+              <option value="60대" selected={getValues('ageRange') === '60대'}>
+                60대
+              </option>
             </Select>
           </FormControl>
         </VStack>
