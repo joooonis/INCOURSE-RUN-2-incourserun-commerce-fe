@@ -33,7 +33,11 @@ function Header() {
 
   useEffect(() => {
     setAccessToken(localStorage.getItem('token'));
-  });
+  }, []);
+
+  const logOut = () => {
+    if (typeof window !== 'undefined') localStorage.removeItem('token');
+  };
 
   const gotoProduct = () => {
     router.push('/products');
@@ -98,13 +102,14 @@ function Header() {
             </VStack>
 
             {accessToken && (
-              <Flex {...TitleText} position="absolute" bottom="25px">
-                <Image
-                  src="/icons/svg/main/logout.svg"
-                  alt="logout"
-                  _hover={{ cursor: 'pointer' }}
-                  mr="4px"
-                />
+              <Flex
+                {...TitleText}
+                position="absolute"
+                bottom="25px"
+                onClick={logOut}
+                _hover={{ cursor: 'pointer' }}
+              >
+                <Image src="/icons/svg/main/logout.svg" alt="logout" mr="4px" />
                 <Box>로그아웃</Box>
               </Flex>
             )}

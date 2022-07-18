@@ -38,6 +38,10 @@ function My() {
     router.push('review/myreview');
   };
 
+  const logOut = () => {
+    if (typeof window !== 'undefined') localStorage.removeItem('token');
+  };
+
   return (
     <Box>
       {user && (
@@ -138,6 +142,8 @@ function My() {
         h="60px"
         px="16px"
         borderBottom="0.5px solid #F2F3F4"
+        _hover={{ cursor: 'pointer' }}
+        onClick={logOut}
       >
         로그아웃 <Image src="/icons/svg/my/arrow.svg" alt="arrow" pr="8px" />
       </Flex>
