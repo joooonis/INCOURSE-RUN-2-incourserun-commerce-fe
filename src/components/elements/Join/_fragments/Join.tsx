@@ -24,7 +24,7 @@ import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
 import JoinInput from './JoinInput';
-import { FormValues, UserType } from './types';
+import { FormValues } from './types';
 
 function Join() {
   useEffect(() => {
@@ -50,7 +50,7 @@ function Join() {
       if (res.data.email) setValue('email', res.data.email);
       if (res.data.phone) setValue('phone', res.data.phone);
       if (res.data.gender) setValue('gender', res.data.gender);
-      if (res.data.age) setValue('age', res.data.age);
+      if (res.data.ageRange) setValue('ageRange', res.data.age);
 
       if (res.data.avatar) setPreview(res.data.avatar);
     });
@@ -149,8 +149,8 @@ function Join() {
   }, [toggle]);
 
   const validateNickname = (text: string) => {
-    const patter1 = /[a-zA-Z]/;
-    const patter2 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
+    const patter1 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
+    const patter2 = /[a-zA-Z]/;
     if (patter1.test(text)) return text.length >= 1 && text.length <= 5;
     else if (patter2.test(text)) return text.length >= 2 && text.length <= 10;
     else return false;
@@ -299,7 +299,7 @@ function Join() {
               fontSize="16px"
               placeholder="연령대를 선택하세요"
               _selected={{ color: '#1A1A1A' }}
-              {...register('age')}
+              {...register('ageRange')}
             >
               <option value="10대">10대</option>
               <option value="20대">20대</option>{' '}
