@@ -6,10 +6,7 @@ import { Box, Flex, Image } from '@chakra-ui/react';
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
-type User = {
-  username: string;
-  email: string;
-};
+import { UserType } from './types';
 
 function My() {
   useEffect(() => {
@@ -20,7 +17,7 @@ function My() {
     }
   }, []);
 
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserType>();
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
       setUser(res.data);
@@ -46,7 +43,7 @@ function My() {
       {user && (
         <Box px="16px" pt="150px" pb="30px">
           <Box {...TitleText} w="full">
-            {user.username}
+            {user.name}
           </Box>
           <Box {...BasicText} color="gray.400" w="full">
             {user.email}

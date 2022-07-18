@@ -22,7 +22,7 @@ import instance from '@apis/_axios/instance';
 import { EditModal } from '@components/elements/Modal';
 
 import EditInput from './EditInput';
-import { FormValues, User } from './types';
+import { FormValues, UserType } from './types';
 
 function Edit() {
   const {
@@ -31,9 +31,9 @@ function Edit() {
     formState: { errors },
   } = useForm<FormValues>();
 
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserType>();
   useEffect(() => {
-    instance.get('/v1/users/5').then((res) => {
+    instance.get('/v1/users/me').then((res) => {
       setUser(res.data);
 
       if (res.data.avatar) setPreview(res.data.avatar);
@@ -64,16 +64,16 @@ function Edit() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     if (data && img) {
-      instance.patch('/v1/users/5', data);
+      instance.patch('/v1/users/me', data);
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
-      instance.patch('/v1/users/5', formData).then(() => {
+      instance.patch('/v1/users/me', formData).then(() => {
         onOpen();
         router.push('/');
       });
     } else if (data) {
-      instance.patch('/v1/users/5', data).then(() => {
+      instance.patch('/v1/users/me', data).then(() => {
         onOpen();
         router.push('/');
       });
@@ -140,7 +140,7 @@ function Edit() {
                 required: true,
                 minLength: 2,
               }}
-              defaultValue={user?.username}
+              defaultValue={user?.name}
             ></EditInput>
             {errors.username && (
               <Box {...ErrorStyle}>최소 2자 이상 입력해주세요.</Box>
