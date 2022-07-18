@@ -136,8 +136,6 @@ function CartPayMent() {
     if (shippingFullAddress) data.shippingAddress = shippingFullAddress;
     if (shippingZonecode) data.shippingZipcode = shippingZonecode;
 
-    shippingData.user = 5;
-
     if (orders && quantities) {
       const orderProducts = [];
       for (let i = 0; i < orders.length; i++) {
@@ -151,8 +149,7 @@ function CartPayMent() {
       setValue('orderProducts', orderProducts);
     }
 
-    console.log(data);
-    instance.post('/v1/orders', data).then((res) => {
+    instance.post('/v1/orders', shippingData).then((res) => {
       onClickPayment(res.data);
     });
   };

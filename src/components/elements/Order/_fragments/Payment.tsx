@@ -54,7 +54,7 @@ function Payment() {
 
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
-    instance.get('/v1/users/5').then((res) => {
+    instance.get('/v1/users/me').then((res) => {
       setOrderer({
         ...orderer,
         name: res.data.name,
@@ -124,12 +124,10 @@ function Payment() {
       };
       shippingData.orderProducts = [SingleOrderProduct];
     }
-    shippingData.user = 5;
 
-    console.log(shippingData);
-
-    // const res = await instance.post('/v1/orders', data);
-    // onClickPayment(res.data);
+    instance
+      .post('/v1/orders', shippingData)
+      .then((res) => onClickPayment(res.data));
   };
 
   useEffect(() => {

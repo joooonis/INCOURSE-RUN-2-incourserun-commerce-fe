@@ -22,7 +22,7 @@ function My() {
 
   const [user, setUser] = useState<User>();
   useEffect(() => {
-    instance.get('/v1/users/5').then((res) => {
+    instance.get('/v1/users/me').then((res) => {
       setUser(res.data);
     });
   }, []);
