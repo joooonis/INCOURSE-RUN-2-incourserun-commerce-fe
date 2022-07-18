@@ -21,6 +21,7 @@ export interface FormValues {
   requiredTerms: boolean;
   privateInfoTerms: boolean;
   marketingTerms: boolean;
+  isRegister: boolean;
 }
 export interface JoinInputProps extends InputProps {
   label: Path<FormValues>;
