@@ -22,7 +22,7 @@ import instance from '@apis/_axios/instance';
 import { EditModal } from '@components/elements/Modal';
 
 import EditInput from './EditInput';
-import { FormValues, UserType } from './types';
+import { FormValues } from './types';
 
 function Edit() {
   const {
@@ -32,10 +32,8 @@ function Edit() {
     formState: { errors },
   } = useForm<FormValues>();
 
-  // const [user, setUser] = useState<UserType>();
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
-      // setUser(res.data);
       if (res.data.name) setValue('name', res.data.name);
       if (res.data.nickname) setValue('nickname', res.data.nickname);
       if (res.data.email) setValue('email', res.data.email);
@@ -89,13 +87,13 @@ function Edit() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const validateNickname = (text: string) => {
-    const patter1 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
-    const patter2 = /[a-zA-Z]/;
-    if (patter1.test(text)) return text.length >= 1 && text.length <= 5;
-    else if (patter2.test(text)) return text.length >= 2 && text.length <= 10;
-    else return false;
-  };
+  function validateWithByte(str: string) {
+    let byte = 0;
+    for (let i = 0; i < str.length; ++i) {
+      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
+    }
+    return byte >= 2 && byte <= 10;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -168,7 +166,7 @@ function Edit() {
               register={register}
               options={{
                 required: true,
-                validate: (nickname: string) => validateNickname(nickname),
+                validate: (nickname: string) => validateWithByte(nickname),
               }}
             />
             {errors.nickname && (

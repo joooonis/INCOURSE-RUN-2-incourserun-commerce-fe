@@ -141,13 +141,13 @@ function Join() {
     } else setIsJoinButtonActive(false);
   }, [toggle]);
 
-  const validateNickname = (text: string) => {
-    const patter1 = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힇]/;
-    const patter2 = /[a-zA-Z]/;
-    if (patter1.test(text)) return text.length >= 1 && text.length <= 5;
-    else if (patter2.test(text)) return text.length >= 2 && text.length <= 10;
-    else return false;
-  };
+  function validateWithByte(str: string) {
+    let byte = 0;
+    for (let i = 0; i < str.length; ++i) {
+      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
+    }
+    return byte >= 2 && byte <= 10;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -222,7 +222,7 @@ function Join() {
               register={register}
               options={{
                 required: true,
-                validate: (nickname: string) => validateNickname(nickname),
+                validate: (nickname: string) => validateWithByte(nickname),
               }}
             />
             {errors.nickname && (
