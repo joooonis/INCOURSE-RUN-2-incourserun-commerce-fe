@@ -14,13 +14,7 @@ function Order() {
   const [products, setProducts] = useState<ProductType[]>();
 
   useEffect(() => {
-    instance
-      .get('/v1/orders', {
-        params: {
-          user: 1, //여기에서 user id 를 수정합니다.
-        },
-      })
-      .then((res) => setOrders(res.data));
+    instance.get('/v1/users/me/orders').then((res) => setOrders(res.data));
 
     instance.get('/v1/products').then((res) => setProducts(res.data));
   }, []);
