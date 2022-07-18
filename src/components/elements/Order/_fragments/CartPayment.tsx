@@ -26,6 +26,7 @@ import {
   PaymentProductType,
   ProductType,
 } from './types';
+import usePostcode from './usePostCode';
 
 function CartPayMent() {
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
@@ -84,6 +85,13 @@ function CartPayMent() {
     });
   }, []);
 
+  const { handleClick, fullAddress, zonecode } = usePostcode();
+  const {
+    handleClick: shippingHandleClick,
+    fullAddress: shippingFullAddress,
+    zonecode: shippingZonecode,
+  } = usePostcode();
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = event.target;
     setOrderer({
@@ -92,28 +100,44 @@ function CartPayMent() {
     });
   };
 
-  const checkboxHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const matchShippingOrderer = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       if (orderer?.name) setValue('shippingName', orderer?.name);
       if (orderer?.phone) setValue('shippingPhone', orderer?.phone);
-      if (orderer?.addressDetail) {
-        setValue('shippingZipcode', '04015');
-      }
+      if (orderer?.address) setValue('shippingAddress', orderer?.address);
+      else if (fullAddress) setValue('shippingAddress', fullAddress);
+
+      if (orderer?.addressDetail)
+        setValue('shippingAddressDetail', orderer?.addressDetail);
+      if (zonecode) setValue('shippingZipcode', zonecode);
     } else reset();
   };
 
   const [isPayButtonActive, setIsPayButtonActive] = useState(false);
+  const [isCard, setIsCard] = useState(false);
+
+  const checkPayMethod = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCard(e.target.checked);
+  };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsPayButtonActive(e.target.checked);
-    setValue('shippingZipcode', '04015');
-    setValue('shippingName', '박태준');
-    setValue('shippingPhone', '010-4690-6756');
-    setValue('totalPrice', 100);
-    setValue('deliveryFee', 0);
-    setValue('payMethod', '신용카드');
-    setValue('totalPaid', 100);
-    setValue('user', 5);
+  };
+
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const shippingData = { ...data };
+    if (total && deliveryFee) {
+      shippingData.totalPrice = total;
+      shippingData.deliveryFee = deliveryFee;
+      shippingData.totalPaid = total + deliveryFee;
+    }
+    if (isCard) data.payMethod = '신용카드';
+
+    if (shippingFullAddress) data.shippingAddress = shippingFullAddress;
+    if (shippingZonecode) data.shippingZipcode = shippingZonecode;
+
+    shippingData.user = 5;
+
     if (orders && quantities) {
       const orderProducts = [];
       for (let i = 0; i < orders.length; i++) {
@@ -126,9 +150,7 @@ function CartPayMent() {
       }
       setValue('orderProducts', orderProducts);
     }
-  };
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
     instance.post('/v1/orders', data).then((res) => {
       onClickPayment(res.data);
@@ -259,6 +281,7 @@ function CartPayMent() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
+                  onClick={handleClick}
                 >
                   우편번호 검색
                 </Button>
@@ -289,7 +312,7 @@ function CartPayMent() {
               <Checkbox
                 size="lg"
                 colorScheme="primary"
-                onChange={checkboxHandler}
+                onChange={matchShippingOrderer}
               />
               <Box color="gray.600">주문자 정보와 동일</Box>
             </HStack>
@@ -328,6 +351,7 @@ function CartPayMent() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
+                  onClick={shippingHandleClick}
                 >
                   우편번호 검색
                 </Button>
@@ -360,7 +384,7 @@ function CartPayMent() {
             <Checkbox
               size="lg"
               colorScheme="primary"
-              // {...register('payMethod')}
+              onChange={checkPayMethod}
             />
             <Image src="/icons/svg/order/pay.svg" />
             <Box>신용카드결제</Box>

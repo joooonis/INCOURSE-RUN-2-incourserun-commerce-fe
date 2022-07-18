@@ -13,7 +13,7 @@ const Kakao = () => {
       .post('https://api.incourserun.cf/v1/users/social_login', {
         code: code,
         state: 'kakao',
-        redirectUri: 'https://localhost:3000/login/kakao/callback',
+        redirectUri: 'https://incourserun.cf/login/kakao/callback',
       })
       .then((res) => {
         const token = res.data.access;
