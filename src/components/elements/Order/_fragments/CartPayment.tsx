@@ -74,7 +74,7 @@ function CartPayMent() {
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
 
-    instance.get('/v1/users/5').then((res) => {
+    instance.get('/v1/users/me').then((res) => {
       setOrderer({
         ...orderer,
         name: res.data.name,
