@@ -81,7 +81,6 @@ function Edit() {
     } else if (data) {
       instance.patch('/v1/users/me', data).then(() => {
         onOpen();
-        router.push('/');
       });
     }
   };
