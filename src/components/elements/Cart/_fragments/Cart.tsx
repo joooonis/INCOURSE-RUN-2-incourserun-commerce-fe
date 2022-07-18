@@ -84,11 +84,7 @@ function Cart() {
     const fetchURL = async () => {
       try {
         const res1 = await instance.get('/v1/products');
-        const res2 = await instance.get('/v1/carts', {
-          params: {
-            user: 1, //여기에서 user id 를 수정합니다.
-          },
-        });
+        const res2 = await instance.get('/v1/users/me/carts');
         setProducts(res1.data);
         setItems(res2.data);
       } catch (err) {

@@ -75,7 +75,7 @@ function SingleReview({ review }: SingleReviewProps) {
 function MyReview() {
   const [myReviews, setMyReviews] = useState<ReviewType[]>();
   useEffect(() => {
-    instance.get('/v1/reviews', { params: { user: 1 } }).then((res) => {
+    instance.get('/v1/users/me/reviews').then((res) => {
       setMyReviews(res.data.results);
     });
   }, []);
