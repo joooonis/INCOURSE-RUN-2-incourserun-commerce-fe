@@ -15,6 +15,8 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { LogOutModal } from '@components/elements/Modal';
+
 import { LAYOUT } from '@constants/layout';
 
 function Header() {
@@ -35,10 +37,11 @@ function Header() {
     setAccessToken(localStorage.getItem('token'));
   }, []);
 
-  const logOut = () => {
-    if (typeof window !== 'undefined') localStorage.removeItem('token');
-    router.replace('/login');
-  };
+  const {
+    isOpen: isLogOutModalOpen,
+    onOpen: onLogOutModalOpen,
+    onClose: onLogOutModalClose,
+  } = useDisclosure();
 
   const gotoProduct = () => {
     router.push('/products');
@@ -47,6 +50,8 @@ function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
+      <LogOutModal isOpen={isLogOutModalOpen} onClose={onLogOutModalClose} />
+
       <Container px={0} maxW={LAYOUT.SIZE.WIDTH}>
         <Flex
           as="header"
@@ -107,7 +112,7 @@ function Header() {
                 {...TitleText}
                 position="absolute"
                 bottom="25px"
-                onClick={logOut}
+                onClick={onLogOutModalOpen}
                 _hover={{ cursor: 'pointer' }}
               >
                 <Image src="/icons/svg/main/logout.svg" alt="logout" mr="4px" />
