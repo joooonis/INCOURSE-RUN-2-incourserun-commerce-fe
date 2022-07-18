@@ -40,6 +40,7 @@ function My() {
 
   const logOut = () => {
     if (typeof window !== 'undefined') localStorage.removeItem('token');
+    router.replace('/login');
   };
 
   return (
