@@ -29,9 +29,9 @@ export interface JoinInputProps extends InputProps {
   options?: Options;
 }
 
-export type User = {
+export type UserType = {
   avatar: File;
-  username: string;
+  name: string;
   nickname: string;
   email: string;
   phone: string;
