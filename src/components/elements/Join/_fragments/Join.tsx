@@ -277,8 +277,12 @@ function Join() {
               placeholder="성별을 선택하세요"
               {...register('gender')}
             >
-              <option value="남성">남</option>
-              <option value="여성">여</option>
+              <option value="남성" selected={getValues('gender') === '남성'}>
+                남
+              </option>
+              <option value="여성" selected={getValues('gender') === '여성'}>
+                여
+              </option>
             </Select>
           </FormControl>
           <FormControl>
@@ -294,12 +298,24 @@ function Join() {
               _selected={{ color: '#1A1A1A' }}
               {...register('ageRange')}
             >
-              <option value="10대">10대</option>
-              <option value="20대">20대</option>{' '}
-              <option value="30대">30대</option>
-              <option value="40대">40대</option>
-              <option value="50대">50대</option>
-              <option value="60대">60대</option>
+              <option value="10대" selected={getValues('ageRange') === '10대'}>
+                10대
+              </option>
+              <option value="20대" selected={getValues('ageRange') === '20대'}>
+                20대
+              </option>{' '}
+              <option value="30대" selected={getValues('ageRange') === '30대'}>
+                30대
+              </option>
+              <option value="40대" selected={getValues('ageRange') === '40대'}>
+                40대
+              </option>
+              <option value="50대" selected={getValues('ageRange') === '50대'}>
+                50대
+              </option>
+              <option value="60대" selected={getValues('ageRange') === '60대'}>
+                60대
+              </option>
             </Select>
           </FormControl>
         </VStack>
