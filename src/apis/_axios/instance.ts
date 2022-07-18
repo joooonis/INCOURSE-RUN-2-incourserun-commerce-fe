@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-import { SERVER_URL } from '@components/elements/urls';
-
 import { CONFIG } from '@config';
 import { apiLogger } from '@utils/apiLogger';
 import { getToken } from '@utils/localStorage/token';
