@@ -1,7 +1,7 @@
-import HomeLayout from '@components/common/@Layout/HomeLayout';
+import Layout from '@components/common/@Layout/layouts/HomeLayout';
 
 import Content from './_fragments/Content';
 
 export function CounterContainer() {
-  return <HomeLayout content={<Content />} />;
+  return <Layout content={<Content />} />;
 }
