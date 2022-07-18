@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import {
   Box,
   Flex,
@@ -13,6 +15,11 @@ import PrimaryButton from '@components/common/Button';
 import { MyModalProps } from './types';
 
 function EditModal({ isOpen, onClose }: MyModalProps) {
+  const router = useRouter();
+  const editComplete = () => {
+    onClose();
+    router.push('/mypage');
+  };
   return (
     <>
       <Modal
@@ -29,7 +36,7 @@ function EditModal({ isOpen, onClose }: MyModalProps) {
               회원정보 수정이 완료되었습니다.
             </Box>
             <Flex justify="center">
-              <PrimaryButton onClick={onClose} w="155px">
+              <PrimaryButton onClick={editComplete} w="155px">
                 확인
               </PrimaryButton>
             </Flex>

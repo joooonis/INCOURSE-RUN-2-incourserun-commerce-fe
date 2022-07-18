@@ -154,6 +154,30 @@ function CartPayMent() {
     });
   };
 
+  useEffect(() => {
+    const jQuery = document.createElement('script');
+    jQuery.type = 'text/javascript';
+    jQuery.src = 'https://code.jquery.com/jquery-1.12.4.min.js';
+    document.body.appendChild(jQuery);
+
+    const payModule = document.createElement('script');
+    payModule.type = 'text/javascript';
+    payModule.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+    document.body.appendChild(payModule);
+
+    const postCode = document.createElement('script');
+
+    postCode.src =
+      '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    document.body.appendChild(postCode);
+
+    () => {
+      document.body.removeChild(jQuery);
+      document.body.removeChild(payModule);
+      document.body.removeChild(postCode);
+    };
+  }, []);
+
   function onClickPayment(payData: PaymentDataType) {
     /* 1. 가맹점 식별하기 */
     const { IMP } = window;
