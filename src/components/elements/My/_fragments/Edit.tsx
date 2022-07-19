@@ -41,7 +41,6 @@ function Edit() {
       if (res.data.phone) setValue('phone', res.data.phone);
       if (res.data.gender) setValue('gender', res.data.gender);
       if (res.data.ageRange) setValue('ageRange', res.data.age);
-
       if (res.data.avatar) setPreview(res.data.avatar);
     });
   }, []);

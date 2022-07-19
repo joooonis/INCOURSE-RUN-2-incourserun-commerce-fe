@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { Box, Button, Checkbox, Flex, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
-import { setAuthHeader } from '@apis/_axios/instance';
 import {
   addItem,
   checkAllItem,
@@ -22,14 +21,6 @@ import Item from './Item';
 import { ItemType, ProductType, QueryType } from './types';
 
 function Cart() {
-  useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
-  }, []);
-
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [products, setProducts] = useState<ProductType[]>();
   const { itemCheckers, total } = useRootState((state) => state.ITEM);
