@@ -35,16 +35,18 @@ function Join() {
   } = useForm<FormValues>();
 
   useEffect(() => {
-    instance.get('/v1/users/me').then((res) => {
-      if (res.data.name) setValue('name', res.data.name);
-      if (res.data.nickname) setValue('nickname', res.data.nickname);
-      if (res.data.email) setValue('email', res.data.email);
-      if (res.data.phone) setValue('phone', res.data.phone);
-      if (res.data.gender) setValue('gender', res.data.gender);
-      if (res.data.ageRange) setValue('ageRange', res.data.age);
+    setTimeout(() => {
+      instance.get('/v1/users/me').then((res) => {
+        if (res.data.name) setValue('name', res.data.name);
+        if (res.data.nickname) setValue('nickname', res.data.nickname);
+        if (res.data.email) setValue('email', res.data.email);
+        if (res.data.phone) setValue('phone', res.data.phone);
+        if (res.data.gender) setValue('gender', res.data.gender);
+        if (res.data.ageRange) setValue('ageRange', res.data.age);
 
-      if (res.data.avatar) setPreview(res.data.avatar);
-    });
+        if (res.data.avatar) setPreview(res.data.avatar);
+      });
+    }, 1000);
   }, []);
 
   const avatarRef = useRef<HTMLInputElement>(null);
@@ -75,7 +77,7 @@ function Join() {
 
     if (
       (img && data.agreeAllTerms) ||
-      (img && data.requiredTerms && data.marketingTerms)
+      (img && data.requiredTerms && data.privateInfoTerms)
     ) {
       instance
         .patch('/v1/users/me', patchData)
@@ -89,7 +91,7 @@ function Join() {
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
-      (img && data.requiredTerms && data.marketingTerms)
+      (img && data.requiredTerms && data.privateInfoTerms)
     ) {
       instance
         .patch('/v1/users/me', patchData)
