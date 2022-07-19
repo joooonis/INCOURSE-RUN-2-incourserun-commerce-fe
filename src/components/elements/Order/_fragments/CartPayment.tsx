@@ -123,10 +123,10 @@ function CartPayMent() {
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
     }
-    if (isCard) data.payMethod = '신용카드';
+    if (isCard) shippingData.payMethod = '신용카드';
 
-    if (shippingFullAddress) data.shippingAddress = shippingFullAddress;
-    if (shippingZonecode) data.shippingZipcode = shippingZonecode;
+    if (shippingFullAddress) shippingData.shippingAddress = shippingFullAddress;
+    if (shippingZonecode) shippingData.shippingZipcode = shippingZonecode;
 
     if (orders && quantities) {
       const orderProducts = [];
@@ -138,7 +138,7 @@ function CartPayMent() {
         };
         orderProducts.push(SingleOrderProduct);
       }
-      setValue('orderProducts', orderProducts);
+      shippingData.orderProducts = orderProducts;
     }
 
     instance.post('/v1/orders', shippingData).then((res) => {
