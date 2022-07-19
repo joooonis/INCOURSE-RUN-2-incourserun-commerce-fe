@@ -9,6 +9,7 @@ import {
   addItem,
   checkAllItem,
   checkItem,
+  cleanUpItems,
   setTotal,
   unCheckAllItem,
 } from '@features/Item/itemSlice';
@@ -37,6 +38,21 @@ function Cart() {
   const gotoProduct = () => {
     router.push('/products');
   };
+
+  useEffect(() => {
+    const fetchURL = async () => {
+      try {
+        const res1 = await instance.get('/v1/products');
+        const res2 = await instance.get('/v1/users/me/carts');
+        setProducts(res1.data);
+        setItems(res2.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchURL();
+    dispatch(cleanUpItems());
+  }, []);
 
   useEffect(() => {
     let total = 0;
@@ -70,20 +86,6 @@ function Cart() {
       query: { checked: JSON.stringify(queries) },
     });
   };
-
-  useEffect(() => {
-    const fetchURL = async () => {
-      try {
-        const res1 = await instance.get('/v1/products');
-        const res2 = await instance.get('/v1/users/me/carts');
-        setProducts(res1.data);
-        setItems(res2.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchURL();
-  }, []);
 
   const incTotal = (price: number, t: number = total) => {
     dispatch(setTotal(t + price));

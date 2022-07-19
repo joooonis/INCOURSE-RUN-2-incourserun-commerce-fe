@@ -64,7 +64,6 @@ function CartPayMent() {
         sum += +orders[i].price * quantities[i];
       }
       setTotal(sum);
-      console.log(sum);
       if (sum < 30000) setDeliveryFee(3000);
       else setDeliveryFee(0);
     }
