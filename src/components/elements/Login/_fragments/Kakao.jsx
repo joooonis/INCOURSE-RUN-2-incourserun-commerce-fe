@@ -13,7 +13,7 @@ const Kakao = () => {
       .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/social_login`, {
         code: code,
         state: 'kakao',
-        redirectUri: `${process.env.NEXT_PUBLIC_API_BASE_URL}/login/kakao/callback`,
+        redirectUri: `${process.env.NEXT_PUBLIC_DOMAIN}/login/kakao/callback`,
       })
       .then((res) => {
         const token = res.data.access;

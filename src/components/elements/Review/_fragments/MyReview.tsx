@@ -4,7 +4,8 @@ import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
-import Pagination from './Pagination';
+import Pagination from '@components/common/Pagination';
+
 import { ReviewType, SingleReviewProps, StarRatingProps } from './types';
 
 function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
