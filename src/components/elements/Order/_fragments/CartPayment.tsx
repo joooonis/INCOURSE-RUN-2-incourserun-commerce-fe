@@ -76,7 +76,6 @@ function CartPayMent() {
     instance.get('/v1/products').then((res) => setProducts(res.data));
     instance.get('/v1/users/me').then((res) => {
       setOrderer({ ...res.data });
-
     });
   }, []);
 
