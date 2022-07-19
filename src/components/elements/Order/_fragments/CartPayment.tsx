@@ -64,7 +64,9 @@ function CartPayMent() {
         sum += +orders[i].price * quantities[i];
       }
       setTotal(sum);
+      console.log(sum);
       if (sum < 30000) setDeliveryFee(3000);
+      else setDeliveryFee(0);
     }
   }, [orders, quantities]);
 
@@ -118,7 +120,7 @@ function CartPayMent() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const shippingData = { ...data };
-    if (total && deliveryFee) {
+    if ((total && deliveryFee) || (total && deliveryFee == 0)) {
       shippingData.totalPrice = total;
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
@@ -180,11 +182,10 @@ function CartPayMent() {
       pg: 'html5_inicis', // PG사
       pay_method: 'card', // 결제수단
       merchant_uid: payData.merchantUid, // 주문번호
-      amount: 100, // 결제금액
+      amount: payData.totalPaid, // 결제금액
       name: '아임포트 결제 데이터 분석', // 주문명
       buyer_name: payData.shippingName, // 구매자 이름
       buyer_tel: payData.shippingPhone, // 구매자 전화번호
-      buyer_email: 'example@example', // 구매자 이메일
       buyer_addr: payData.shippingAddress, // 구매자 주소
       buyer_postcode: payData.shippingZipcode, // 구매자 우편번호
     };
@@ -420,7 +421,11 @@ function CartPayMent() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {(total && deliveryFee) ||
+                (total &&
+                  deliveryFee == 0 &&
+                  priceToString(total + deliveryFee))}
+              원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>

@@ -103,7 +103,7 @@ function Payment() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const shippingData = { ...data };
-    if (total && deliveryFee) {
+    if ((total && deliveryFee) || (total && deliveryFee == 0)) {
       shippingData.totalPrice = total;
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
@@ -391,7 +391,11 @@ function Payment() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {(total && deliveryFee) ||
+                (total &&
+                  deliveryFee == 0 &&
+                  priceToString(total + deliveryFee))}{' '}
+              원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>
