@@ -91,7 +91,7 @@ function Join() {
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
-      (img && data.requiredTerms && data.privateInfoTerms)
+      (data.requiredTerms && data.privateInfoTerms)
     ) {
       instance
         .patch('/v1/users/me', patchData)

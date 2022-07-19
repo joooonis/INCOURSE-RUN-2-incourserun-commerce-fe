@@ -12,7 +12,6 @@ function JoinPage() {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
     else {
-      console.log('토큰넣기 성공');
       setAuthHeader(accessToken);
     }
   }, []);
