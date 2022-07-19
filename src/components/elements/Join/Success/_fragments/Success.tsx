@@ -26,8 +26,8 @@ function Success() {
     }
   }, []);
 
-  const gotoProduct = () => {
-    router.replace('/products');
+  const gotoMain = () => {
+    router.replace('/');
   };
   return (
     <Container maxW={LAYOUT.SIZE.WIDTH}>
@@ -49,7 +49,7 @@ function Success() {
             borderRadius="25px"
             size="sd"
             py="12px"
-            onClick={gotoProduct}
+            onClick={gotoMain}
           >
             시작하기
           </Button>
