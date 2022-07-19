@@ -39,8 +39,8 @@ function Payment() {
   const [order, setOrder] = useState<ProductType>();
   const [orderer, setOrderer] = useState<OrdererType>();
   const [products, setProducts] = useState<ProductType[]>([]);
-  const [total, setTotal] = useState<number>();
-  const [deliveryFee, setDeliveryFee] = useState<number>();
+  const [total, setTotal] = useState<number>(0);
+  const [deliveryFee, setDeliveryFee] = useState<number>(0);
 
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
@@ -98,7 +98,7 @@ function Payment() {
   };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPaymentButtonActive(e.target.checked);
+    setIsPaymentButtonActive(e.target.checked && isCard);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {

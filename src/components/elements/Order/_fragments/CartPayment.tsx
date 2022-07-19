@@ -40,7 +40,7 @@ function CartPayMent() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [total, setTotal] = useState<number>(0);
 
-  const [deliveryFee, setDeliveryFee] = useState<number>();
+  const [deliveryFee, setDeliveryFee] = useState<number>(0);
 
   useEffect(() => {
     if (typeof checked === 'string') {
@@ -64,9 +64,7 @@ function CartPayMent() {
         sum += +orders[i].price * quantities[i];
       }
       setTotal(sum);
-
-      if (sum >= 30000) setDeliveryFee(0);
-      else setDeliveryFee(3000);
+      if (sum < 30000) setDeliveryFee(3000);
     }
   }, [orders, quantities]);
 
@@ -115,7 +113,7 @@ function CartPayMent() {
   };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPayButtonActive(e.target.checked);
+    setIsPayButtonActive(e.target.checked && isCard);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
