@@ -24,7 +24,7 @@ const Kakao = () => {
         }
 
         if (isRegister) router.push('/');
-        else router.replace('/login');
+        else router.replace('/join');
       })
       .catch((err) => {
         console.log('소셜로그인 에러', err);
