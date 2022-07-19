@@ -67,7 +67,7 @@ function Order() {
           position="relative"
         >
           {orders &&
-            orders.map((order, index) => {
+            orders.map((_, index) => {
               return (
                 <Tab key={index} {...TabStyle} _selected={{ color: '#1A1A1A' }}>
                   {index}

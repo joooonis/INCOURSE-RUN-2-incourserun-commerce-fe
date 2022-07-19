@@ -10,10 +10,10 @@ const Kakao = () => {
     const code = new URL(window.location.href).searchParams.get('code');
 
     axios
-      .post('https://api.incourserun.cf/v1/users/social_login', {
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/social_login`, {
         code: code,
         state: 'kakao',
-        redirectUri: 'https://incourserun.cf/login/kakao/callback',
+        redirectUri: `${process.env.NEXT_PUBLIC_API_BASE_URL}/login/kakao/callback`,
       })
       .then((res) => {
         const token = res.data.access;
