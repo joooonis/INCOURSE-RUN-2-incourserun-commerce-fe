@@ -70,11 +70,16 @@ function Join() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const patchData = { ...data };
+    patchData.isRegister = true;
+
     if (
       (img && data.agreeAllTerms) ||
       (img && data.requiredTerms && data.marketingTerms)
     ) {
-      instance.patch('/v1/users/me', data).then((res) => console.log(res.data));
+      instance
+        .patch('/v1/users/me', patchData)
+        .then((res) => console.log(res.data));
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
@@ -86,7 +91,9 @@ function Join() {
       data.agreeAllTerms ||
       (img && data.requiredTerms && data.marketingTerms)
     ) {
-      instance.patch('/v1/users/me', data).then((res) => console.log(res.data));
+      instance
+        .patch('/v1/users/me', patchData)
+        .then((res) => console.log(res.data));
       router.replace('join/success');
     }
   };
