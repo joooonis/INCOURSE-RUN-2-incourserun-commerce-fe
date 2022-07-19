@@ -37,35 +37,31 @@ function Payment() {
   const { product, quantity } = router.query;
 
   const [order, setOrder] = useState<ProductType>();
+  const [orderer, setOrderer] = useState<OrdererType>();
   const [products, setProducts] = useState<ProductType[]>([]);
   const [total, setTotal] = useState<number>();
   const [deliveryFee, setDeliveryFee] = useState<number>();
 
   useEffect(() => {
-    const order = findProduct(products, Number(product));
-    setOrder(order);
-    setTotal(order?.price * Number(quantity));
-
-    if (order?.price * Number(quantity) >= 30000) setDeliveryFee(0);
-    else setDeliveryFee(3000);
-  }, [products]);
-
-  const [orderer, setOrderer] = useState<OrdererType>();
-
-  useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
     instance.get('/v1/users/me').then((res) => {
-      setOrderer({
-        ...orderer,
-        name: res.data.name,
-        phone: res.data.phone,
-        address: res.data.address,
-        addressDetail: res.data.addressDetail,
-      });
+      setOrderer({ ...res.data });
     });
   }, []);
 
-  const { handleClick, fullAddress, zonecode } = usePostcode();
+  useEffect(() => {
+    const myOrder = findProduct(products, Number(product));
+    setOrder(myOrder);
+    setTotal(myOrder?.price * Number(quantity));
+    if (myOrder?.price * Number(quantity) >= 30000) setDeliveryFee(0);
+    else setDeliveryFee(3000);
+  }, [products]);
+
+  const {
+    handleClick: ordererHandleClick,
+    fullAddress: ordererFullAddress,
+    zonecode: ordererZonecode,
+  } = usePostcode();
   const {
     handleClick: shippingHandleClick,
     fullAddress: shippingFullAddress,
@@ -85,11 +81,12 @@ function Payment() {
       if (orderer?.name) setValue('shippingName', orderer?.name);
       if (orderer?.phone) setValue('shippingPhone', orderer?.phone);
       if (orderer?.address) setValue('shippingAddress', orderer?.address);
-      else if (fullAddress) setValue('shippingAddress', fullAddress);
+      else if (ordererFullAddress)
+        setValue('shippingAddress', ordererFullAddress);
 
       if (orderer?.addressDetail)
         setValue('shippingAddressDetail', orderer?.addressDetail);
-      if (zonecode) setValue('shippingZipcode', zonecode);
+      if (ordererZonecode) setValue('shippingZipcode', ordererZonecode);
     } else reset();
   };
 
@@ -130,7 +127,6 @@ function Payment() {
       .then((res) => onClickPayment(res.data));
   };
 
-  // 모듈 import
   useEffect(() => {
     const jQuery = document.createElement('script');
     jQuery.type = 'text/javascript';
@@ -166,11 +162,10 @@ function Payment() {
       pg: 'html5_inicis', // PG사
       pay_method: 'card', // 결제수단
       merchant_uid: PaymentData.merchantUid, // 주문번호
-      amount: 100, // 결제금액
+      amount: PaymentData.totalPaid, // 결제금액
       name: '아임포트 결제 데이터 분석', // 주문명
       buyer_name: PaymentData.shippingName, // 구매자 이름
       buyer_tel: PaymentData.shippingPhone, // 구매자 전화번호
-      buyer_email: 'example@example', // 구매자 이메일
       buyer_addr: PaymentData.shippingAddress, // 구매자 주소
       buyer_postcode: PaymentData.shippingZipcode, // 구매자 우편번호
     };
@@ -200,17 +195,6 @@ function Payment() {
     }
   };
 
-  const test = () => {
-    instance
-      .post('/v1/orders/Payment/complete', {
-        imp_uid: 'imp_328484503989',
-        merchant_uid: 'ORD220711-000049',
-      })
-      .then((res) => {
-        if (res.data.status === 'paid')
-          router.push(`/order/Payment/complete/${res.data.order.id}`);
-      });
-  };
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -223,9 +207,6 @@ function Payment() {
         pb="80px"
         px="16px"
       >
-        <Button display="none" onClick={test}>
-          테스트
-        </Button>
         <Box {...TitleText} w="full">
           주문결제
         </Box>
@@ -273,7 +254,9 @@ function Payment() {
                   w="249px"
                   name="address"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  value={fullAddress ? fullAddress : orderer?.address}
+                  value={
+                    ordererFullAddress ? ordererFullAddress : orderer?.address
+                  }
                   onChange={onChange}
                 />
                 <Button
@@ -282,7 +265,7 @@ function Payment() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
-                  onClick={handleClick}
+                  onClick={ordererHandleClick}
                 >
                   우편번호 검색
                 </Button>
