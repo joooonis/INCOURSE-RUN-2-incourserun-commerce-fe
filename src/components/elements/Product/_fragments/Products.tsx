@@ -1,24 +1,13 @@
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
 import { Box, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
-import { setAuthHeader } from '@apis/_axios/instance';
 
 import Card from './Card';
 import { ProductType } from './types';
 
 function Products() {
-  useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
-  }, []);
-  const router = useRouter();
-
   const [products, setProducts] = useState<ProductType[]>();
 
   useEffect(() => {

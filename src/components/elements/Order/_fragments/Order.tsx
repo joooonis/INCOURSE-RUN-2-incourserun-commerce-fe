@@ -15,7 +15,6 @@ function Order() {
 
   useEffect(() => {
     instance.get('/v1/users/me/orders').then((res) => setOrders(res.data));
-
     instance.get('/v1/products').then((res) => setProducts(res.data));
   }, []);
 

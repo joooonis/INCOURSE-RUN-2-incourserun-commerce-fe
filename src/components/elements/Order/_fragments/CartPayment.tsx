@@ -25,6 +25,7 @@ import {
   PaymentDataType,
   PaymentProductType,
   ProductType,
+  QueryType,
 } from './types';
 import usePostcode from './usePostCode';
 
@@ -45,7 +46,7 @@ function CartPayMent() {
     if (typeof checked === 'string') {
       const queries = JSON.parse(checked);
       if (queries) {
-        queries?.forEach((query: any) => {
+        queries?.forEach((query: QueryType) => {
           const order = findProduct(products, Number(query.product));
           if (order) {
             setOrders((orders) => [...orders, order]);
@@ -73,15 +74,9 @@ function CartPayMent() {
 
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
-
     instance.get('/v1/users/me').then((res) => {
-      setOrderer({
-        ...orderer,
-        name: res.data.name,
-        phone: res.data.phone,
-        address: res.data.address,
-        addressDetail: res.data.addressDetail,
-      });
+      setOrderer({ ...res.data });
+
     });
   }, []);
 
