@@ -76,6 +76,7 @@ function CartPayMent() {
     instance.get('/v1/products').then((res) => setProducts(res.data));
     instance.get('/v1/users/me').then((res) => {
       setOrderer({ ...res.data });
+
     });
   }, []);
 
@@ -287,7 +288,7 @@ function CartPayMent() {
                   w="249px"
                   name="address"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  value={orderer?.address}
+                  value={fullAddress ? fullAddress : orderer?.address}
                   onChange={onChange}
                 />
                 <Button
@@ -357,7 +358,7 @@ function CartPayMent() {
                   {...InputStyle}
                   w="249px"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  defaultValue="서울특별시 마포구 망원동 398-9 (동광탑스빌)"
+                  value={shippingFullAddress}
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button
@@ -376,7 +377,6 @@ function CartPayMent() {
                 w="full"
                 mt="10px"
                 placeholder="성산빌딩 B동 302호"
-                defaultValue="502호"
                 {...register('shippingAddressDetail', { required: true })}
               />
             </Box>
