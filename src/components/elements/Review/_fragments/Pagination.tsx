@@ -15,6 +15,7 @@ function Pagination({ total, limit, page, setPage }: PaginationProps) {
       <Flex py="30px" justifyContent="center" alignItems="center">
         {Array(numPages).map((_, index) => (
           <Button
+            variant="ghost"
             key={index + 1}
             onClick={() => setPage(index + 1)}
             _hover={{ cursor: 'pointer' }}

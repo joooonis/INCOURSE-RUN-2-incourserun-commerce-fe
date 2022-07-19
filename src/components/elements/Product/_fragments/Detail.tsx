@@ -528,11 +528,11 @@ function Detail() {
                   mt="4px"
                   color="gray.600"
                 >
-                  <Box>5점</Box>
-                  <Box>4점</Box>
-                  <Box>3점</Box>
-                  <Box>2점</Box>
                   <Box>1점</Box>
+                  <Box>2점</Box>
+                  <Box>3점</Box>
+                  <Box>4점</Box>
+                  <Box>5점</Box>
                 </HStack>
               </VStack>
             </Flex>
