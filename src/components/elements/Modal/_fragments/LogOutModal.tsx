@@ -12,6 +12,8 @@ import {
 
 import PrimaryButton from '@components/common/Button';
 
+import { deleteToken } from '@utils/localStorage/token';
+
 interface MyModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -21,10 +23,8 @@ function LogOutModal({ isOpen, onClose }: MyModalProps) {
   const router = useRouter();
 
   const logOut = () => {
-    if (typeof window !== 'undefined' && localStorage.getItem('token')) {
-      localStorage.removeItem('token');
-      router.push('/login');
-    }
+    deleteToken();
+    router.push('/login');
   };
   return (
     <>

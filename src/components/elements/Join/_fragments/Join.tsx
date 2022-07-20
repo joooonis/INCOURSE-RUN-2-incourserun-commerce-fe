@@ -23,14 +23,17 @@ import {
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
+import { getToken } from '@utils/localStorage/token';
+
 import JoinInput from './JoinInput';
 import { FormValues } from './types';
 
 function Join() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const {

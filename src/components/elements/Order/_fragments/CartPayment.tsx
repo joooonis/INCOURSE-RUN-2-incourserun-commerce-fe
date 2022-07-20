@@ -19,6 +19,8 @@ import { setAuthHeader } from '@apis/_axios/instance';
 
 import { findProduct, priceToString } from '@components/hooks';
 
+import { getToken } from '@utils/localStorage/token';
+
 import SinglePayment from './SinglePayment';
 import {
   FormValues,
@@ -33,9 +35,9 @@ import usePostcode from './usePostCode';
 function CartPayMent() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 

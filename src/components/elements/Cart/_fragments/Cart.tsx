@@ -19,15 +19,17 @@ import { removeItem } from '@features/Item/itemSlice';
 import { findProduct, priceToString } from '@components/hooks';
 import { useRootState } from '@components/hooks/useRootState';
 
+import { getToken } from '@utils/localStorage/token';
+
 import Item from './Item';
 import { ItemType, ProductType, QueryType } from './types';
 
 function Cart() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const [items, setItems] = useState<ItemType[] | null>(null);

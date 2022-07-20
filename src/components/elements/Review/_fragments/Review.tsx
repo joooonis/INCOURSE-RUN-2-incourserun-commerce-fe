@@ -20,6 +20,8 @@ import PrimaryButton from '@components/common/Button/Button';
 import { ReviewModal } from '@components/elements/Modal';
 import { findProduct, priceToString } from '@components/hooks';
 
+import { getToken } from '@utils/localStorage/token';
+
 import {
   PreviewsType,
   ProductType,
@@ -67,9 +69,9 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
 function Review() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
   const [products, setProducts] = useState<ProductType[]>([]);
   const { id, createdAt, product, quantity, isfreedelivery } = router.query;

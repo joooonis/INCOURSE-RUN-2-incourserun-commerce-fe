@@ -8,15 +8,17 @@ import instance, { setAuthHeader } from '@apis/_axios/instance';
 import Pagination from '@components/common/Pagination';
 import { dateToString, findProduct } from '@components/hooks';
 
+import { getToken } from '@utils/localStorage/token';
+
 import SingleOrder from './SingleOrder';
 import { OrderType, ProductType } from './types';
 
 function Order() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const [orders, setOrders] = useState<OrderType[]>([]);

@@ -12,20 +12,15 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { setAuthHeader } from '@apis/_axios/instance';
-
 import { LAYOUT } from '@constants/layout';
+import { getToken } from '@utils/localStorage/token';
 
 function Success() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
+    const token = getToken();
+    if (!token.access) router.replace('/login');
   }, []);
-
   const gotoMain = () => {
     router.replace('/');
   };
