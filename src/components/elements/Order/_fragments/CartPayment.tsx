@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { findProduct, priceToString } from '@components/hooks';
 
@@ -30,9 +31,16 @@ import {
 import usePostcode from './usePostCode';
 
 function CartPayMent() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
-  const router = useRouter();
   const { checked } = router.query;
 
   const [orders, setOrders] = useState<ProductType[]>([]);

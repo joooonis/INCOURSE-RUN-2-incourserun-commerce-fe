@@ -17,6 +17,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';
 
 import { EditModal } from '@components/elements/Modal';
@@ -25,6 +26,15 @@ import EditInput from './EditInput';
 import { FormValues } from './types';
 
 function Edit() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -49,7 +59,6 @@ function Edit() {
 
   const [img, setImg] = useState(avatarRef.current?.files);
   const [preview, setPreview] = useState<string>();
-  const router = useRouter();
 
   const handleAvatar = (e: React.MouseEvent) => {
     e.preventDefault();

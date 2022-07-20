@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import Pagination from '@components/common/Pagination';
 
@@ -75,6 +77,15 @@ function SingleReview({ review }: SingleReviewProps) {
 }
 
 function MyReview() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+
   const [myReviews, setMyReviews] = useState<ReviewType[]>([]);
   const [page, setPage] = useState<number>(1);
   const limit = 5;

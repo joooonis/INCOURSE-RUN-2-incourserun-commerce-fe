@@ -14,6 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
 import { ReviewModal } from '@components/elements/Modal';
@@ -64,8 +65,15 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
 }
 
 function Review() {
-  const [products, setProducts] = useState<ProductType[]>([]);
   const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+  const [products, setProducts] = useState<ProductType[]>([]);
   const { id, createdAt, product, quantity, isfreedelivery } = router.query;
 
   const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();

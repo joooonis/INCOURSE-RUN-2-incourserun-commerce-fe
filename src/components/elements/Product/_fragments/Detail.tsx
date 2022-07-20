@@ -158,6 +158,7 @@ function ReviewChartBar({ countAll, count }: ReviewChartBarProps) {
 }
 
 function Detail() {
+  const router = useRouter();
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
@@ -166,7 +167,6 @@ function Detail() {
     }
   }, []);
 
-  const router = useRouter();
   const [detail, setDetail] = useState<DetailType | null>(null);
   const [reviews, setReviews] = useState<ReviewType[]>();
   const [ratingCounts, setRatingCounts] = useState<number[]>();
