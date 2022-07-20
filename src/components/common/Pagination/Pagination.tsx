@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import { Button, Flex } from '@chakra-ui/react';
 
@@ -11,7 +11,6 @@ interface PaginationProps {
 
 function Pagination({ total, limit, page, setPage }: PaginationProps) {
   const numPages = Math.ceil(total / limit);
-  const [selected, setSelected] = useState<boolean[]>([]);
   const pageIndexComparsion = (num: number) => {
     if (num % 5 == 0) return Math.ceil((num - 1) / 5);
     else return Math.ceil(num / 5);
