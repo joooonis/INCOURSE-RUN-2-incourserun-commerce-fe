@@ -48,7 +48,7 @@ function Edit() {
       if (res.data.email) setValue('email', res.data.email);
       if (res.data.phone) setValue('phone', res.data.phone);
       if (res.data.gender) setValue('gender', res.data.gender);
-      if (res.data.ageRange) setValue('ageRange', res.data.age);
+      if (res.data.ageRange) setValue('ageRange', res.data.ageRange);
       if (res.data.avatar) setPreview(res.data.avatar);
     });
   }, []);
@@ -153,7 +153,6 @@ function Edit() {
             <EditInput
               label="name"
               name="이름"
-              placeholder="김인코스런"
               register={register}
               options={{
                 required: true,
@@ -168,7 +167,6 @@ function Edit() {
             <EditInput
               label="nickname"
               name="닉네임"
-              placeholder="인코스런"
               register={register}
               options={{
                 required: true,
@@ -185,7 +183,6 @@ function Edit() {
             <EditInput
               label="phone"
               name="핸드폰 번호"
-              placeholder="010-1234-1234"
               register={register}
               options={{
                 required: true,
@@ -200,7 +197,6 @@ function Edit() {
             <EditInput
               label="email"
               name="이메일 주소"
-              placeholder="incourse.run@gmail.com"
               register={register}
               options={{
                 required: true,
