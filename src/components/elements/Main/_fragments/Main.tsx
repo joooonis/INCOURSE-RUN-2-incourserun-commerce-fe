@@ -135,42 +135,44 @@ function Main() {
             <Image pr="8px" src="/icons/svg/instagram.svg" alt="instagram" />
             INCOURSE.RUN
           </Flex>
-          <Box
-            border="1px solid #1A1A1A"
-            w="50px"
-            h="50px"
-            borderRadius="50%"
-            position="absolute"
-            right="16px"
-            bottom="20px"
-          >
+          <a href="#">
             <Box
-              position="absolute"
-              width="12px"
-              height="12px"
-              left="50%"
-              top="50%"
-              transform="translate(-50%, -50%) rotate(45deg)"
-              _before={{
-                content: '""',
-                width: '100%',
-                height: '100%',
-                position: 'absolute',
-                border: '1px solid #1A1A1A',
-                borderRight: 0,
-                borderBottom: 0,
-              }}
-              _after={{
-                content: '""',
-                height: '1px',
-                width: '16px',
-                backgroundColor: '#1A1A1A',
-                position: 'absolute',
-                transformOrigin: '0 100%',
-                transform: 'rotate(45deg)',
-              }}
-            ></Box>
-          </Box>
+              border="2px solid #1A1A1A"
+              w="50px"
+              h="50px"
+              borderRadius="50%"
+              position="fixed"
+              right="16px"
+              bottom="20px"
+            >
+              <Box
+                position="absolute"
+                width="12px"
+                height="12px"
+                left="50%"
+                top="50%"
+                transform="translate(-50%, -50%) rotate(45deg)"
+                _before={{
+                  content: '""',
+                  width: '100%',
+                  height: '100%',
+                  position: 'absolute',
+                  border: '2px solid #1A1A1A',
+                  borderRight: 0,
+                  borderBottom: 0,
+                }}
+                _after={{
+                  content: '""',
+                  height: '2px',
+                  width: '16px',
+                  backgroundColor: '#1A1A1A',
+                  position: 'absolute',
+                  transformOrigin: '0 100%',
+                  transform: 'rotate(45deg)',
+                }}
+              ></Box>
+            </Box>
+          </a>
         </VStack>
       </Box>
     </>
