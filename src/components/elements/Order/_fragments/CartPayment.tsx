@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { findProduct, priceToString } from '@components/hooks';
 
@@ -34,6 +35,7 @@ function CartPayMent() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
@@ -266,7 +268,6 @@ function CartPayMent() {
               <Input
                 name="name"
                 {...InputStyle}
-                placeholder="김인코스런"
                 value={orderer?.name}
                 onChange={onChange}
               />
@@ -276,7 +277,6 @@ function CartPayMent() {
               <Input
                 {...InputStyle}
                 name="phone"
-                placeholder="010-1234-1234"
                 value={orderer?.phone}
                 onChange={onChange}
               />
@@ -288,7 +288,6 @@ function CartPayMent() {
                   {...InputStyle}
                   w="249px"
                   name="address"
-                  placeholder="울특별시 마포구 성산동  123-3"
                   value={fullAddress ? fullAddress : orderer?.address}
                   onChange={onChange}
                 />
@@ -308,7 +307,6 @@ function CartPayMent() {
                 w="full"
                 mt="10px"
                 name="addressDetail"
-                placeholder="성산빌딩 B동 302호"
                 value={orderer?.addressDetail}
                 onChange={onChange}
               />
@@ -340,7 +338,6 @@ function CartPayMent() {
               <Text {...NameStyle}>이름</Text>
               <Input
                 {...InputStyle}
-                placeholder="김인코스런"
                 {...register('shippingName', { required: true })}
               />
             </Box>
@@ -348,7 +345,6 @@ function CartPayMent() {
               <Text {...NameStyle}>핸드폰 번호</Text>
               <Input
                 {...InputStyle}
-                placeholder="010-1234-1234"
                 {...register('shippingPhone', { required: true })}
               />
             </Box>
@@ -358,7 +354,6 @@ function CartPayMent() {
                 <Input
                   {...InputStyle}
                   w="249px"
-                  placeholder="울특별시 마포구 성산동  123-3"
                   value={shippingFullAddress}
                   {...register('shippingAddress', { required: true })}
                 />
@@ -377,17 +372,12 @@ function CartPayMent() {
                 {...InputStyle}
                 w="full"
                 mt="10px"
-                placeholder="성산빌딩 B동 302호"
                 {...register('shippingAddressDetail', { required: true })}
               />
             </Box>
             <Box w="full">
               <Text {...NameStyle}>배송요청사항</Text>
-              <Input
-                {...InputStyle}
-                placeholder="문 앞에 두고 가주세요"
-                {...register('shippingRequest')}
-              />
+              <Input {...InputStyle} {...register('shippingRequest')} />
             </Box>
           </VStack>
         </Box>

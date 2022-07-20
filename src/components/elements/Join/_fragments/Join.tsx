@@ -209,7 +209,6 @@ function Join() {
             <JoinInput
               label="name"
               name="이름"
-              placeholder="김인코스런"
               register={register}
               options={{
                 required: true,
@@ -224,7 +223,6 @@ function Join() {
             <JoinInput
               label="nickname"
               name="닉네임"
-              placeholder="인코스런"
               register={register}
               options={{
                 required: true,
@@ -241,7 +239,6 @@ function Join() {
             <JoinInput
               label="phone"
               name="핸드폰 번호"
-              placeholder="010-1234-1234"
               register={register}
               options={{
                 required: true,
@@ -256,7 +253,6 @@ function Join() {
             <JoinInput
               label="email"
               name="이메일 주소"
-              placeholder="incourse.run@gmail.com"
               register={register}
               options={{
                 required: true,
