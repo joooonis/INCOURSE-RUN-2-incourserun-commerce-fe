@@ -16,12 +16,17 @@ const Kakao = () => {
         redirectUri: `${process.env.NEXT_PUBLIC_DOMAIN}/login/kakao/callback`,
       })
       .then((res) => {
+        console.log(res);
+        const data = JSON.stringify(res.data);
+
+        if (data) localStorage.setItem('oauth', data);
+
         const token = res.data.access;
+        const refresh = res.data.refresh;
         const isRegister = res.data.isRegister;
 
-        if (token) {
-          localStorage.setItem('token', token);
-        }
+        if (token) localStorage.setItem('token', token);
+        if (refresh) localStorage.setItem('refresh', refresh);
 
         if (isRegister) router.push('/');
         else router.replace('/join');

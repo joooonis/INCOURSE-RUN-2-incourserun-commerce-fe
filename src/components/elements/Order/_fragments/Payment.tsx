@@ -15,7 +15,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';
 
 import { PayMentModal } from '@components/elements/Modal';
@@ -35,9 +34,6 @@ function Payment() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();

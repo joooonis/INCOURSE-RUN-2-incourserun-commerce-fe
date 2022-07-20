@@ -24,7 +24,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';
 
 import { CartModal } from '@components/elements/Modal';
@@ -162,9 +161,6 @@ function Detail() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
   const [detail, setDetail] = useState<DetailType | null>(null);
