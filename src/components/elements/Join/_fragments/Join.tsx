@@ -31,9 +31,6 @@ function Join() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
   const {

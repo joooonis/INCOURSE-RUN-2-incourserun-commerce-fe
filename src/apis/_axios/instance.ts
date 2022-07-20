@@ -24,6 +24,14 @@ const unsetAuthHeader = () => {
   delete instance.defaults.headers.common['Authorization'];
 };
 
+const refreshToken = async () => {
+  const refresh = localStorage.getItem('refresh');
+  const res = await instance.post('/v1/users/token/refresh', {
+    refresh: refresh,
+  });
+  return res.data;
+};
+
 instance.interceptors.request.use(
   async (config) => {
     const token = await getToken();
@@ -54,11 +62,11 @@ instance.interceptors.response.use(
         apiLogger({ status, reqData, resData: error, method: 'error' });
 
       if (isExpiredToken) {
-        // const token = await refreshToken();
-        // if (token?.access) {
-        //   setAuthHeader(token?.access);
-        //   return instance(reqData);
-        // }
+        const token = await refreshToken();
+        if (token?.access) {
+          setAuthHeader(token?.access);
+          return instance(reqData);
+        }
       }
 
       if (isUnAuthError) {

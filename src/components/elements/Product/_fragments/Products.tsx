@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 import { Box, VStack } from '@chakra-ui/react';
 
-import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';
 
 import Card from './Card';
@@ -14,9 +13,6 @@ function Products() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
   const [products, setProducts] = useState<ProductType[]>();
