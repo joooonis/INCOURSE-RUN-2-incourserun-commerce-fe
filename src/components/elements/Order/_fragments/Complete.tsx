@@ -12,6 +12,11 @@ import { OrderType, ProductType } from './types';
 
 function Complete() {
   const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+  }, []);
+
   const id = Number(router.query.id);
   const [order, setOrder] = useState<OrderType>();
   const [products, setProducts] = useState<ProductType[]>();

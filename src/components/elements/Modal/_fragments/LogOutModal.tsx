@@ -21,9 +21,9 @@ function LogOutModal({ isOpen, onClose }: MyModalProps) {
   const router = useRouter();
 
   const logOut = () => {
-    if (localStorage.getItem('token')) {
+    if (typeof window !== 'undefined' && localStorage.getItem('token')) {
       localStorage.removeItem('token');
-      router.push('/');
+      router.push('/login');
     }
   };
   return (

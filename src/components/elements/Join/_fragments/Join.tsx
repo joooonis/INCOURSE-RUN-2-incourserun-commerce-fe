@@ -24,15 +24,13 @@ import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
 import JoinInput from './JoinInput';
-import { FormValues, UserType } from './types';
+import { FormValues } from './types';
 
 function Join() {
+  const router = useRouter();
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
   const {
@@ -43,19 +41,25 @@ function Join() {
     setValue,
   } = useForm<FormValues>();
 
-  const [user, setUser] = useState<UserType>();
   useEffect(() => {
-    instance.get('/v1/users/me').then((res) => {
-      setUser(res.data);
-      if (res.data.avatar) setPreview(res.data.avatar);
-    });
+    setTimeout(() => {
+      instance.get('/v1/users/me').then((res) => {
+        if (res.data.name) setValue('name', res.data.name);
+        if (res.data.nickname) setValue('nickname', res.data.nickname);
+        if (res.data.email) setValue('email', res.data.email);
+        if (res.data.phone) setValue('phone', res.data.phone);
+        if (res.data.gender) setValue('gender', res.data.gender);
+        if (res.data.ageRange) setValue('ageRange', res.data.age);
+
+        if (res.data.avatar) setPreview(res.data.avatar);
+      });
+    }, 1000);
   }, []);
 
   const avatarRef = useRef<HTMLInputElement>(null);
 
   const [img, setImg] = useState(avatarRef.current?.files);
   const [preview, setPreview] = useState<string>();
-  const router = useRouter();
 
   const handleAvatar = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,7 +83,7 @@ function Join() {
 
     if (
       (img && data.agreeAllTerms) ||
-      (img && data.requiredTerms && data.marketingTerms)
+      (img && data.requiredTerms && data.privateInfoTerms)
     ) {
       instance
         .patch('/v1/users/me', patchData)
@@ -93,7 +97,7 @@ function Join() {
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
-      (img && data.requiredTerms && data.marketingTerms)
+      (data.requiredTerms && data.privateInfoTerms)
     ) {
       instance
         .patch('/v1/users/me', patchData)
@@ -142,6 +146,14 @@ function Join() {
       setIsJoinButtonActive(true);
     } else setIsJoinButtonActive(false);
   }, [toggle]);
+
+  function validateWithByte(str: string) {
+    let byte = 0;
+    for (let i = 0; i < str.length; ++i) {
+      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
+    }
+    return byte >= 2 && byte <= 10;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -195,7 +207,7 @@ function Join() {
         <VStack spacing="78px" w="full" alignItems="flex-start">
           <FormControl>
             <JoinInput
-              label="username"
+              label="name"
               name="이름"
               placeholder="김인코스런"
               register={register}
@@ -203,9 +215,8 @@ function Join() {
                 required: true,
                 minLength: 2,
               }}
-              defaultValue={user?.name}
             ></JoinInput>
-            {errors.username && (
+            {errors.name && (
               <Box {...ErrorStyle}>최소 2자 이상 입력해주세요.</Box>
             )}
           </FormControl>
@@ -217,10 +228,8 @@ function Join() {
               register={register}
               options={{
                 required: true,
-                minLength: 2,
-                maxLength: 5,
+                validate: (nickname: string) => validateWithByte(nickname),
               }}
-              defaultValue={user?.nickname}
             />
             {errors.nickname && (
               <Box {...ErrorStyle}>
@@ -238,7 +247,6 @@ function Join() {
                 required: true,
                 pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
               }}
-              defaultValue={user?.phone}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
@@ -255,7 +263,6 @@ function Join() {
                 pattern:
                   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
               }}
-              defaultValue={user?.email}
             />
             {errors.email && (
               <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
@@ -275,10 +282,13 @@ function Join() {
               fontSize="16px"
               placeholder="성별을 선택하세요"
               {...register('gender')}
-              defaultValue={user?.gender}
             >
-              <option value="남성">남</option>
-              <option value="여성">여</option>
+              <option value="남성" selected={getValues('gender') === '남성'}>
+                남
+              </option>
+              <option value="여성" selected={getValues('gender') === '여성'}>
+                여
+              </option>
             </Select>
           </FormControl>
           <FormControl>
@@ -292,15 +302,26 @@ function Join() {
               fontSize="16px"
               placeholder="연령대를 선택하세요"
               _selected={{ color: '#1A1A1A' }}
-              {...register('age')}
-              defaultValue={user?.age}
+              {...register('ageRange')}
             >
-              <option value="10대">10대</option>
-              <option value="20대">20대</option>{' '}
-              <option value="30대">30대</option>
-              <option value="40대">40대</option>
-              <option value="50대">50대</option>
-              <option value="60대">60대</option>
+              <option value="10대" selected={getValues('ageRange') === '10대'}>
+                10대
+              </option>
+              <option value="20대" selected={getValues('ageRange') === '20대'}>
+                20대
+              </option>{' '}
+              <option value="30대" selected={getValues('ageRange') === '30대'}>
+                30대
+              </option>
+              <option value="40대" selected={getValues('ageRange') === '40대'}>
+                40대
+              </option>
+              <option value="50대" selected={getValues('ageRange') === '50대'}>
+                50대
+              </option>
+              <option value="60대" selected={getValues('ageRange') === '60대'}>
+                60대
+              </option>
             </Select>
           </FormControl>
         </VStack>

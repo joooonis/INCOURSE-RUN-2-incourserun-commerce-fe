@@ -25,13 +25,18 @@ import {
   PaymentDataType,
   PaymentProductType,
   ProductType,
+  QueryType,
 } from './types';
 import usePostcode from './usePostCode';
 
 function CartPayMent() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+  }, []);
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
-  const router = useRouter();
   const { checked } = router.query;
 
   const [orders, setOrders] = useState<ProductType[]>([]);
@@ -39,13 +44,13 @@ function CartPayMent() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [total, setTotal] = useState<number>(0);
 
-  const [deliveryFee, setDeliveryFee] = useState<number>();
+  const [deliveryFee, setDeliveryFee] = useState<number>(0);
 
   useEffect(() => {
     if (typeof checked === 'string') {
       const queries = JSON.parse(checked);
       if (queries) {
-        queries?.forEach((query: any) => {
+        queries?.forEach((query: QueryType) => {
           const order = findProduct(products, Number(query.product));
           if (order) {
             setOrders((orders) => [...orders, order]);
@@ -63,9 +68,8 @@ function CartPayMent() {
         sum += +orders[i].price * quantities[i];
       }
       setTotal(sum);
-
-      if (sum >= 30000) setDeliveryFee(0);
-      else setDeliveryFee(3000);
+      if (sum < 30000) setDeliveryFee(3000);
+      else setDeliveryFee(0);
     }
   }, [orders, quantities]);
 
@@ -73,15 +77,8 @@ function CartPayMent() {
 
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
-
     instance.get('/v1/users/me').then((res) => {
-      setOrderer({
-        ...orderer,
-        name: res.data.name,
-        phone: res.data.phone,
-        address: res.data.address,
-        addressDetail: res.data.addressDetail,
-      });
+      setOrderer({ ...res.data });
     });
   }, []);
 
@@ -121,20 +118,20 @@ function CartPayMent() {
   };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPayButtonActive(e.target.checked);
+    setIsPayButtonActive(e.target.checked && isCard);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const shippingData = { ...data };
-    if (total && deliveryFee) {
+    if ((total && deliveryFee) || (total && deliveryFee == 0)) {
       shippingData.totalPrice = total;
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
     }
-    if (isCard) data.payMethod = '신용카드';
+    if (isCard) shippingData.payMethod = '신용카드';
 
-    if (shippingFullAddress) data.shippingAddress = shippingFullAddress;
-    if (shippingZonecode) data.shippingZipcode = shippingZonecode;
+    if (shippingFullAddress) shippingData.shippingAddress = shippingFullAddress;
+    if (shippingZonecode) shippingData.shippingZipcode = shippingZonecode;
 
     if (orders && quantities) {
       const orderProducts = [];
@@ -146,7 +143,7 @@ function CartPayMent() {
         };
         orderProducts.push(SingleOrderProduct);
       }
-      setValue('orderProducts', orderProducts);
+      shippingData.orderProducts = orderProducts;
     }
 
     instance.post('/v1/orders', shippingData).then((res) => {
@@ -154,21 +151,44 @@ function CartPayMent() {
     });
   };
 
+  useEffect(() => {
+    const jQuery = document.createElement('script');
+    jQuery.type = 'text/javascript';
+    jQuery.src = 'https://code.jquery.com/jquery-1.12.4.min.js';
+    document.body.appendChild(jQuery);
+
+    const payModule = document.createElement('script');
+    payModule.type = 'text/javascript';
+    payModule.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+    document.body.appendChild(payModule);
+
+    const postCode = document.createElement('script');
+
+    postCode.src =
+      '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    document.body.appendChild(postCode);
+
+    () => {
+      document.body.removeChild(jQuery);
+      document.body.removeChild(payModule);
+      document.body.removeChild(postCode);
+    };
+  }, []);
+
   function onClickPayment(payData: PaymentDataType) {
     /* 1. 가맹점 식별하기 */
     const { IMP } = window;
-    IMP.init('imp39787589');
+    IMP.init('imp61247005');
 
     /* 2. 결제 데이터 정의하기 */
     const data = {
       pg: 'html5_inicis', // PG사
       pay_method: 'card', // 결제수단
       merchant_uid: payData.merchantUid, // 주문번호
-      amount: 100, // 결제금액
+      amount: payData.totalPaid, // 결제금액
       name: '아임포트 결제 데이터 분석', // 주문명
       buyer_name: payData.shippingName, // 구매자 이름
       buyer_tel: payData.shippingPhone, // 구매자 전화번호
-      buyer_email: 'example@example', // 구매자 이메일
       buyer_addr: payData.shippingAddress, // 구매자 주소
       buyer_postcode: payData.shippingZipcode, // 구매자 우편번호
     };
@@ -404,7 +424,10 @@ function CartPayMent() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {(total && deliveryFee) || deliveryFee == 0
+                ? priceToString(total + deliveryFee)
+                : '0'}
+              원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>

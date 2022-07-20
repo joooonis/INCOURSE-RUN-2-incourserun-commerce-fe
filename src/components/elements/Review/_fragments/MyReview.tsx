@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 
 import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+
+import Pagination from '@components/common/Pagination';
 
 import { ReviewType, SingleReviewProps, StarRatingProps } from './types';
 
@@ -73,10 +76,20 @@ function SingleReview({ review }: SingleReviewProps) {
 }
 
 function MyReview() {
-  const [myReviews, setMyReviews] = useState<ReviewType[]>();
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+  }, []);
+
+  const [myReviews, setMyReviews] = useState<ReviewType[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const limit = 5;
+  const offset = (page - 1) * limit;
+
   useEffect(() => {
     instance.get('/v1/users/me/reviews').then((res) => {
-      setMyReviews(res.data.results);
+      setMyReviews(res.data);
     });
   }, []);
 
@@ -86,14 +99,20 @@ function MyReview() {
         내 상품 리뷰
       </Box>
       <Box {...ReviewCountStyle} pt="80px" pb="30px" w="full">
-        총 <span style={{ color: '#FF710B' }}>{myReviews?.length}</span>건
+        총 <span style={{ color: '#FF710B' }}>{myReviews.length}</span>건
       </Box>
       <Box w="full" h="30px"></Box>
       {myReviews &&
-        myReviews.map((review) => (
-          <SingleReview key={review.id} review={review} />
-        ))}
+        myReviews.slice(offset, offset + limit).map((review) => {
+          return <SingleReview key={review.id} review={review} />;
+        })}
       <Box w="full" borderBottom="1px solid #F2F3F4"></Box>
+      <Pagination
+        total={myReviews.length}
+        limit={limit}
+        page={page}
+        setPage={setPage}
+      />
     </Box>
   );
 }

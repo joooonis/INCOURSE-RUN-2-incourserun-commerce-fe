@@ -7,16 +7,17 @@ interface Options {
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
+  validate?: any;
 }
 
 export interface FormValues {
   avatar: File;
-  username: string;
+  name: string;
   nickname: string;
   email: string;
   phone: string;
   gender: string;
-  age: string;
+  ageRange: string;
   agreeAllTerms: boolean;
   requiredTerms: boolean;
   privateInfoTerms: boolean;

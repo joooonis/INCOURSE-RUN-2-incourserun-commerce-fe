@@ -5,11 +5,11 @@ import { useDispatch } from 'react-redux';
 import { Box, Button, Checkbox, Flex, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
-import { setAuthHeader } from '@apis/_axios/instance';
 import {
   addItem,
   checkAllItem,
   checkItem,
+  cleanUpItems,
   setTotal,
   unCheckAllItem,
 } from '@features/Item/itemSlice';
@@ -22,19 +22,16 @@ import Item from './Item';
 import { ItemType, ProductType, QueryType } from './types';
 
 function Cart() {
+  const router = useRouter();
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
   const [items, setItems] = useState<ItemType[] | null>(null);
   const [products, setProducts] = useState<ProductType[]>();
   const { itemCheckers, total } = useRootState((state) => state.ITEM);
 
-  const router = useRouter();
   const dispatch = useDispatch();
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,6 +43,21 @@ function Cart() {
   const gotoProduct = () => {
     router.push('/products');
   };
+
+  useEffect(() => {
+    const fetchURL = async () => {
+      try {
+        const res1 = await instance.get('/v1/products');
+        const res2 = await instance.get('/v1/users/me/carts');
+        setProducts(res1.data);
+        setItems(res2.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchURL();
+    dispatch(cleanUpItems());
+  }, []);
 
   useEffect(() => {
     let total = 0;
@@ -79,20 +91,6 @@ function Cart() {
       query: { checked: JSON.stringify(queries) },
     });
   };
-
-  useEffect(() => {
-    const fetchURL = async () => {
-      try {
-        const res1 = await instance.get('/v1/products');
-        const res2 = await instance.get('/v1/users/me/carts');
-        setProducts(res1.data);
-        setItems(res2.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchURL();
-  }, []);
 
   const incTotal = (price: number, t: number = total) => {
     dispatch(setTotal(t + price));
@@ -183,7 +181,9 @@ function Cart() {
               </Flex>
               <Flex {...TextStyle} pt="10px" w="full" justify="space-between">
                 <Box>총 배송비</Box>
-                <Box>{total > 30000 ? '0 원' : '3,000 원'}</Box>
+                <Box>
+                  {total == 0 ? '0 원' : total > 30000 ? '0 원' : '3,000 원'}
+                </Box>
               </Flex>
               <Flex
                 {...TextStyle}
@@ -195,7 +195,9 @@ function Cart() {
               >
                 <Box>결제금액</Box>
                 <Box color="primary.500" fontWeight="700">
-                  {total > 30000
+                  {total == 0
+                    ? 0
+                    : total > 30000
                     ? priceToString(total)
                     : priceToString(total + 3000)}
                   원

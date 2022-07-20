@@ -10,20 +10,25 @@ const Kakao = () => {
     const code = new URL(window.location.href).searchParams.get('code');
 
     axios
-      .post('https://api.incourserun.cf/v1/users/social_login', {
+      .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/social_login`, {
         code: code,
         state: 'kakao',
-        redirectUri: 'https://incourserun.cf/login/kakao/callback',
+        redirectUri: `${process.env.NEXT_PUBLIC_DOMAIN}/login/kakao/callback`,
       })
       .then((res) => {
+        console.log(res);
+        const data = JSON.stringify(res.data);
+
+        if (data) localStorage.setItem('oauth', data);
+
         const token = res.data.access;
+        const refresh = res.data.refresh;
         const isRegister = res.data.isRegister;
 
-        if (token) {
-          localStorage.setItem('token', token);
-        }
+        if (token) localStorage.setItem('token', token);
+        if (refresh) localStorage.setItem('refresh', refresh);
 
-        if (isRegister) router.push('/products');
+        if (isRegister) router.push('/');
         else router.replace('/join');
       })
       .catch((err) => {

@@ -1,21 +1,31 @@
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 
+import Pagination from '@components/common/Pagination';
 import { dateToString, findProduct } from '@components/hooks';
 
 import SingleOrder from './SingleOrder';
 import { OrderType, ProductType } from './types';
 
 function Order() {
-  const [orders, setOrders] = useState<OrderType[]>();
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+  }, []);
+
+  const [orders, setOrders] = useState<OrderType[]>([]);
   const [products, setProducts] = useState<ProductType[]>();
+  const [page, setPage] = useState<number>(1);
+  const limit = 5;
+  const offset = (page - 1) * limit;
 
   useEffect(() => {
     instance.get('/v1/users/me/orders').then((res) => setOrders(res.data));
-
     instance.get('/v1/products').then((res) => setProducts(res.data));
   }, []);
 
@@ -25,62 +35,48 @@ function Order() {
         주문내역
       </Box>
       <Box h="80px"></Box>
-      <Tabs variant="unstyled" size="sm">
-        <TabPanels>
-          {orders &&
-            orders.map((order) => {
-              const date = dateToString(order.createdAt);
-              const dateString = date.year + date.month + date.date;
-              return (
-                <TabPanel key={order.id} py={0}>
-                  <Box {...TitleText} w="full" py="19px">
-                    [{date.year} - {date.month} - {date.date}]
-                  </Box>
-                  {order.orderProducts &&
-                    products &&
-                    order.orderProducts.map((orderProduct) => {
-                      const targeProduct = findProduct(
-                        products,
-                        orderProduct.product,
-                      );
-                      return (
-                        <SingleOrder
-                          id={orderProduct.id}
-                          key={orderProduct.id}
-                          createdAt={dateString}
-                          product={targeProduct}
-                          quantity={orderProduct.quantity}
-                          hasReview={orderProduct.hasReview}
-                          shippingStatus={orderProduct.shippingStatus}
-                          isFreeDelivery={order.totalPrice >= 30000}
-                          merchantUid={order.merchantUid}
-                        ></SingleOrder>
-                      );
-                    })}
-                </TabPanel>
-              );
-            })}
-        </TabPanels>
-        <TabList
-          py="30px"
-          justifyContent="center"
-          alignItems="center"
-          position="relative"
-        >
-          {orders &&
-            orders.map((order, index) => {
-              return (
-                <Tab key={index} {...TabStyle} _selected={{ color: '#1A1A1A' }}>
-                  {index}
-                </Tab>
-              );
-            })}
-        </TabList>
-      </Tabs>
+      {orders &&
+        orders.slice(offset, offset + limit).map((order) => {
+          const date = dateToString(order.createdAt);
+          const dateString = date.year + date.month + date.date;
+          return (
+            <>
+              <Box {...TitleText} w="full" py="19px">
+                [{date.year} - {date.month} - {date.date}]
+              </Box>
+              {order.orderProducts &&
+                products &&
+                order.orderProducts.map((orderProduct) => {
+                  const targeProduct = findProduct(
+                    products,
+                    orderProduct.product,
+                  );
+                  return (
+                    <SingleOrder
+                      id={orderProduct.id}
+                      key={orderProduct.id}
+                      createdAt={dateString}
+                      product={targeProduct}
+                      quantity={orderProduct.quantity}
+                      hasReview={orderProduct.hasReview}
+                      shippingStatus={orderProduct.shippingStatus}
+                      isFreeDelivery={order.totalPrice >= 30000}
+                      merchantUid={order.merchantUid}
+                    ></SingleOrder>
+                  );
+                })}
+            </>
+          );
+        })}
+      <Pagination
+        total={orders.length}
+        limit={limit}
+        page={page}
+        setPage={setPage}
+      />
     </Box>
   );
 }
-
 export default Order;
 
 const TitleStyle = {

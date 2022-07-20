@@ -21,6 +21,11 @@ export interface orderProductType {
   shippingStatus: string;
 }
 
+export type QueryType = {
+  product: number;
+  quantity: number;
+};
+
 export type OrderType = {
   id: number;
   user: number;

@@ -24,7 +24,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';
 
 import { CartModal } from '@components/elements/Modal';
@@ -158,15 +157,12 @@ function ReviewChartBar({ countAll, count }: ReviewChartBarProps) {
 }
 
 function Detail() {
+  const router = useRouter();
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
-    else {
-      setAuthHeader(accessToken);
-    }
   }, []);
 
-  const router = useRouter();
   const [detail, setDetail] = useState<DetailType | null>(null);
   const [reviews, setReviews] = useState<ReviewType[]>();
   const [ratingCounts, setRatingCounts] = useState<number[]>();
@@ -181,8 +177,8 @@ function Detail() {
           params: { product: id, ordering: 'created_at' },
         })
         .then((res) => {
-          setReviews(res.data.results);
-          setRatingCounts(reviewAnalysis(res.data.results));
+          setReviews(res.data);
+          setRatingCounts(reviewAnalysis(res.data));
         });
     }
   }, [id]);
@@ -210,13 +206,13 @@ function Detail() {
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering, has_photo: true },
         })
-        .then((res) => setReviews(res.data.results));
+        .then((res) => setReviews(res.data));
     } else if (id && id > 0 && !hasPhoto) {
       instance
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
-        .then((res) => setReviews(res.data.results));
+        .then((res) => setReviews(res.data));
     }
   }, [ordering, hasPhoto]);
 
@@ -528,11 +524,11 @@ function Detail() {
                   mt="4px"
                   color="gray.600"
                 >
-                  <Box>5점</Box>
-                  <Box>4점</Box>
-                  <Box>3점</Box>
-                  <Box>2점</Box>
                   <Box>1점</Box>
+                  <Box>2점</Box>
+                  <Box>3점</Box>
+                  <Box>4점</Box>
+                  <Box>5점</Box>
                 </HStack>
               </VStack>
             </Flex>

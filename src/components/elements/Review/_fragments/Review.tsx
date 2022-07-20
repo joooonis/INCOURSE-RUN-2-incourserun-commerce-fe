@@ -64,8 +64,12 @@ function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
 }
 
 function Review() {
-  const [products, setProducts] = useState<ProductType[]>([]);
   const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+  }, []);
+  const [products, setProducts] = useState<ProductType[]>([]);
   const { id, createdAt, product, quantity, isfreedelivery } = router.query;
 
   const { register, handleSubmit, setValue } = useForm<ReviewFormValues>();

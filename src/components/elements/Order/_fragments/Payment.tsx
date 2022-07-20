@@ -31,41 +31,42 @@ import {
 import usePostcode from './usePostCode';
 
 function Payment() {
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+  }, []);
+
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
 
   const [order, setOrder] = useState<ProductType>();
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const [total, setTotal] = useState<number>();
-  const [deliveryFee, setDeliveryFee] = useState<number>();
-
-  useEffect(() => {
-    const order = findProduct(products, Number(product));
-    setOrder(order);
-    setTotal(order?.price * Number(quantity));
-
-    if (order?.price * Number(quantity) >= 30000) setDeliveryFee(0);
-    else setDeliveryFee(3000);
-  }, [products]);
-
   const [orderer, setOrderer] = useState<OrdererType>();
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [deliveryFee, setDeliveryFee] = useState<number>(0);
 
   useEffect(() => {
     instance.get('/v1/products').then((res) => setProducts(res.data));
     instance.get('/v1/users/me').then((res) => {
-      setOrderer({
-        ...orderer,
-        name: res.data.name,
-        phone: res.data.phone,
-        address: res.data.address,
-        addressDetail: res.data.addressDetail,
-      });
+      setOrderer({ ...res.data });
     });
   }, []);
 
-  const { handleClick, fullAddress, zonecode } = usePostcode();
+  useEffect(() => {
+    const myOrder = findProduct(products, Number(product));
+    setOrder(myOrder);
+    setTotal(myOrder?.price * Number(quantity));
+    if (myOrder?.price * Number(quantity) >= 30000) setDeliveryFee(0);
+    else setDeliveryFee(3000);
+  }, [products]);
+
+  const {
+    handleClick: ordererHandleClick,
+    fullAddress: ordererFullAddress,
+    zonecode: ordererZonecode,
+  } = usePostcode();
   const {
     handleClick: shippingHandleClick,
     fullAddress: shippingFullAddress,
@@ -85,11 +86,12 @@ function Payment() {
       if (orderer?.name) setValue('shippingName', orderer?.name);
       if (orderer?.phone) setValue('shippingPhone', orderer?.phone);
       if (orderer?.address) setValue('shippingAddress', orderer?.address);
-      else if (fullAddress) setValue('shippingAddress', fullAddress);
+      else if (ordererFullAddress)
+        setValue('shippingAddress', ordererFullAddress);
 
       if (orderer?.addressDetail)
         setValue('shippingAddressDetail', orderer?.addressDetail);
-      if (zonecode) setValue('shippingZipcode', zonecode);
+      if (ordererZonecode) setValue('shippingZipcode', ordererZonecode);
     } else reset();
   };
 
@@ -101,12 +103,12 @@ function Payment() {
   };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPaymentButtonActive(e.target.checked);
+    setIsPaymentButtonActive(e.target.checked && isCard);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const shippingData = { ...data };
-    if (total && deliveryFee) {
+    if ((total && deliveryFee) || (total && deliveryFee == 0)) {
       shippingData.totalPrice = total;
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
@@ -131,39 +133,43 @@ function Payment() {
   };
 
   useEffect(() => {
-    const script1 = document.createElement('script');
-    script1.type = 'text/javascript';
-    script1.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
-    document.body.appendChild(script1);
+    const jQuery = document.createElement('script');
+    jQuery.type = 'text/javascript';
+    jQuery.src = 'https://code.jquery.com/jquery-1.12.4.min.js';
+    document.body.appendChild(jQuery);
 
-    const script2 = document.createElement('script');
+    const payModule = document.createElement('script');
+    payModule.type = 'text/javascript';
+    payModule.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
+    document.body.appendChild(payModule);
 
-    script2.src =
+    const postCode = document.createElement('script');
+
+    postCode.src =
       '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    document.body.appendChild(script2);
+    document.body.appendChild(postCode);
 
     () => {
-      document.body.removeChild(script1);
-      document.body.removeChild(script2);
+      document.body.removeChild(jQuery);
+      document.body.removeChild(payModule);
+      document.body.removeChild(postCode);
     };
   }, []);
-
   const onClickPayment = (PaymentData: PaymentDataType) => {
     /* 1. 가맹점 식별하기 */
 
     const { IMP } = window;
-    IMP.init('imp39787589');
+    IMP.init('imp61247005');
 
     /* 2. 결제 데이터 정의하기 */
     const data = {
       pg: 'html5_inicis', // PG사
       pay_method: 'card', // 결제수단
       merchant_uid: PaymentData.merchantUid, // 주문번호
-      amount: 100, // 결제금액
+      amount: PaymentData.totalPaid, // 결제금액
       name: '아임포트 결제 데이터 분석', // 주문명
       buyer_name: PaymentData.shippingName, // 구매자 이름
       buyer_tel: PaymentData.shippingPhone, // 구매자 전화번호
-      buyer_email: 'example@example', // 구매자 이메일
       buyer_addr: PaymentData.shippingAddress, // 구매자 주소
       buyer_postcode: PaymentData.shippingZipcode, // 구매자 우편번호
     };
@@ -193,17 +199,6 @@ function Payment() {
     }
   };
 
-  const test = () => {
-    instance
-      .post('/v1/orders/Payment/complete', {
-        imp_uid: 'imp_328484503989',
-        merchant_uid: 'ORD220711-000049',
-      })
-      .then((res) => {
-        if (res.data.status === 'paid')
-          router.push(`/order/Payment/complete/${res.data.order.id}`);
-      });
-  };
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -216,9 +211,6 @@ function Payment() {
         pb="80px"
         px="16px"
       >
-        <Button display="none" onClick={test}>
-          테스트
-        </Button>
         <Box {...TitleText} w="full">
           주문결제
         </Box>
@@ -266,7 +258,9 @@ function Payment() {
                   w="249px"
                   name="address"
                   placeholder="울특별시 마포구 성산동  123-3"
-                  value={fullAddress ? fullAddress : orderer?.address}
+                  value={
+                    ordererFullAddress ? ordererFullAddress : orderer?.address
+                  }
                   onChange={onChange}
                 />
                 <Button
@@ -275,7 +269,7 @@ function Payment() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
-                  onClick={handleClick}
+                  onClick={ordererHandleClick}
                 >
                   우편번호 검색
                 </Button>
@@ -401,7 +395,10 @@ function Payment() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {(total && deliveryFee) || deliveryFee == 0
+                ? priceToString(total + deliveryFee)
+                : '0'}
+              원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>

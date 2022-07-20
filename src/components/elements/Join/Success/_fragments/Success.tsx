@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {
   Box,
@@ -12,12 +12,22 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
+
 import { LAYOUT } from '@constants/layout';
 
 function Success() {
   const router = useRouter();
-  const gotoProduct = () => {
-    router.replace('/products');
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+
+  const gotoMain = () => {
+    router.replace('/');
   };
   return (
     <Container maxW={LAYOUT.SIZE.WIDTH}>
@@ -39,7 +49,7 @@ function Success() {
             borderRadius="25px"
             size="sd"
             py="12px"
-            onClick={gotoProduct}
+            onClick={gotoMain}
           >
             시작하기
           </Button>

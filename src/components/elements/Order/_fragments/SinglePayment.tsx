@@ -4,7 +4,7 @@ import priceToString from '@components/hooks/priceToString';
 
 import { SinglePaymentProps } from './types';
 
-function SinglementPay({
+function SinglePayment({
   product,
   quantity,
   isPaymentCompleted,
@@ -44,7 +44,7 @@ function SinglementPay({
   );
 }
 
-export default SinglementPay;
+export default SinglePayment;
 
 const TitleText = {
   fontWeight: 700,
