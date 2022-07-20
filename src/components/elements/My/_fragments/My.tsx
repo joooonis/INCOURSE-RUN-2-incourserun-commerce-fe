@@ -8,14 +8,16 @@ import { setAuthHeader } from '@apis/_axios/instance';
 
 import { LogOutModal } from '@components/elements/Modal';
 
+import { getToken } from '@utils/localStorage/token';
+
 import { UserType } from './types';
 
 function My() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const [user, setUser] = useState<UserType>();

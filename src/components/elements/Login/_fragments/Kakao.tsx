@@ -7,6 +7,9 @@ import { Container, Spinner } from '@chakra-ui/react';
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
+import { setToken } from '@utils/localStorage/token';
+import { Token } from '@utils/localStorage/token';
+
 const Kakao = () => {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
@@ -19,21 +22,12 @@ const Kakao = () => {
       })
       .then((res) => {
         console.log(res);
-        const data = JSON.stringify(res.data);
+        const token: Token = res.data;
 
-        if (data) localStorage.setItem('oauth', data);
+        if (token) setToken(token);
+        if (token.access) setAuthHeader(token.access);
 
-        const token = res.data.access;
-        const refresh = res.data.refresh;
-        const isRegister = res.data.isRegister;
-
-        if (token) {
-          localStorage.setItem('token', token);
-          setAuthHeader(token);
-        }
-        if (refresh) localStorage.setItem('refresh', refresh);
-
-        if (isRegister) router.push('/');
+        if (token.isRegister) router.push('/');
         else router.replace('/join');
       })
       .catch((err) => {

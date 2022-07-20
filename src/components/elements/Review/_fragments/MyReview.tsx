@@ -8,6 +8,8 @@ import { setAuthHeader } from '@apis/_axios/instance';
 
 import Pagination from '@components/common/Pagination';
 
+import { getToken } from '@utils/localStorage/token';
+
 import { ReviewType, SingleReviewProps, StarRatingProps } from './types';
 
 function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
@@ -79,9 +81,9 @@ function SingleReview({ review }: SingleReviewProps) {
 function MyReview() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const [myReviews, setMyReviews] = useState<ReviewType[]>([]);

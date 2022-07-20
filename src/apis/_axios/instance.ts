@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { CONFIG } from '@config';
 import { apiLogger } from '@utils/apiLogger';
-import { getToken } from '@utils/localStorage/token';
+import { getToken, setToken } from '@utils/localStorage/token';
 import styledConsole from '@utils/styledConsole';
 
 const isDev = CONFIG.ENV === 'development';
@@ -25,11 +25,13 @@ const unsetAuthHeader = () => {
 };
 
 const refreshToken = async () => {
-  const refresh = localStorage.getItem('refresh');
-  const res = await instance.post('/v1/users/token/refresh', {
-    refresh: refresh,
-  });
-  return res.data;
+  const refresh = getToken().refresh;
+  const token = await instance
+    .post('/v1/users/token/refresh', {
+      refresh: refresh,
+    })
+    .then((res) => res.data);
+  return token;
 };
 
 instance.interceptors.request.use(
@@ -65,6 +67,8 @@ instance.interceptors.response.use(
         const token = await refreshToken();
         if (token?.access) {
           setAuthHeader(token?.access);
+          setToken(token);
+          reqData.headers.Authorization = `Bearer ${token?.access}`;
           return instance(reqData);
         }
       }

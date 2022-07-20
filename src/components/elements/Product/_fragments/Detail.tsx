@@ -30,6 +30,8 @@ import { setAuthHeader } from '@apis/_axios/instance';
 import { CartModal } from '@components/elements/Modal';
 import { priceToString } from '@components/hooks';
 
+import { getToken } from '@utils/localStorage/token';
+
 import reviewAnalysis from './reviewAnalysis';
 import {
   DetailType,
@@ -160,9 +162,9 @@ function ReviewChartBar({ countAll, count }: ReviewChartBarProps) {
 function Detail() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const [detail, setDetail] = useState<DetailType | null>(null);
@@ -380,7 +382,7 @@ function Detail() {
                   구매정보
                 </Box>
                 <Box {...BoldText} fontWeight="400" color="gray.600">
-                  리뷰 (78)
+                  리뷰 ({reviews?.length})
                 </Box>
               </Flex>
             </VStack>

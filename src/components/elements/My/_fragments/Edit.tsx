@@ -22,15 +22,17 @@ import { setAuthHeader } from '@apis/_axios/instance';
 
 import { EditModal } from '@components/elements/Modal';
 
+import { getToken } from '@utils/localStorage/token';
+
 import EditInput from './EditInput';
 import { FormValues } from './types';
 
 function Edit() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const {

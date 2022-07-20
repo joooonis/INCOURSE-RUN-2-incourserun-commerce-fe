@@ -6,15 +6,17 @@ import { Box, VStack } from '@chakra-ui/react';
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
+import { getToken } from '@utils/localStorage/token';
+
 import Card from './Card';
 import { ProductType } from './types';
 
 function Products() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
-    else setAuthHeader(accessToken);
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
 
   const [products, setProducts] = useState<ProductType[]>();

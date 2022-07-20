@@ -3,11 +3,16 @@ import React, { useEffect } from 'react';
 
 import { Box, Flex, Image, VStack } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
+
+import { getToken } from '@utils/localStorage/token';
+
 function Main() {
   const router = useRouter();
   useEffect(() => {
-    const accessToken = localStorage.getItem('token');
-    if (!accessToken) router.replace('/login');
+    const token = getToken();
+    if (!token.access) router.replace('/login');
+    else setAuthHeader(token.access);
   }, []);
   return (
     <>
