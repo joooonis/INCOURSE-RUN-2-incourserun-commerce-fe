@@ -66,6 +66,10 @@ export const itemSlice = createSlice({
         (itemChecker) => (itemChecker.checked = false),
       );
     },
+    cleanUpItems: (state) => {
+      state.itemCheckers = [];
+      state.total = 0;
+    },
   },
 });
 
@@ -78,6 +82,7 @@ export const {
   incItem,
   decItem,
   setTotal,
+  cleanUpItems,
 } = itemSlice.actions;
 
 export default itemSlice;

@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';
 
 import { PayMentModal } from '@components/elements/Modal';
@@ -31,6 +32,14 @@ import {
 import usePostcode from './usePostCode';
 
 function Payment() {
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
   const router = useRouter();
@@ -103,7 +112,7 @@ function Payment() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const shippingData = { ...data };
-    if (total && deliveryFee) {
+    if ((total && deliveryFee) || (total && deliveryFee == 0)) {
       shippingData.totalPrice = total;
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
@@ -150,7 +159,7 @@ function Payment() {
       document.body.removeChild(postCode);
     };
   }, []);
-
+  console.log(total);
   const onClickPayment = (PaymentData: PaymentDataType) => {
     /* 1. 가맹점 식별하기 */
 
@@ -391,7 +400,10 @@ function Payment() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {(total && deliveryFee) || deliveryFee == 0
+                ? priceToString(total + deliveryFee)
+                : '0'}
+              원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>

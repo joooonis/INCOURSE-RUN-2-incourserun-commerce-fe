@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { findProduct, priceToString } from '@components/hooks';
 
@@ -30,9 +31,16 @@ import {
 import usePostcode from './usePostCode';
 
 function CartPayMent() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 
-  const router = useRouter();
   const { checked } = router.query;
 
   const [orders, setOrders] = useState<ProductType[]>([]);
@@ -65,6 +73,7 @@ function CartPayMent() {
       }
       setTotal(sum);
       if (sum < 30000) setDeliveryFee(3000);
+      else setDeliveryFee(0);
     }
   }, [orders, quantities]);
 
@@ -118,15 +127,15 @@ function CartPayMent() {
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const shippingData = { ...data };
-    if (total && deliveryFee) {
+    if ((total && deliveryFee) || (total && deliveryFee == 0)) {
       shippingData.totalPrice = total;
       shippingData.deliveryFee = deliveryFee;
       shippingData.totalPaid = total + deliveryFee;
     }
-    if (isCard) data.payMethod = '신용카드';
+    if (isCard) shippingData.payMethod = '신용카드';
 
-    if (shippingFullAddress) data.shippingAddress = shippingFullAddress;
-    if (shippingZonecode) data.shippingZipcode = shippingZonecode;
+    if (shippingFullAddress) shippingData.shippingAddress = shippingFullAddress;
+    if (shippingZonecode) shippingData.shippingZipcode = shippingZonecode;
 
     if (orders && quantities) {
       const orderProducts = [];
@@ -138,7 +147,7 @@ function CartPayMent() {
         };
         orderProducts.push(SingleOrderProduct);
       }
-      setValue('orderProducts', orderProducts);
+      shippingData.orderProducts = orderProducts;
     }
 
     instance.post('/v1/orders', shippingData).then((res) => {
@@ -180,11 +189,10 @@ function CartPayMent() {
       pg: 'html5_inicis', // PG사
       pay_method: 'card', // 결제수단
       merchant_uid: payData.merchantUid, // 주문번호
-      amount: 100, // 결제금액
+      amount: payData.totalPaid, // 결제금액
       name: '아임포트 결제 데이터 분석', // 주문명
       buyer_name: payData.shippingName, // 구매자 이름
       buyer_tel: payData.shippingPhone, // 구매자 전화번호
-      buyer_email: 'example@example', // 구매자 이메일
       buyer_addr: payData.shippingAddress, // 구매자 주소
       buyer_postcode: payData.shippingZipcode, // 구매자 우편번호
     };
@@ -420,7 +428,10 @@ function CartPayMent() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {total && deliveryFee && priceToString(total + deliveryFee)} 원
+              {(total && deliveryFee) || deliveryFee == 0
+                ? priceToString(total + deliveryFee)
+                : '0'}
+              원
             </Box>
           </Flex>
           <Box w="full" h="1px" bg="gray.200"></Box>

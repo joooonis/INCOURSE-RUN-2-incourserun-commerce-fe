@@ -21,11 +21,21 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import JoinInput from './JoinInput';
 import { FormValues } from './types';
 
 function Join() {
+  const router = useRouter();
+  useEffect(() => {
+    const accessToken = localStorage.getItem('token');
+    if (!accessToken) router.replace('/login');
+    else {
+      setAuthHeader(accessToken);
+    }
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -53,7 +63,6 @@ function Join() {
 
   const [img, setImg] = useState(avatarRef.current?.files);
   const [preview, setPreview] = useState<string>();
-  const router = useRouter();
 
   const handleAvatar = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -91,7 +100,7 @@ function Join() {
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
-      (img && data.requiredTerms && data.privateInfoTerms)
+      (data.requiredTerms && data.privateInfoTerms)
     ) {
       instance
         .patch('/v1/users/me', patchData)
