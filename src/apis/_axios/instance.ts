@@ -2,7 +2,7 @@ import axios from 'axios';
 
 import { CONFIG } from '@config';
 import { apiLogger } from '@utils/apiLogger';
-import { getToken, setToken } from '@utils/localStorage/token';
+import { deleteToken, getToken, setToken } from '@utils/localStorage/token';
 import styledConsole from '@utils/styledConsole';
 
 const isDev = CONFIG.ENV === 'development';
@@ -74,9 +74,9 @@ instance.interceptors.response.use(
       }
 
       if (isUnAuthError) {
-        // deleteToken();
-        // if (isClient) Router.push(ROUTE.LOGIN);
-        // return Promise.reject(error);
+        deleteToken();
+        window.location.replace('/login');
+        return Promise.reject(error);
       }
 
       return Promise.reject(error);
