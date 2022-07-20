@@ -65,5 +65,4 @@ const TabStyle = {
   fontWeight: 700,
   fontSize: '16px',
   lineHeight: '28px',
-  // color: 'gray.400',
 };

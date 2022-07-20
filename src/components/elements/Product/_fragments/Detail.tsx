@@ -181,8 +181,8 @@ function Detail() {
           params: { product: id, ordering: 'created_at' },
         })
         .then((res) => {
-          setReviews(res.data.results);
-          setRatingCounts(reviewAnalysis(res.data.results));
+          setReviews(res.data);
+          setRatingCounts(reviewAnalysis(res.data));
         });
     }
   }, [id]);
@@ -210,13 +210,13 @@ function Detail() {
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering, has_photo: true },
         })
-        .then((res) => setReviews(res.data.results));
+        .then((res) => setReviews(res.data));
     } else if (id && id > 0 && !hasPhoto) {
       instance
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
-        .then((res) => setReviews(res.data.results));
+        .then((res) => setReviews(res.data));
     }
   }, [ordering, hasPhoto]);
 

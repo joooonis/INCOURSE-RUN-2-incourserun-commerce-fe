@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
 import instance from '@apis/_axios/instance';

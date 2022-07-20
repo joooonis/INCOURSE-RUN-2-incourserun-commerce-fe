@@ -93,7 +93,7 @@ function MyReview() {
 
   useEffect(() => {
     instance.get('/v1/users/me/reviews').then((res) => {
-      setMyReviews(res.data.results);
+      setMyReviews(res.data);
     });
   }, []);
 
@@ -103,13 +103,13 @@ function MyReview() {
         내 상품 리뷰
       </Box>
       <Box {...ReviewCountStyle} pt="80px" pb="30px" w="full">
-        총 <span style={{ color: '#FF710B' }}>{myReviews?.length}</span>건
+        총 <span style={{ color: '#FF710B' }}>{myReviews.length}</span>건
       </Box>
       <Box w="full" h="30px"></Box>
       {myReviews &&
-        myReviews
-          .slice(offset, offset + limit)
-          .map((review) => <SingleReview key={review.id} review={review} />)}
+        myReviews.slice(offset, offset + limit).map((review) => {
+          return <SingleReview key={review.id} review={review} />;
+        })}
       <Box w="full" borderBottom="1px solid #F2F3F4"></Box>
       <Pagination
         total={myReviews.length}
