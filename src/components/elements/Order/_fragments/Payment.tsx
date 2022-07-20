@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { PayMentModal } from '@components/elements/Modal';
 import { findProduct, priceToString } from '@components/hooks';
@@ -34,6 +35,7 @@ function Payment() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
 
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();

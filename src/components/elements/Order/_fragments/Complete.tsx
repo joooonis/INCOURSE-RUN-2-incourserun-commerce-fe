@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Flex, HStack, VStack } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { dateToString, findProduct, priceToString } from '@components/hooks';
 
@@ -15,6 +16,7 @@ function Complete() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
 
   const id = Number(router.query.id);

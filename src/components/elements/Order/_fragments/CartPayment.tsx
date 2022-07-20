@@ -15,6 +15,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { findProduct, priceToString } from '@components/hooks';
 
@@ -34,6 +35,7 @@ function CartPayMent() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
   const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
 

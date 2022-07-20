@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { EditModal } from '@components/elements/Modal';
 
@@ -29,6 +30,7 @@ function Edit() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
 
   const {

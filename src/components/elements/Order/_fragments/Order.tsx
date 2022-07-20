@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import { Box } from '@chakra-ui/react';
 
-import instance from '@apis/_axios/instance';
+import instance, { setAuthHeader } from '@apis/_axios/instance';
 
 import Pagination from '@components/common/Pagination';
 import { dateToString, findProduct } from '@components/hooks';
@@ -16,6 +16,7 @@ function Order() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
 
   const [orders, setOrders] = useState<OrderType[]>([]);

@@ -1,15 +1,17 @@
 import router from 'next/router';
 import React, { useEffect } from 'react';
 
-import axios from 'axios';
-
+// import axios from 'axios';
 import { Container, Spinner } from '@chakra-ui/react';
+
+import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 const Kakao = () => {
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get('code');
 
-    axios
+    instance
       .post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/users/social_login`, {
         code: code,
         state: 'kakao',
@@ -25,7 +27,10 @@ const Kakao = () => {
         const refresh = res.data.refresh;
         const isRegister = res.data.isRegister;
 
-        if (token) localStorage.setItem('token', token);
+        if (token) {
+          localStorage.setItem('token', token);
+          setAuthHeader(token);
+        }
         if (refresh) localStorage.setItem('refresh', refresh);
 
         if (isRegister) router.push('/');

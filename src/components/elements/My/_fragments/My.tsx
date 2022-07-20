@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Image, useDisclosure } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
+import { setAuthHeader } from '@apis/_axios/instance';
 
 import { LogOutModal } from '@components/elements/Modal';
 
@@ -14,7 +15,9 @@ function My() {
   useEffect(() => {
     const accessToken = localStorage.getItem('token');
     if (!accessToken) router.replace('/login');
+    else setAuthHeader(accessToken);
   }, []);
+
   const [user, setUser] = useState<UserType>();
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
