@@ -159,12 +159,11 @@ function Payment() {
       document.body.removeChild(postCode);
     };
   }, []);
-  console.log(total);
   const onClickPayment = (PaymentData: PaymentDataType) => {
     /* 1. 가맹점 식별하기 */
 
     const { IMP } = window;
-    IMP.init('imp39787589');
+    IMP.init('imp61247005');
 
     /* 2. 결제 데이터 정의하기 */
     const data = {
