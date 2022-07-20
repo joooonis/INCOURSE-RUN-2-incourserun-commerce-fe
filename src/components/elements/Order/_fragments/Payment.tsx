@@ -237,7 +237,6 @@ function Payment() {
               <Input
                 name="name"
                 {...InputStyle}
-                placeholder="김인코스런"
                 value={orderer?.name}
                 onChange={onChange}
               />
@@ -247,7 +246,6 @@ function Payment() {
               <Input
                 {...InputStyle}
                 name="phone"
-                placeholder="010-1234-1234"
                 value={orderer?.phone}
                 onChange={onChange}
               />
@@ -259,7 +257,6 @@ function Payment() {
                   {...InputStyle}
                   w="249px"
                   name="address"
-                  placeholder="울특별시 마포구 성산동  123-3"
                   value={
                     ordererFullAddress ? ordererFullAddress : orderer?.address
                   }
@@ -281,7 +278,6 @@ function Payment() {
                 w="full"
                 mt="10px"
                 name="addressDetail"
-                placeholder="성산빌딩 B동 302호"
                 value={orderer?.addressDetail}
                 onChange={onChange}
               />
@@ -313,7 +309,6 @@ function Payment() {
               <Text {...NameStyle}>이름</Text>
               <Input
                 {...InputStyle}
-                placeholder="김인코스런"
                 {...register('shippingName', { required: true })}
               />
             </Box>
@@ -321,7 +316,6 @@ function Payment() {
               <Text {...NameStyle}>핸드폰 번호</Text>
               <Input
                 {...InputStyle}
-                placeholder="010-1234-1234"
                 {...register('shippingPhone', { required: true })}
               />
             </Box>
@@ -331,7 +325,6 @@ function Payment() {
                 <Input
                   {...InputStyle}
                   w="249px"
-                  placeholder="울특별시 마포구 성산동  123-3"
                   value={shippingFullAddress}
                   {...register('shippingAddress', { required: true })}
                 />
@@ -350,17 +343,12 @@ function Payment() {
                 {...InputStyle}
                 w="full"
                 mt="10px"
-                placeholder="성산빌딩 B동 302호"
                 {...register('shippingAddressDetail', { required: true })}
               />
             </Box>
             <Box w="full">
               <Text {...NameStyle}>배송요청사항</Text>
-              <Input
-                {...InputStyle}
-                placeholder="문 앞에 두고 가주세요"
-                {...register('shippingRequest')}
-              />
+              <Input {...InputStyle} {...register('shippingRequest')} />
             </Box>
           </VStack>
         </Box>
