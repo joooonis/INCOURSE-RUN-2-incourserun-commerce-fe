@@ -420,10 +420,9 @@ function CartPayMent() {
           <Flex py="20px" justify="space-between">
             <Box>결제금액</Box>
             <Box fontWeight={700} color="primary.500">
-              {(total && deliveryFee) ||
-                (total &&
-                  deliveryFee == 0 &&
-                  priceToString(total + deliveryFee))}
+              {(total && deliveryFee) || deliveryFee == 0
+                ? priceToString(total + deliveryFee)
+                : '0'}
               원
             </Box>
           </Flex>
