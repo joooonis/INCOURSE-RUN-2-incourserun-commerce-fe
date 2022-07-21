@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Accordion,
@@ -264,6 +264,8 @@ function Detail() {
     onClose: ModalClose,
   } = useDisclosure();
 
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   return (
     <Box pt="120px" pb="80px">
       {detail && (
@@ -378,12 +380,21 @@ function Detail() {
                 <Box {...BoldText} color="primary.500">
                   상세정보
                 </Box>
-                <Box {...BoldText} fontWeight="400" color="gray.600">
-                  구매정보
-                </Box>
-                <Box {...BoldText} fontWeight="400" color="gray.600">
-                  리뷰 ({reviews?.length})
-                </Box>
+                <a href="#orderInfo">
+                  <Box
+                    {...BoldText}
+                    fontWeight="400"
+                    color="gray.600"
+                    onClick={() => buttonRef.current?.click()}
+                  >
+                    구매정보
+                  </Box>
+                </a>
+                <a href="#review">
+                  <Box {...BoldText} fontWeight="400" color="gray.600">
+                    리뷰 ({reviews?.length})
+                  </Box>
+                </a>
               </Flex>
             </VStack>
             <Box maxH="477px" overflow="hidden">
@@ -426,8 +437,8 @@ function Detail() {
             <Accordion defaultIndex={[1]} allowMultiple pt="25px">
               <AccordionItem>
                 <Box>
-                  <AccordionButton py="15.5px">
-                    <Box {...BoldText} flex="1" textAlign="left">
+                  <AccordionButton py="15.5px" ref={buttonRef}>
+                    <Box {...BoldText} flex="1" textAlign="left" id="orderInfo">
                       주문 및 배송 안내
                     </Box>
                     <AccordionIcon />
@@ -455,7 +466,7 @@ function Detail() {
 
           <Box px="16px">
             <HStack pt="51px" pb="30px" justify="space-between">
-              <Box {...ReviewCountStyle}>
+              <Box id="review" {...ReviewCountStyle}>
                 리뷰 <span style={{ color: '#FF710B' }}>{reviews?.length}</span>
                 건
               </Box>
