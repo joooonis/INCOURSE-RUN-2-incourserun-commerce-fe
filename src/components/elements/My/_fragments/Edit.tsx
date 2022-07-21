@@ -258,11 +258,11 @@ function Edit() {
               <option value="40대" selected={getValues('ageRange') === '40대'}>
                 40대
               </option>
-              <option value="50대" selected={getValues('ageRange') === '50대'}>
-                50대
-              </option>
-              <option value="60대" selected={getValues('ageRange') === '60대'}>
-                60대
+              <option
+                value="50대 이상"
+                selected={getValues('ageRange') === '50대 이상'}
+              >
+                50대 이상
               </option>
             </Select>
           </FormControl>

@@ -52,7 +52,7 @@ function Join() {
         if (res.data.email) setValue('email', res.data.email);
         if (res.data.phone) setValue('phone', res.data.phone);
         if (res.data.gender) setValue('gender', res.data.gender);
-        if (res.data.ageRange) setValue('ageRange', res.data.age);
+        if (res.data.ageRange) setValue('ageRange', res.data.ageRange);
 
         if (res.data.avatar) setPreview(res.data.avatar);
       });
@@ -315,11 +315,11 @@ function Join() {
               <option value="40대" selected={getValues('ageRange') === '40대'}>
                 40대
               </option>
-              <option value="50대" selected={getValues('ageRange') === '50대'}>
-                50대
-              </option>
-              <option value="60대" selected={getValues('ageRange') === '60대'}>
-                60대
+              <option
+                value="50대 이상"
+                selected={getValues('ageRange') === '50대 이상'}
+              >
+                50대 이상
               </option>
             </Select>
           </FormControl>

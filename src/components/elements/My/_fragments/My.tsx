@@ -39,6 +39,10 @@ function My() {
     router.push('review/myreview');
   };
 
+  const gotoWithdrawal = () => {
+    router.push('withdrawal');
+  };
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -130,6 +134,8 @@ function My() {
           h="60px"
           px="16px"
           borderBottom="0.5px solid #F2F3F4"
+          _hover={{ cursor: 'pointer' }}
+          onClick={gotoWithdrawal}
         >
           회원탈퇴
           <Image src="/icons/svg/my/arrow.svg" alt="arrow" pr="8px" />

@@ -1,7 +1,7 @@
 export default function dateToString(createdAt: string) {
   const d = new Date(createdAt); // 서버에서 받은 createAt
   const year = String(d.getFullYear());
-  let month = String(d.getMonth());
+  let month = String(d.getMonth() + 1);
   let date = String(d.getDate());
 
   if (Number(month) < 10) {
