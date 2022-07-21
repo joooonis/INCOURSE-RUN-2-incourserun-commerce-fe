@@ -265,6 +265,22 @@ function Detail() {
   } = useDisclosure();
 
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const orderInfoRef = useRef<HTMLDivElement>(null);
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const onOrderInfoClick = () => {
+    orderInfoRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+    buttonRef.current?.click();
+  };
+
+  const onReviewClick = () => {
+    reviewRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  };
 
   return (
     <Box pt="120px" pb="80px">
@@ -380,21 +396,24 @@ function Detail() {
                 <Box {...BoldText} color="primary.500">
                   상세정보
                 </Box>
-                <a href="#orderInfo">
-                  <Box
-                    {...BoldText}
-                    fontWeight="400"
-                    color="gray.600"
-                    onClick={() => buttonRef.current?.click()}
-                  >
-                    구매정보
-                  </Box>
-                </a>
-                <a href="#review">
-                  <Box {...BoldText} fontWeight="400" color="gray.600">
-                    리뷰 ({reviews?.length})
-                  </Box>
-                </a>
+                <Box
+                  {...BoldText}
+                  fontWeight="400"
+                  color="gray.600"
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={onOrderInfoClick}
+                >
+                  구매정보
+                </Box>
+                <Box
+                  {...BoldText}
+                  fontWeight="400"
+                  color="gray.600"
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={onReviewClick}
+                >
+                  리뷰 ({reviews?.length})
+                </Box>
               </Flex>
             </VStack>
             <Box maxH="477px" overflow="hidden">
@@ -438,7 +457,12 @@ function Detail() {
               <AccordionItem>
                 <Box>
                   <AccordionButton py="15.5px" ref={buttonRef}>
-                    <Box {...BoldText} flex="1" textAlign="left" id="orderInfo">
+                    <Box
+                      ref={orderInfoRef}
+                      {...BoldText}
+                      flex="1"
+                      textAlign="left"
+                    >
                       주문 및 배송 안내
                     </Box>
                     <AccordionIcon />
@@ -466,7 +490,7 @@ function Detail() {
 
           <Box px="16px">
             <HStack pt="51px" pb="30px" justify="space-between">
-              <Box id="review" {...ReviewCountStyle}>
+              <Box ref={reviewRef} {...ReviewCountStyle}>
                 리뷰 <span style={{ color: '#FF710B' }}>{reviews?.length}</span>
                 건
               </Box>
@@ -514,7 +538,7 @@ function Detail() {
                   {detail.avgRating?.toFixed(1)}
                 </Box>
                 <StarRating
-                  starRating={Number(detail.avgRating?.toFixed(1))}
+                  starRating={Number(detail.avgRating?.toFixed())}
                 ></StarRating>
               </HStack>
               <Box w="1px" h="70px" bg="gray.200"></Box>
