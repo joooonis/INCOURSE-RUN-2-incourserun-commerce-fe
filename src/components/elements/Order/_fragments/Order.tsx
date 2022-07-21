@@ -1,11 +1,12 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import { Box, Button, Flex } from '@chakra-ui/react';
+import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
 
 import instance, { setAuthHeader } from '@apis/_axios/instance';
 
 import Pagination from '@components/common/Pagination';
+import { OrderModal } from '@components/elements/Modal';
 import { dateToString, findProduct } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
@@ -27,6 +28,8 @@ function Order() {
   const limit = 5;
   const offset = (page - 1) * limit;
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   useEffect(() => {
     instance.get('/v1/users/me/orders').then((res) => {
       console.log(res.data);
@@ -36,65 +39,73 @@ function Order() {
   }, []);
 
   return (
-    <Box pt="130px" px="16px" pb="50px">
-      <Box {...TitleStyle} w="full">
-        주문내역
-      </Box>
-      <Box h="80px"></Box>
-      {orders &&
-        orders.slice(offset, offset + limit).map((order) => {
-          const date = dateToString(order.createdAt);
-          const dateString = date.year + date.month + date.date;
-          return (
-            <>
-              <Box {...TitleText} w="full" py="19px">
-                [{date.year} - {date.month} - {date.date}]
-              </Box>
-              {order.orderProducts &&
-                products &&
-                order.orderProducts.map((orderProduct) => {
-                  const targeProduct = findProduct(
-                    products,
-                    orderProduct.product,
-                  );
-                  return (
-                    <SingleOrder
-                      id={orderProduct.id}
-                      key={orderProduct.id}
-                      createdAt={dateString}
-                      product={targeProduct}
-                      quantity={orderProduct.quantity}
-                      hasReview={orderProduct.hasReview}
-                      shippingStatus={orderProduct.shippingStatus}
-                      isFreeDelivery={order.totalPrice >= 30000}
+    <>
+      <Box pt="130px" px="16px" pb="50px">
+        <Box {...TitleStyle} w="full">
+          주문내역
+        </Box>
+        <Box h="80px"></Box>
+        {orders &&
+          orders.slice(offset, offset + limit).map((order) => {
+            const date = dateToString(order.createdAt);
+            const dateString = date.year + date.month + date.date;
+            return (
+              <>
+                <Box {...TitleText} w="full" py="19px">
+                  [{date.year} - {date.month} - {date.date}]
+                </Box>
+                {order.orderProducts &&
+                  products &&
+                  order.orderProducts.map((orderProduct) => {
+                    const targeProduct = findProduct(
+                      products,
+                      orderProduct.product,
+                    );
+                    return (
+                      <SingleOrder
+                        id={orderProduct.id}
+                        key={orderProduct.id}
+                        createdAt={dateString}
+                        product={targeProduct}
+                        quantity={orderProduct.quantity}
+                        hasReview={orderProduct.hasReview}
+                        shippingStatus={orderProduct.shippingStatus}
+                        isFreeDelivery={order.totalPrice >= 30000}
+                        merchantUid={order.merchantUid}
+                      ></SingleOrder>
+                    );
+                  })}
+                {order.shippingStatus === '결제완료' && (
+                  <Flex w="full" pt="10px" pb="21px" justify="flex-end">
+                    <Button
+                      borderRadius="5px"
+                      w="140px"
+                      h="40px"
+                      p="0px 15px"
+                      colorScheme="primary"
+                      onClick={onOpen}
+                      {...TitleText}
+                    >
+                      주문취소
+                    </Button>
+                    <OrderModal
+                      isOpen={isOpen}
+                      onClose={onClose}
                       merchantUid={order.merchantUid}
-                    ></SingleOrder>
-                  );
-                })}
-              {order.shippingStatus === '결제완료' && (
-                <Flex w="full" pt="10px" pb="21px" justify="flex-end">
-                  <Button
-                    borderRadius="5px"
-                    w="140px"
-                    h="40px"
-                    p="0px 15px"
-                    colorScheme="primary"
-                    {...TitleText}
-                  >
-                    주문취소
-                  </Button>
-                </Flex>
-              )}
-            </>
-          );
-        })}
-      <Pagination
-        total={orders.length}
-        limit={limit}
-        page={page}
-        setPage={setPage}
-      />
-    </Box>
+                    />
+                  </Flex>
+                )}
+              </>
+            );
+          })}
+        <Pagination
+          total={orders.length}
+          limit={limit}
+          page={page}
+          setPage={setPage}
+        />
+      </Box>
+    </>
   );
 }
 export default Order;
