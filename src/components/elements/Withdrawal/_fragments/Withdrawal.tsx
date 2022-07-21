@@ -6,7 +6,6 @@ import {
   Box,
   Flex,
   HStack,
-  Image,
   Input,
   Radio,
   RadioGroup,
@@ -18,11 +17,11 @@ import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
-import { LogOutModal } from '@components/elements/Modal';
+import { WithdrawalModal } from '@components/elements/Modal';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { FormValues, UserType } from './types';
+import { FormValues, UserType, WithdrawalType } from './types';
 
 function Withdrawal() {
   const router = useRouter();
@@ -53,11 +52,19 @@ function Withdrawal() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+    const withdrawal: WithdrawalType = {
+      reasons: data.reasons,
+      reasonOthers: data.reasonOthers,
+    };
+    console.log(withdrawal);
+    instance.post('/v1/users/withdrawals', withdrawal).then((res) => {
+      console.log(res);
+      onOpen();
+    });
   };
   return (
     <>
-      <LogOutModal isOpen={isOpen} onClose={onClose} />
+      <WithdrawalModal isOpen={isOpen} onClose={onClose} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box>
           <Box pt="130px" px="16px" pb="80px">
@@ -154,7 +161,10 @@ function Withdrawal() {
             </Flex>
             <Input
               {...InputStyle}
-              {...register('incourserun', { required: true })}
+              {...register('incourserun', {
+                required: true,
+                validate: (value) => value === '인코스런',
+              })}
               placeholder="인코스런"
             />
           </Box>

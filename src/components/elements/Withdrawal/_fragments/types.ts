@@ -4,6 +4,11 @@ export interface FormValues {
   incourserun: '인코스런';
 }
 
+export type WithdrawalType = {
+  reasons: string;
+  reasonOthers: string;
+};
+
 export type UserType = {
   avatar: File;
   name: string;
