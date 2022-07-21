@@ -12,12 +12,15 @@ import {
 
 import PrimaryButton from '@components/common/Button';
 
+import { deleteToken } from '@utils/localStorage/token';
+
 import { MyModalProps } from './types';
 
 function WithdrawalModal({ isOpen, onClose }: MyModalProps) {
   const router = useRouter();
   const Complete = () => {
     onClose();
+    deleteToken();
     router.push('/login');
   };
   return (
