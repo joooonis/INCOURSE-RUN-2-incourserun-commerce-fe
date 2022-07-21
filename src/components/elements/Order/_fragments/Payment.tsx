@@ -329,7 +329,7 @@ function Payment() {
                 <Input
                   {...InputStyle}
                   w="249px"
-                  onClick={ordererHandleClick}
+                  onClick={shippingHandleClick}
                   value={shippingFullAddress ? shippingFullAddress : ''}
                   {...register('shippingAddress', { required: true })}
                 />
