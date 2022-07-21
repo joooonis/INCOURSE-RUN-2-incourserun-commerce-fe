@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import { Box } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 
 import instance, { setAuthHeader } from '@apis/_axios/instance';
 
@@ -28,7 +28,10 @@ function Order() {
   const offset = (page - 1) * limit;
 
   useEffect(() => {
-    instance.get('/v1/users/me/orders').then((res) => setOrders(res.data));
+    instance.get('/v1/users/me/orders').then((res) => {
+      console.log(res.data);
+      setOrders(res.data);
+    });
     instance.get('/v1/products').then((res) => setProducts(res.data));
   }, []);
 
@@ -68,6 +71,20 @@ function Order() {
                     ></SingleOrder>
                   );
                 })}
+              {order.shippingStatus === '결제완료' && (
+                <Flex w="full" pt="10px" pb="21px" justify="flex-end">
+                  <Button
+                    borderRadius="5px"
+                    w="140px"
+                    h="40px"
+                    p="0px 15px"
+                    colorScheme="primary"
+                    {...TitleText}
+                  >
+                    주문취소
+                  </Button>
+                </Flex>
+              )}
             </>
           );
         })}
