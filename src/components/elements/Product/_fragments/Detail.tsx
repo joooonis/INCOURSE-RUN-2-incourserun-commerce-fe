@@ -178,7 +178,7 @@ function Detail() {
 
       instance
         .get('/v1/reviews', {
-          params: { product: id, ordering: 'created_at' },
+          params: { product: id, ordering: '-created_at' },
         })
         .then((res) => {
           setReviews(res.data);
@@ -187,7 +187,7 @@ function Detail() {
     }
   }, [id]);
 
-  const [ordering, setOrdering] = useState('created_at');
+  const [ordering, setOrdering] = useState('-created_at');
   const [hasPhoto, setHasPhoto] = useState<boolean>(false);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -210,13 +210,19 @@ function Detail() {
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering, has_photo: true },
         })
-        .then((res) => setReviews(res.data));
+        .then((res) => {
+          setReviews(res.data);
+          setRatingCounts(reviewAnalysis(res.data));
+        });
     } else if (id && id > 0 && !hasPhoto) {
       instance
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
-        .then((res) => setReviews(res.data));
+        .then((res) => {
+          setReviews(res.data);
+          setRatingCounts(reviewAnalysis(res.data));
+        });
     }
   }, [ordering, hasPhoto]);
 
@@ -505,7 +511,7 @@ function Detail() {
                   onChange={handleOrderingOnChange}
                   defaultValue="created_at"
                 >
-                  <option value="created_at">최신순</option>
+                  <option value="-created_at">최신순</option>
                   <option value="-rating">평점 높은 순</option>
                   <option value="rating">평점 낮은 순</option>
                 </Select>
