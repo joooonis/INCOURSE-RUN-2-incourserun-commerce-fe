@@ -45,13 +45,14 @@ function Edit() {
 
   useEffect(() => {
     instance.get('/v1/users/me').then((res) => {
-      if (res.data.name) setValue('name', res.data.name);
-      if (res.data.nickname) setValue('nickname', res.data.nickname);
-      if (res.data.email) setValue('email', res.data.email);
-      if (res.data.phone) setValue('phone', res.data.phone);
-      if (res.data.gender) setValue('gender', res.data.gender);
-      if (res.data.ageRange) setValue('ageRange', res.data.ageRange);
-      if (res.data.avatar) setPreview(res.data.avatar);
+      const user = res.data;
+      if (user.name) setValue('name', user.name);
+      if (user.nickname) setValue('nickname', user.nickname);
+      if (user.email) setValue('email', user.email);
+      if (user.phone) setValue('phone', user.phone);
+      if (user.gender) setValue('gender', user.gender);
+      if (user.ageRange) setValue('ageRange', user.ageRange);
+      if (user.avatar) setPreview(user.avatar);
     });
   }, []);
 
