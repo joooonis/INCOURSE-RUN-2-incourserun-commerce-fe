@@ -78,21 +78,6 @@ function SingleOrder({
           )}
         </VStack>
       </Flex>
-      {shippingStatus === '결제완료' && (
-        <Flex w="full" pt="10px" pb="21px" justify="flex-end">
-          <Button
-            borderRadius="5px"
-            w="140px"
-            h="40px"
-            p="0px 15px"
-            colorScheme="primary"
-            onClick={onCartModalOpen}
-            {...TitleText}
-          >
-            주문취소
-          </Button>
-        </Flex>
-      )}
       {shippingStatus === '배송완료' && !hasReview && (
         <Flex w="full" pt="10px" pb="21px" justify="flex-end">
           <Button
