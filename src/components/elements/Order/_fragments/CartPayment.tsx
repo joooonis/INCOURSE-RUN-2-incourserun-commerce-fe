@@ -113,16 +113,19 @@ function CartPayMent() {
       if (zonecode) setValue('shippingZipcode', zonecode);
     } else reset();
   };
-
-  const [isPayButtonActive, setIsPayButtonActive] = useState(false);
-  const [isCard, setIsCard] = useState(false);
+  const [isPaymentButtonActive, setIsPaymentButtonActive] =
+    useState<boolean>(false);
+  const [isAgreement, setIsAgreement] = useState<boolean>(false);
+  const [isCard, setIsCard] = useState<boolean>(false);
 
   const checkPayMethod = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCard(e.target.checked);
+    setIsPaymentButtonActive(e.target.checked && isAgreement);
   };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPayButtonActive(e.target.checked && isCard);
+    setIsAgreement(e.target.checked);
+    setIsPaymentButtonActive(isCard && e.target.checked);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -442,7 +445,7 @@ function CartPayMent() {
             h="50px"
             py="12px"
             type="submit"
-            disabled={!isPayButtonActive}
+            disabled={!isPaymentButtonActive}
           >
             결제하기
           </Button>

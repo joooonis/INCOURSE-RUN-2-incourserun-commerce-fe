@@ -40,7 +40,8 @@ function Payment() {
     else setAuthHeader(token.access);
   }, []);
 
-  const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
+  const { register, handleSubmit, setValue, reset, watch } =
+    useForm<FormValues>();
 
   const router = useRouter();
   const { product, quantity } = router.query;
@@ -84,7 +85,6 @@ function Payment() {
       [name]: value,
     });
   };
-
   const matchShippingOrderer = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       if (orderer?.name) setValue('shippingName', orderer?.name);
@@ -99,15 +99,19 @@ function Payment() {
     } else reset();
   };
 
-  const [isPaymentButtonActive, setIsPaymentButtonActive] = useState(false);
-  const [isCard, setIsCard] = useState(false);
+  const [isPaymentButtonActive, setIsPaymentButtonActive] =
+    useState<boolean>(false);
+  const [isAgreement, setIsAgreement] = useState<boolean>(false);
+  const [isCard, setIsCard] = useState<boolean>(false);
 
   const checkPayMethod = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsCard(e.target.checked);
+    setIsPaymentButtonActive(e.target.checked && isAgreement);
   };
 
   const agreementHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsPaymentButtonActive(e.target.checked && isCard);
+    setIsAgreement(e.target.checked);
+    setIsPaymentButtonActive(isCard && e.target.checked);
   };
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -259,10 +263,8 @@ function Payment() {
                   {...InputStyle}
                   w="249px"
                   name="address"
-                  value={
-                    ordererFullAddress ? ordererFullAddress : orderer?.address
-                  }
-                  onChange={onChange}
+                  onClick={ordererHandleClick}
+                  value={ordererFullAddress ? ordererFullAddress : ''}
                 />
                 <Button
                   colorScheme="primary"
@@ -327,7 +329,8 @@ function Payment() {
                 <Input
                   {...InputStyle}
                   w="249px"
-                  value={shippingFullAddress}
+                  onClick={ordererHandleClick}
+                  value={shippingFullAddress ? shippingFullAddress : ''}
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button
