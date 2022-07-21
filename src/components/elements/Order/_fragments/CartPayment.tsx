@@ -86,7 +86,11 @@ function CartPayMent() {
     });
   }, []);
 
-  const { handleClick, fullAddress, zonecode } = usePostcode();
+  const {
+    handleClick: ordererHandleClick,
+    fullAddress: ordererFullAddress,
+    zonecode: ordererZonecode,
+  } = usePostcode();
   const {
     handleClick: shippingHandleClick,
     fullAddress: shippingFullAddress,
@@ -106,11 +110,12 @@ function CartPayMent() {
       if (orderer?.name) setValue('shippingName', orderer?.name);
       if (orderer?.phone) setValue('shippingPhone', orderer?.phone);
       if (orderer?.address) setValue('shippingAddress', orderer?.address);
-      else if (fullAddress) setValue('shippingAddress', fullAddress);
+      else if (ordererFullAddress)
+        setValue('shippingAddress', ordererFullAddress);
 
       if (orderer?.addressDetail)
         setValue('shippingAddressDetail', orderer?.addressDetail);
-      if (zonecode) setValue('shippingZipcode', zonecode);
+      if (ordererZonecode) setValue('shippingZipcode', ordererZonecode);
     } else reset();
   };
   const [isPaymentButtonActive, setIsPaymentButtonActive] =
@@ -293,8 +298,8 @@ function CartPayMent() {
                   {...InputStyle}
                   w="249px"
                   name="address"
-                  value={fullAddress ? fullAddress : orderer?.address}
-                  onChange={onChange}
+                  onClick={ordererHandleClick}
+                  value={ordererFullAddress ? ordererFullAddress : ''}
                 />
                 <Button
                   colorScheme="primary"
@@ -302,7 +307,7 @@ function CartPayMent() {
                   h="40px"
                   borderRadius="5px"
                   py="11px"
-                  onClick={handleClick}
+                  onClick={ordererHandleClick}
                 >
                   우편번호 검색
                 </Button>
@@ -359,7 +364,8 @@ function CartPayMent() {
                 <Input
                   {...InputStyle}
                   w="249px"
-                  value={shippingFullAddress}
+                  onClick={shippingHandleClick}
+                  value={shippingFullAddress ? shippingFullAddress : ''}
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button
