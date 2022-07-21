@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import {
   Accordion,
@@ -178,7 +178,7 @@ function Detail() {
 
       instance
         .get('/v1/reviews', {
-          params: { product: id, ordering: 'created_at' },
+          params: { product: id, ordering: '-created_at' },
         })
         .then((res) => {
           setReviews(res.data);
@@ -187,7 +187,7 @@ function Detail() {
     }
   }, [id]);
 
-  const [ordering, setOrdering] = useState('created_at');
+  const [ordering, setOrdering] = useState('-created_at');
   const [hasPhoto, setHasPhoto] = useState<boolean>(false);
 
   const handleOrderingOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -210,13 +210,19 @@ function Detail() {
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering, has_photo: true },
         })
-        .then((res) => setReviews(res.data));
+        .then((res) => {
+          setReviews(res.data);
+          setRatingCounts(reviewAnalysis(res.data));
+        });
     } else if (id && id > 0 && !hasPhoto) {
       instance
         .get('/v1/reviews', {
           params: { product: id, ordering: ordering },
         })
-        .then((res) => setReviews(res.data));
+        .then((res) => {
+          setReviews(res.data);
+          setRatingCounts(reviewAnalysis(res.data));
+        });
     }
   }, [ordering, hasPhoto]);
 
@@ -263,6 +269,24 @@ function Detail() {
     onOpen: ModalOpen,
     onClose: ModalClose,
   } = useDisclosure();
+
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const orderInfoRef = useRef<HTMLDivElement>(null);
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const onOrderInfoClick = () => {
+    orderInfoRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+    buttonRef.current?.click();
+  };
+
+  const onReviewClick = () => {
+    reviewRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    });
+  };
 
   return (
     <Box pt="120px" pb="80px">
@@ -378,10 +402,22 @@ function Detail() {
                 <Box {...BoldText} color="primary.500">
                   상세정보
                 </Box>
-                <Box {...BoldText} fontWeight="400" color="gray.600">
+                <Box
+                  {...BoldText}
+                  fontWeight="400"
+                  color="gray.600"
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={onOrderInfoClick}
+                >
                   구매정보
                 </Box>
-                <Box {...BoldText} fontWeight="400" color="gray.600">
+                <Box
+                  {...BoldText}
+                  fontWeight="400"
+                  color="gray.600"
+                  _hover={{ cursor: 'pointer' }}
+                  onClick={onReviewClick}
+                >
                   리뷰 ({reviews?.length})
                 </Box>
               </Flex>
@@ -426,8 +462,13 @@ function Detail() {
             <Accordion defaultIndex={[1]} allowMultiple pt="25px">
               <AccordionItem>
                 <Box>
-                  <AccordionButton py="15.5px">
-                    <Box {...BoldText} flex="1" textAlign="left">
+                  <AccordionButton py="15.5px" ref={buttonRef}>
+                    <Box
+                      ref={orderInfoRef}
+                      {...BoldText}
+                      flex="1"
+                      textAlign="left"
+                    >
                       주문 및 배송 안내
                     </Box>
                     <AccordionIcon />
@@ -455,7 +496,7 @@ function Detail() {
 
           <Box px="16px">
             <HStack pt="51px" pb="30px" justify="space-between">
-              <Box {...ReviewCountStyle}>
+              <Box ref={reviewRef} {...ReviewCountStyle}>
                 리뷰 <span style={{ color: '#FF710B' }}>{reviews?.length}</span>
                 건
               </Box>
@@ -470,7 +511,7 @@ function Detail() {
                   onChange={handleOrderingOnChange}
                   defaultValue="created_at"
                 >
-                  <option value="created_at">최신순</option>
+                  <option value="-created_at">최신순</option>
                   <option value="-rating">평점 높은 순</option>
                   <option value="rating">평점 낮은 순</option>
                 </Select>
@@ -503,7 +544,7 @@ function Detail() {
                   {detail.avgRating?.toFixed(1)}
                 </Box>
                 <StarRating
-                  starRating={Number(detail.avgRating?.toFixed(1))}
+                  starRating={Number(detail.avgRating?.toFixed())}
                 ></StarRating>
               </HStack>
               <Box w="1px" h="70px" bg="gray.200"></Box>
