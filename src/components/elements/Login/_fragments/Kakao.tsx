@@ -1,8 +1,7 @@
 import router from 'next/router';
 import React, { useEffect } from 'react';
 
-// import axios from 'axios';
-import { Container, Spinner } from '@chakra-ui/react';
+import { Container, Flex, Spinner } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
@@ -37,8 +36,16 @@ const Kakao = () => {
   }, []);
 
   return (
-    <Container>
-      <Spinner />
+    <Container w="375px" h="812px">
+      <Flex w="full" h="full" justify="center" alignItems="center">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="primary.500"
+          size="xl"
+        />
+      </Flex>
     </Container>
   );
 };

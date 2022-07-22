@@ -152,7 +152,7 @@ function Cart() {
                   pr="10px"
                   alignSelf="center"
                   onChange={checkAll}
-                  defaultChecked
+                  isChecked={itemCheckers.every((items) => items.checked)}
                 ></Checkbox>
                 모두선택
               </Flex>

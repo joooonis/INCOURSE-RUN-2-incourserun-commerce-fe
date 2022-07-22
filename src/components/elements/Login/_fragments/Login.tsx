@@ -7,7 +7,7 @@ import SocialButton from '@components/common/SocialButton';
 function Login() {
   return (
     <VStack
-      w="100%"
+      w="full"
       py="50px"
       bg="primary.500"
       h="812px"
