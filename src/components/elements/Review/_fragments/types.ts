@@ -48,16 +48,11 @@ export type ReviewType = {
   createdAt: string;
   rating: number;
   photos: Photo[];
+  reviewerNickname: string;
 };
 
 export interface SingleReviewProps {
   review: ReviewType;
-}
-
-export interface StarRatingProps {
-  starRating: number;
-  upStar?: any;
-  downStar?: any;
 }
 
 export type ReviewFormValues = {

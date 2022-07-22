@@ -17,54 +17,13 @@ import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
+import StarRating from '@components/common/StarRating/StarRating';
 import { ReviewModal } from '@components/elements/Modal';
 import { findProduct, priceToString } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
 
-import {
-  PreviewsType,
-  ProductType,
-  ReviewFormValues,
-  StarRatingProps,
-} from './types';
-
-function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
-  const rendering = () => {
-    const result = [];
-    for (let i = 0; i < starRating; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star.svg"
-          w="24px"
-          alt={String(i)}
-          onClick={downStar}
-          _hover={{ cursor: 'pointer' }}
-        />,
-      );
-    }
-    for (let i = starRating; i < 5; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star_gray.svg"
-          w="24px"
-          alt={String(i)}
-          onClick={upStar}
-          _hover={{ cursor: 'pointer' }}
-        />,
-      );
-    }
-    return result;
-  };
-
-  return (
-    <HStack spacing="12px" w="full" py="28px" justify="center">
-      {rendering()}
-    </HStack>
-  );
-}
+import { PreviewsType, ProductType, ReviewFormValues } from './types';
 
 function Review() {
   const router = useRouter();
@@ -237,6 +196,7 @@ function Review() {
                 starRating={starRating}
                 upStar={upStar}
                 downStar={downStar}
+                width="24px"
               />
               <Box {...InputTitleStyle} pt="40px" pb="20px">
                 내용
@@ -292,8 +252,88 @@ function Review() {
                       onClick={handleAttachImg}
                     ></Box>
                   )}
+                </Box>{' '}
+                <Box
+                  w="80px"
+                  h="80px"
+                  border={preview?.preview2 ? 'none' : '2px dashed #CBCED6'}
+                  borderRadius="5px"
+                  position="relative"
+                >
+                  {preview?.preview2 ? (
+                    <Box>
+                      <Image src={preview.preview2}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
+                  )}
                 </Box>
-                {preview?.preview2 && (
+                <Box
+                  w="80px"
+                  h="80px"
+                  border={preview?.preview3 ? 'none' : '2px dashed #CBCED6'}
+                  borderRadius="5px"
+                  position="relative"
+                >
+                  {preview?.preview3 ? (
+                    <Box>
+                      <Image src={preview.preview3}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
+                  )}
+                </Box>
+                {/* {preview?.preview2 && (
                   <Box
                     w="80px"
                     h="80px"
@@ -318,7 +358,7 @@ function Review() {
                       <Image src={preview.preview3}></Image>
                     </Box>
                   </Box>
-                )}
+                )} */}
               </HStack>
               <Input
                 display="none"
@@ -327,7 +367,6 @@ function Review() {
                 accept="image/*"
                 ref={attachImgRef}
                 onChange={handleImgOnChange}
-                // {...register('photos')}
               ></Input>
               <PrimaryButton type="submit">작성하기</PrimaryButton>
             </VStack>
