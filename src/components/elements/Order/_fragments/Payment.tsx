@@ -180,6 +180,7 @@ function Payment() {
       buyer_tel: PaymentData.shippingPhone, // 구매자 전화번호
       buyer_addr: PaymentData.shippingAddress, // 구매자 주소
       buyer_postcode: PaymentData.shippingZipcode, // 구매자 우편번호
+      m_redirect_url: `${process.env.NEXT_PUBLIC_DOMAIN}/order/payment/complete/mobile`,
     };
 
     /* 4. 결제 창 호출하기 */
