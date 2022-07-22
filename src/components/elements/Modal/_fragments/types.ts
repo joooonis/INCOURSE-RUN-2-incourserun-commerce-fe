@@ -27,7 +27,6 @@ type OrderType = {
   orderProducts: orderProductType[];
   totalPrice: number;
   merchantUid: string;
-  isCancelled: boolean;
 };
 
 interface orderProductType {
