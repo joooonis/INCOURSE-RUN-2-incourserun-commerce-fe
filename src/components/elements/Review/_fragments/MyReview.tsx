@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
-import { Box, Flex, HStack, Image, VStack } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
@@ -10,73 +10,8 @@ import Pagination from '@components/common/Pagination';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { ReviewType, SingleReviewProps, StarRatingProps } from './types';
-
-function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
-  const rendering = () => {
-    const result = [];
-    for (let i = 0; i < starRating; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star.svg"
-          w="10px"
-          alt={String(i)}
-          onClick={downStar}
-        />,
-      );
-    }
-    for (let i = starRating; i < 5; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star_gray.svg"
-          w="10px"
-          alt={String(i)}
-          onClick={upStar}
-        />,
-      );
-    }
-    return result;
-  };
-
-  return (
-    <HStack spacing="6px" justify="center">
-      {rendering()}
-    </HStack>
-  );
-}
-
-function SingleReview({ review }: SingleReviewProps) {
-  const year = review.createdAt.slice(0, 4);
-  const month = review.createdAt.slice(5, 7);
-  const date = review.createdAt.slice(8, 10);
-  return (
-    <VStack spacing={0} pt="23px" pb="25px" w="full">
-      <Flex w="full" justify="space-between">
-        <Box {...ReviewrStyle}>incourse.run</Box>
-        <StarRating starRating={review.rating} />
-      </Flex>
-      <Box {...ReviewDateStyle} w="full">
-        {year}.{month}.{date}
-      </Box>
-      <Box {...ReviewContentStyle} w="full" pt="17px">
-        {review.content}
-      </Box>
-      <HStack spacing="10px" w="full" justify="flex-start" pt="9px">
-        {review.photos.map((photo) => (
-          <Image
-            key={photo.id}
-            borderRadius="5px"
-            w="80px"
-            h="80px"
-            src={photo.img}
-          ></Image>
-        ))}
-      </HStack>
-    </VStack>
-  );
-}
+import SingleReview from './SingleReview';
+import { ReviewType } from './types';
 
 function MyReview() {
   const router = useRouter();

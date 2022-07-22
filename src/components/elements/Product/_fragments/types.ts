@@ -43,14 +43,9 @@ export type ReviewType = {
   rating: number;
   photos: Photo[];
   reply: ReplyType;
+  reviewerNickname: string;
 };
 
 export interface SingleReviewProps {
   review: ReviewType;
-}
-
-export interface StarRatingProps {
-  starRating: number;
-  upStar?: any;
-  downStar?: any;
 }

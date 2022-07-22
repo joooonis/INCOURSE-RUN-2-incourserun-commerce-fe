@@ -27,53 +27,14 @@ import {
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
+import StarRating from '@components/common/StarRating/StarRating';
 import { CartModal } from '@components/elements/Modal';
 import { priceToString } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
 
 import reviewAnalysis from './reviewAnalysis';
-import {
-  DetailType,
-  ReviewType,
-  SingleReviewProps,
-  StarRatingProps,
-} from './types';
-
-function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
-  const rendering = () => {
-    const result = [];
-    for (let i = 0; i < starRating; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star.svg"
-          w="10px"
-          alt={String(i)}
-          onClick={downStar}
-        />,
-      );
-    }
-    for (let i = starRating; i < 5; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star_gray.svg"
-          w="10px"
-          alt={String(i)}
-          onClick={upStar}
-        />,
-      );
-    }
-    return result;
-  };
-
-  return (
-    <HStack spacing="6px" justify="center">
-      {rendering()}
-    </HStack>
-  );
-}
+import { DetailType, ReviewType, SingleReviewProps } from './types';
 
 function SingleReview({ review }: SingleReviewProps) {
   const year = review.createdAt.slice(0, 4);
@@ -87,7 +48,7 @@ function SingleReview({ review }: SingleReviewProps) {
     <>
       <VStack spacing={0} pt="23px" pb="25px" w="full">
         <Flex w="full" justify="space-between">
-          <Box {...ReviewrStyle}>incourse.run</Box>
+          <Box {...ReviewrStyle}>{review.reviewerNickname}</Box>
           <StarRating starRating={review.rating} />
         </Flex>
         <Box {...ReviewDateStyle} w="full">

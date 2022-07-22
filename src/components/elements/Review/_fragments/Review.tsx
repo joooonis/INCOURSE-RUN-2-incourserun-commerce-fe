@@ -17,54 +17,13 @@ import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
 import PrimaryButton from '@components/common/Button/Button';
+import StarRating from '@components/common/StarRating/StarRating';
 import { ReviewModal } from '@components/elements/Modal';
 import { findProduct, priceToString } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
 
-import {
-  PreviewsType,
-  ProductType,
-  ReviewFormValues,
-  StarRatingProps,
-} from './types';
-
-function StarRating({ starRating, upStar, downStar }: StarRatingProps) {
-  const rendering = () => {
-    const result = [];
-    for (let i = 0; i < starRating; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star.svg"
-          w="24px"
-          alt={String(i)}
-          onClick={downStar}
-          _hover={{ cursor: 'pointer' }}
-        />,
-      );
-    }
-    for (let i = starRating; i < 5; i++) {
-      result.push(
-        <Image
-          key={i}
-          src="/icons/svg/review/star_gray.svg"
-          w="24px"
-          alt={String(i)}
-          onClick={upStar}
-          _hover={{ cursor: 'pointer' }}
-        />,
-      );
-    }
-    return result;
-  };
-
-  return (
-    <HStack spacing="12px" w="full" py="28px" justify="center">
-      {rendering()}
-    </HStack>
-  );
-}
+import { PreviewsType, ProductType, ReviewFormValues } from './types';
 
 function Review() {
   const router = useRouter();
@@ -104,7 +63,6 @@ function Review() {
   const [preview, setPreview] = useState<PreviewsType>();
 
   const handleAttachImg = (e: React.MouseEvent) => {
-    console.log(e);
     e.preventDefault();
     if (attachImgRef.current) {
       attachImgRef.current.click();
@@ -114,23 +72,36 @@ function Review() {
   const handleImgOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (attachImgRef.current?.files) {
-      setImg(attachImgRef.current?.files);
       const files = attachImgRef.current?.files;
+      const dataTranster = new DataTransfer();
+      for (let i = 0; i < 3; i++) {
+        if (files[i]) dataTranster.items.add(files[i]);
+      }
+      setImg(dataTranster.files);
 
-      if (files && files[0] && files[1] && files[2]) {
+      if (
+        dataTranster.files &&
+        dataTranster.files[0] &&
+        dataTranster.files[1] &&
+        dataTranster.files[2]
+      ) {
         setPreview({
-          preview1: URL.createObjectURL(files[0]),
-          preview2: URL.createObjectURL(files[1]),
-          preview3: URL.createObjectURL(files[2]),
+          preview1: URL.createObjectURL(dataTranster.files[0]),
+          preview2: URL.createObjectURL(dataTranster.files[1]),
+          preview3: URL.createObjectURL(dataTranster.files[2]),
         });
-      } else if (files && files[0] && files[1]) {
+      } else if (
+        dataTranster.files &&
+        dataTranster.files[0] &&
+        dataTranster.files[1]
+      ) {
         setPreview({
-          preview1: URL.createObjectURL(files[0]),
-          preview2: URL.createObjectURL(files[1]),
+          preview1: URL.createObjectURL(dataTranster.files[0]),
+          preview2: URL.createObjectURL(dataTranster.files[1]),
         });
-      } else if (files && files[0]) {
+      } else if (dataTranster.files && dataTranster.files[0]) {
         setPreview({
-          preview1: URL.createObjectURL(files[0]),
+          preview1: URL.createObjectURL(dataTranster.files[0]),
         });
       }
     }
@@ -154,7 +125,6 @@ function Review() {
     const formData = await buildFormDate(data);
 
     instance.post('/v1/reviews', formData).then((res) => {
-      console.log(res);
       onOpen();
     });
   };
@@ -226,12 +196,8 @@ function Review() {
                 starRating={starRating}
                 upStar={upStar}
                 downStar={downStar}
+                width="24px"
               />
-              {/* <Input
-                display="hidden"
-                value={starRating}
-                {...register('rating')}
-              /> */}
               <Box {...InputTitleStyle} pt="40px" pb="20px">
                 내용
               </Box>
@@ -286,8 +252,88 @@ function Review() {
                       onClick={handleAttachImg}
                     ></Box>
                   )}
+                </Box>{' '}
+                <Box
+                  w="80px"
+                  h="80px"
+                  border={preview?.preview2 ? 'none' : '2px dashed #CBCED6'}
+                  borderRadius="5px"
+                  position="relative"
+                >
+                  {preview?.preview2 ? (
+                    <Box>
+                      <Image src={preview.preview2}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
+                  )}
                 </Box>
-                {preview?.preview2 && (
+                <Box
+                  w="80px"
+                  h="80px"
+                  border={preview?.preview3 ? 'none' : '2px dashed #CBCED6'}
+                  borderRadius="5px"
+                  position="relative"
+                >
+                  {preview?.preview3 ? (
+                    <Box>
+                      <Image src={preview.preview3}></Image>
+                    </Box>
+                  ) : (
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
+                  )}
+                </Box>
+                {/* {preview?.preview2 && (
                   <Box
                     w="80px"
                     h="80px"
@@ -312,7 +358,7 @@ function Review() {
                       <Image src={preview.preview3}></Image>
                     </Box>
                   </Box>
-                )}
+                )} */}
               </HStack>
               <Input
                 display="none"
@@ -321,7 +367,6 @@ function Review() {
                 accept="image/*"
                 ref={attachImgRef}
                 onChange={handleImgOnChange}
-                // {...register('photos')}
               ></Input>
               <PrimaryButton type="submit">작성하기</PrimaryButton>
             </VStack>
