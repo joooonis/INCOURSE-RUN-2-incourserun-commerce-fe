@@ -217,8 +217,8 @@ function CartPayMent() {
         merchant_uid: merchant_uid,
       };
       instance.post('/v1/orders/payment/complete', data).then((res) => {
-        if (res.data.status === 'paid') console.log(res.data);
-        router.push(`/order/pay/complete/${res.data.order.id}`);
+        if (res.data.status === 'paid')
+          router.push(`/order/payment/complete/${res.data.order.id}`);
       });
     } else {
       alert(`결제 실패: ${error_msg}`);

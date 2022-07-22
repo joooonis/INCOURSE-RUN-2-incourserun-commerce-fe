@@ -29,7 +29,7 @@ function PayMentModal({ isOpen, onClose }: MyModalProps) {
             </Box>
             <Flex justify="center" pb="30px">
               <Image
-                src="/icons/svg/order/payment_completed.png"
+                src="/icons/svg/order/payment_completed.svg"
                 alt="payment_completed"
               ></Image>
             </Flex>
