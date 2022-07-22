@@ -104,7 +104,6 @@ function Review() {
   const [preview, setPreview] = useState<PreviewsType>();
 
   const handleAttachImg = (e: React.MouseEvent) => {
-    console.log(e);
     e.preventDefault();
     if (attachImgRef.current) {
       attachImgRef.current.click();
@@ -114,23 +113,36 @@ function Review() {
   const handleImgOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (attachImgRef.current?.files) {
-      setImg(attachImgRef.current?.files);
       const files = attachImgRef.current?.files;
+      const dataTranster = new DataTransfer();
+      for (let i = 0; i < 3; i++) {
+        if (files[i]) dataTranster.items.add(files[i]);
+      }
+      setImg(dataTranster.files);
 
-      if (files && files[0] && files[1] && files[2]) {
+      if (
+        dataTranster.files &&
+        dataTranster.files[0] &&
+        dataTranster.files[1] &&
+        dataTranster.files[2]
+      ) {
         setPreview({
-          preview1: URL.createObjectURL(files[0]),
-          preview2: URL.createObjectURL(files[1]),
-          preview3: URL.createObjectURL(files[2]),
+          preview1: URL.createObjectURL(dataTranster.files[0]),
+          preview2: URL.createObjectURL(dataTranster.files[1]),
+          preview3: URL.createObjectURL(dataTranster.files[2]),
         });
-      } else if (files && files[0] && files[1]) {
+      } else if (
+        dataTranster.files &&
+        dataTranster.files[0] &&
+        dataTranster.files[1]
+      ) {
         setPreview({
-          preview1: URL.createObjectURL(files[0]),
-          preview2: URL.createObjectURL(files[1]),
+          preview1: URL.createObjectURL(dataTranster.files[0]),
+          preview2: URL.createObjectURL(dataTranster.files[1]),
         });
-      } else if (files && files[0]) {
+      } else if (dataTranster.files && dataTranster.files[0]) {
         setPreview({
-          preview1: URL.createObjectURL(files[0]),
+          preview1: URL.createObjectURL(dataTranster.files[0]),
         });
       }
     }
@@ -154,7 +166,6 @@ function Review() {
     const formData = await buildFormDate(data);
 
     instance.post('/v1/reviews', formData).then((res) => {
-      console.log(res);
       onOpen();
     });
   };
@@ -227,11 +238,6 @@ function Review() {
                 upStar={upStar}
                 downStar={downStar}
               />
-              {/* <Input
-                display="hidden"
-                value={starRating}
-                {...register('rating')}
-              /> */}
               <Box {...InputTitleStyle} pt="40px" pb="20px">
                 내용
               </Box>
