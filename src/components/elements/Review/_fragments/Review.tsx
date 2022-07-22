@@ -192,12 +192,15 @@ function Review() {
               <Box {...InputTitleStyle} py="20px">
                 별점
               </Box>
-              <StarRating
-                starRating={starRating}
-                upStar={upStar}
-                downStar={downStar}
-                width="24px"
-              />
+              <Box w="full">
+                <StarRating
+                  starRating={starRating}
+                  upStar={upStar}
+                  downStar={downStar}
+                  width="24px"
+                />
+              </Box>
+
               <Box {...InputTitleStyle} pt="40px" pb="20px">
                 내용
               </Box>
