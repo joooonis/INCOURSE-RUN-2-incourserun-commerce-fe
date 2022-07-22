@@ -241,6 +241,7 @@ function Join() {
                 required: true,
                 pattern: /^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/,
               }}
+              onChange={onChange}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
@@ -256,7 +257,6 @@ function Join() {
                 pattern:
                   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
               }}
-              onChange={onChange}
             />
             {errors.email && (
               <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
