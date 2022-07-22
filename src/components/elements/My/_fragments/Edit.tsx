@@ -21,6 +21,7 @@ import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
 import { EditModal } from '@components/elements/Modal';
+import { phoneNumber, validateWithByte } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
 
@@ -96,13 +97,10 @@ function Edit() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  function validateWithByte(str: string) {
-    let byte = 0;
-    for (let i = 0; i < str.length; ++i) {
-      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
-    }
-    return byte >= 2 && byte <= 10;
-  }
+  const [phone, setPhone] = useState<string>();
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(phoneNumber(event.target.value));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -187,10 +185,12 @@ function Edit() {
               label="phone"
               name="핸드폰 번호"
               register={register}
+              value={phone}
               options={{
                 required: true,
-                pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
+                pattern: /^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/,
               }}
+              onChange={onChange}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
