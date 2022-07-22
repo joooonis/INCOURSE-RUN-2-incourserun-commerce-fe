@@ -1,15 +1,7 @@
 import Router from 'next/router';
 
-import {
-  Box,
-  Button,
-  Flex,
-  Image,
-  VStack,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Box, Button, Flex, Image, VStack } from '@chakra-ui/react';
 
-import { OrderModal } from '@components/elements/Modal';
 import priceToString from '@components/hooks/priceToString';
 
 import { SingleOrderProps } from './types';
@@ -22,7 +14,6 @@ function SingleOrder({
   shippingStatus,
   hasReview,
   isFreeDelivery,
-  merchantUid,
 }: SingleOrderProps) {
   const SendQuery = () => {
     Router.push({
@@ -36,13 +27,6 @@ function SingleOrder({
       },
     });
   };
-
-  const {
-    isOpen: isCartModalOpen,
-    onOpen: onCartModalOpen,
-    onClose: onCartModalClose,
-  } = useDisclosure();
-
   return (
     <>
       <Flex w="full" py="10px" justify="space-between" alignItems="center">
@@ -78,21 +62,6 @@ function SingleOrder({
           )}
         </VStack>
       </Flex>
-      {shippingStatus === '결제완료' && (
-        <Flex w="full" pt="10px" pb="21px" justify="flex-end">
-          <Button
-            borderRadius="5px"
-            w="140px"
-            h="40px"
-            p="0px 15px"
-            colorScheme="primary"
-            onClick={onCartModalOpen}
-            {...TitleText}
-          >
-            주문취소
-          </Button>
-        </Flex>
-      )}
       {shippingStatus === '배송완료' && !hasReview && (
         <Flex w="full" pt="10px" pb="21px" justify="flex-end">
           <Button
@@ -109,11 +78,6 @@ function SingleOrder({
           </Button>
         </Flex>
       )}
-      <OrderModal
-        isOpen={isCartModalOpen}
-        onClose={onCartModalClose}
-        merchantUid={merchantUid}
-      />
     </>
   );
 }

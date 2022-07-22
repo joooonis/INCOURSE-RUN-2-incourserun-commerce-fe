@@ -47,14 +47,14 @@ function Join() {
   useEffect(() => {
     setTimeout(() => {
       instance.get('/v1/users/me').then((res) => {
-        if (res.data.name) setValue('name', res.data.name);
-        if (res.data.nickname) setValue('nickname', res.data.nickname);
-        if (res.data.email) setValue('email', res.data.email);
-        if (res.data.phone) setValue('phone', res.data.phone);
-        if (res.data.gender) setValue('gender', res.data.gender);
-        if (res.data.ageRange) setValue('ageRange', res.data.ageRange);
-
-        if (res.data.avatar) setPreview(res.data.avatar);
+        const user = res.data;
+        if (user.name) setValue('name', user.name);
+        if (user.nickname) setValue('nickname', user.nickname);
+        if (user.email) setValue('email', user.email);
+        if (user.phone) setValue('phone', user.phone);
+        if (user.gender) setValue('gender', user.gender);
+        if (user.ageRange) setValue('ageRange', user.ageRange);
+        if (user.avatar) setPreview(user.avatar);
       });
     }, 1000);
   }, []);
@@ -88,23 +88,17 @@ function Join() {
       (img && data.agreeAllTerms) ||
       (img && data.requiredTerms && data.privateInfoTerms)
     ) {
-      instance
-        .patch('/v1/users/me', patchData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', patchData);
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
-      instance
-        .patch('/v1/users/me', formData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', formData);
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
       (data.requiredTerms && data.privateInfoTerms)
     ) {
-      instance
-        .patch('/v1/users/me', patchData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', patchData);
       router.replace('join/success');
     }
   };
@@ -308,7 +302,7 @@ function Join() {
               </option>
               <option value="20대" selected={getValues('ageRange') === '20대'}>
                 20대
-              </option>{' '}
+              </option>
               <option value="30대" selected={getValues('ageRange') === '30대'}>
                 30대
               </option>

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
@@ -137,8 +138,16 @@ function Main() {
             pb="82px"
             fontWeight="700"
           >
-            <Image pr="8px" src="/icons/svg/instagram.svg" alt="instagram" />
-            INCOURSE.RUN
+            <Link href="https://www.instagram.com/incourse.run">
+              <Flex cursor="pointer">
+                <Image
+                  pr="8px"
+                  src="/icons/svg/instagram.svg"
+                  alt="instagram"
+                />
+                INCOURSE.RUN
+              </Flex>
+            </Link>
           </Flex>
           <a href="#">
             <Box

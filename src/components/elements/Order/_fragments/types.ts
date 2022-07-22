@@ -36,12 +36,14 @@ export type OrderType = {
   shippingAddress: string;
   shippingAddressDetail: string;
   shippingRequest: string;
+  shippingStatus: string;
   payMethod: string;
   deliveryFee: number;
   totalPaid: number;
   orderProducts: orderProductType[];
   totalPrice: number;
   merchantUid: string;
+  isCancelled: boolean;
 };
 
 export interface SingleOrderProps {

@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router';
+
 import {
   Box,
   Flex,
@@ -23,7 +25,7 @@ function OrderCanceledModal({ isOpen, onClose }: MyModalProps) {
         <ModalContent w="343px">
           <ModalBody pt={0} px="11px" pb="33px">
             <Box {...MessageStyle} textAlign="center" pt="110px" pb="80px">
-              주문이 취소가 완료되었습니다.
+              주문취소가 완료되었습니다.
             </Box>
             <Flex justify="center">
               <PrimaryButton onClick={onClose} w="155px">
@@ -37,7 +39,12 @@ function OrderCanceledModal({ isOpen, onClose }: MyModalProps) {
   );
 }
 
-function OrderModal({ isOpen, onClose, merchantUid }: OrderModalProps) {
+function OrderModal({
+  isOpen,
+  onClose,
+  merchantUid,
+  setOrders,
+}: OrderModalProps) {
   const {
     isOpen: isOrderCanceledModalOpen,
     onOpen: onOrderCanceledModalOpen,
@@ -48,14 +55,14 @@ function OrderModal({ isOpen, onClose, merchantUid }: OrderModalProps) {
     instance
       .post('/v1/orders/payment/cancel', {
         merchantUid: merchantUid,
-        reason: '주문최소',
       })
-      .then((res) => {
-        console.log(res.data);
-        // api 수정되면 onClose(), onOrderCanceledModalOpen() 여기로 옮겨주세요
+      .then(() => {
+        instance.get('/v1/users/me/orders').then((res) => {
+          setOrders(res.data);
+        });
+        onClose();
+        onOrderCanceledModalOpen();
       });
-    onClose();
-    onOrderCanceledModalOpen();
   };
   return (
     <>
