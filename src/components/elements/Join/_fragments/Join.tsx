@@ -23,6 +23,8 @@ import {
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
+import { phoneNumber, validateWithByte } from '@components/hooks';
+
 import { getToken } from '@utils/localStorage/token';
 
 import JoinInput from './JoinInput';
@@ -144,13 +146,10 @@ function Join() {
     } else setIsJoinButtonActive(false);
   }, [toggle]);
 
-  function validateWithByte(str: string) {
-    let byte = 0;
-    for (let i = 0; i < str.length; ++i) {
-      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
-    }
-    return byte >= 2 && byte <= 10;
-  }
+  const [phone, setPhone] = useState<string>();
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(phoneNumber(event.target.value));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -237,9 +236,10 @@ function Join() {
               label="phone"
               name="핸드폰 번호"
               register={register}
+              value={phone}
               options={{
                 required: true,
-                pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
+                pattern: /^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/,
               }}
             />
             {errors.phone && (
@@ -256,6 +256,7 @@ function Join() {
                 pattern:
                   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
               }}
+              onChange={onChange}
             />
             {errors.email && (
               <Box {...ErrorStyle}>이메일 주소를 정확하게 입력해주세요.</Box>
