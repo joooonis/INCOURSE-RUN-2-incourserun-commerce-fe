@@ -252,7 +252,7 @@ function Edit() {
               </option>
               <option value="20대" selected={getValues('ageRange') === '20대'}>
                 20대
-              </option>{' '}
+              </option>
               <option value="30대" selected={getValues('ageRange') === '30대'}>
                 30대
               </option>

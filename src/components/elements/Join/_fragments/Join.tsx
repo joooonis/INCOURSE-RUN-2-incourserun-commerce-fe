@@ -52,6 +52,8 @@ function Join() {
         if (user.nickname) setValue('nickname', user.nickname);
         if (user.email) setValue('email', user.email);
         if (user.phone) setValue('phone', user.phone);
+        if (user.gender) setValue('gender', user.gender);
+        if (user.ageRange) setValue('ageRange', user.ageRange);
         if (user.avatar) setPreview(user.avatar);
       });
     }, 1000);
@@ -86,23 +88,17 @@ function Join() {
       (img && data.agreeAllTerms) ||
       (img && data.requiredTerms && data.privateInfoTerms)
     ) {
-      instance
-        .patch('/v1/users/me', patchData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', patchData);
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
-      instance
-        .patch('/v1/users/me', formData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', formData);
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
       (data.requiredTerms && data.privateInfoTerms)
     ) {
-      instance
-        .patch('/v1/users/me', patchData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', patchData);
       router.replace('join/success');
     }
   };
@@ -280,8 +276,12 @@ function Join() {
               placeholder="성별을 선택하세요"
               {...register('gender')}
             >
-              <option value="남성">남</option>
-              <option value="여성">여</option>
+              <option value="남성" selected={getValues('gender') === '남성'}>
+                남
+              </option>
+              <option value="여성" selected={getValues('gender') === '여성'}>
+                여
+              </option>
             </Select>
           </FormControl>
           <FormControl>
@@ -297,11 +297,24 @@ function Join() {
               _selected={{ color: '#1A1A1A' }}
               {...register('ageRange')}
             >
-              <option value="10대">10대</option>
-              <option value="20대">20대</option>{' '}
-              <option value="30대">30대</option>
-              <option value="40대">40대</option>
-              <option value="50대 이상">50대 이상</option>
+              <option value="10대" selected={getValues('ageRange') === '10대'}>
+                10대
+              </option>
+              <option value="20대" selected={getValues('ageRange') === '20대'}>
+                20대
+              </option>
+              <option value="30대" selected={getValues('ageRange') === '30대'}>
+                30대
+              </option>
+              <option value="40대" selected={getValues('ageRange') === '40대'}>
+                40대
+              </option>
+              <option
+                value="50대 이상"
+                selected={getValues('ageRange') === '50대 이상'}
+              >
+                50대 이상
+              </option>
             </Select>
           </FormControl>
         </VStack>
