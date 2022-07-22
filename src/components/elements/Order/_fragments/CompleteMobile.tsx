@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import { Container, Spinner, useDisclosure } from '@chakra-ui/react';
+import { Container, Flex, Spinner, useDisclosure } from '@chakra-ui/react';
 
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
@@ -38,8 +38,16 @@ function CompleteMobile() {
   }, [imp_uid, merchant_uid]);
 
   return (
-    <Container>
-      <Spinner />
+    <Container w="375px" h="812px">
+      <Flex w="full" h="full" justify="center" alignItems="center">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="primary.500"
+          size="xl"
+        />
+      </Flex>
       <PayMentModal isOpen={isOpen} onClose={onClose} />
     </Container>
   );
