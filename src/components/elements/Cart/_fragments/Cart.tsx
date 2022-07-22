@@ -38,7 +38,7 @@ function Cart() {
 
   const dispatch = useDispatch();
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const checkAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       dispatch(checkAllItem());
     } else dispatch(unCheckAllItem());
@@ -151,7 +151,8 @@ function Cart() {
                   colorScheme="primary"
                   pr="10px"
                   alignSelf="center"
-                  onChange={onChange}
+                  onChange={checkAll}
+                  defaultChecked
                 ></Checkbox>
                 모두선택
               </Flex>
