@@ -43,7 +43,6 @@ export type OrderType = {
   orderProducts: orderProductType[];
   totalPrice: number;
   merchantUid: string;
-  isCancelled: boolean;
 };
 
 export interface SingleOrderProps {
