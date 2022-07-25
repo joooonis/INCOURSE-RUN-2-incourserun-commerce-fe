@@ -45,7 +45,3 @@ export type ReviewType = {
   reply: ReplyType;
   reviewerNickname: string;
 };
-
-export interface SingleReviewProps {
-  review: ReviewType;
-}

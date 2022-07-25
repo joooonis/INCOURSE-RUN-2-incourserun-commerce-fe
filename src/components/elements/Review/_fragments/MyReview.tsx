@@ -45,7 +45,6 @@ function MyReview() {
         myReviews.slice(offset, offset + limit).map((review) => {
           return <SingleReview key={review.id} review={review} />;
         })}
-      <Box w="full" borderBottom="1px solid #F2F3F4"></Box>
       <Pagination
         total={myReviews.length}
         limit={limit}

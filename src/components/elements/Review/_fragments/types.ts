@@ -41,6 +41,10 @@ interface Photo {
   id: number;
   img: string;
 }
+type ReplyType = {
+  content: string;
+  createdAt: string;
+};
 
 export type ReviewType = {
   id: number;
@@ -48,6 +52,7 @@ export type ReviewType = {
   createdAt: string;
   rating: number;
   photos: Photo[];
+  reply: ReplyType;
   reviewerNickname: string;
 };
 

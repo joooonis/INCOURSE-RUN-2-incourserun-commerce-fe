@@ -215,6 +215,7 @@ function Cart() {
                 borderRadius="25px"
                 size="lg"
                 onClick={goToCartPay}
+                disabled={!itemCheckers.some((items) => items.checked)}
               >
                 결제하기
               </Button>

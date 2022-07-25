@@ -32,7 +32,7 @@ interface CardProps {
 function Card({ product }: CardProps) {
   const router = useRouter();
   const gotoDetail = () => {
-    router.replace(`products/${product.id}`);
+    router.push(`products/${product.id}`);
   };
   const [quantity, setQunatity] = useState(1);
   const decQuantity = () => {
