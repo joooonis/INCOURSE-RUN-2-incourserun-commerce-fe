@@ -8,6 +8,7 @@ import {
   HStack,
   Image,
   Input,
+  Stack,
   Textarea,
   VStack,
   useDisclosure,
@@ -23,7 +24,7 @@ import { findProduct, priceToString } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
 
-import { PreviewsType, ProductType, ReviewFormValues } from './types';
+import { ProductType, ReviewFormValues } from './types';
 
 function Review() {
   const router = useRouter();
@@ -32,6 +33,7 @@ function Review() {
     if (!token.access) router.replace('/login');
     else setAuthHeader(token.access);
   }, []);
+
   const [products, setProducts] = useState<ProductType[]>([]);
   const { id, createdAt, product, quantity, isfreedelivery } = router.query;
 
@@ -59,8 +61,8 @@ function Review() {
 
   const attachImgRef = useRef<HTMLInputElement>(null);
 
-  const [img, setImg] = useState(attachImgRef.current?.files);
-  const [preview, setPreview] = useState<PreviewsType>();
+  const [img, setImg] = useState<File[]>([]);
+  const [preview, setPreview] = useState<string[]>([]);
 
   const handleAttachImg = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -73,38 +75,30 @@ function Review() {
     e.preventDefault();
     if (attachImgRef.current?.files) {
       const files = attachImgRef.current?.files;
-      const dataTranster = new DataTransfer();
-      for (let i = 0; i < 3; i++) {
-        if (files[i]) dataTranster.items.add(files[i]);
-      }
-      setImg(dataTranster.files);
+      const imgList = [...img];
+      const imgURLList = [...preview];
 
-      if (
-        dataTranster.files &&
-        dataTranster.files[0] &&
-        dataTranster.files[1] &&
-        dataTranster.files[2]
-      ) {
-        setPreview({
-          preview1: URL.createObjectURL(dataTranster.files[0]),
-          preview2: URL.createObjectURL(dataTranster.files[1]),
-          preview3: URL.createObjectURL(dataTranster.files[2]),
-        });
-      } else if (
-        dataTranster.files &&
-        dataTranster.files[0] &&
-        dataTranster.files[1]
-      ) {
-        setPreview({
-          preview1: URL.createObjectURL(dataTranster.files[0]),
-          preview2: URL.createObjectURL(dataTranster.files[1]),
-        });
-      } else if (dataTranster.files && dataTranster.files[0]) {
-        setPreview({
-          preview1: URL.createObjectURL(dataTranster.files[0]),
-        });
+      for (let i = 0; i < files.length; i++) {
+        if (imgList.length >= 3) {
+          alert('사진은 3장까지만 첨부가능합니다.');
+          break;
+        }
+        const imgURL = URL.createObjectURL(files[i]);
+        imgList.push(files[i]);
+        imgURLList.push(imgURL);
       }
+      setImg(imgList);
+      setPreview(imgURLList);
     }
+  };
+
+  const deleteImg = (e: any) => {
+    const imgList = [...img];
+    const imgURLList = [...preview];
+    imgList.splice(Number(e.target.id), 1);
+    imgURLList.splice(Number(e.target.id), 1);
+    setImg(imgList);
+    setPreview(imgURLList);
   };
 
   const postReview = async (data: ReviewFormValues) => {
@@ -187,7 +181,6 @@ function Review() {
           </Flex>
           <Box w="full" bg="gray.100" my="20px" h="10px"></Box>
           <form onSubmit={handleSubmit(async (data) => await postReview(data))}>
-            {' '}
             <VStack spacing={0} align="flex-start">
               <Box {...InputTitleStyle} py="20px">
                 별점
@@ -213,155 +206,115 @@ function Review() {
                 {...register('content')}
               />
               <Box {...InputTitleStyle} pt="20px">
-                사진첨부 ({img?.length ? img?.length : 0}/3)
+                사진첨부 ({preview && preview.length ? preview.length : 0}/3)
               </Box>
-              <HStack spacing="20px" pt="30px" pb="100px" justify="flex-start">
-                <Box
-                  w="80px"
-                  h="80px"
-                  border={preview?.preview1 ? 'none' : '2px dashed #CBCED6'}
-                  borderRadius="5px"
-                  position="relative"
-                >
-                  {preview?.preview1 ? (
-                    <Box>
-                      <Image src={preview.preview1}></Image>
-                    </Box>
-                  ) : (
-                    <Box
-                      _before={{
-                        content: '""',
-                        display: 'block',
-                        width: '2px',
-                        height: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '29px',
-                        left: '37px',
-                      }}
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '2px',
-                        width: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '37px',
-                        left: '29px',
-                      }}
-                      _hover={{ cursor: 'pointer' }}
-                      onClick={handleAttachImg}
-                    ></Box>
-                  )}
-                </Box>{' '}
-                <Box
-                  w="80px"
-                  h="80px"
-                  border={preview?.preview2 ? 'none' : '2px dashed #CBCED6'}
-                  borderRadius="5px"
-                  position="relative"
-                >
-                  {preview?.preview2 ? (
-                    <Box>
-                      <Image src={preview.preview2}></Image>
-                    </Box>
-                  ) : (
-                    <Box
-                      _before={{
-                        content: '""',
-                        display: 'block',
-                        width: '2px',
-                        height: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '29px',
-                        left: '37px',
-                      }}
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '2px',
-                        width: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '37px',
-                        left: '29px',
-                      }}
-                      _hover={{ cursor: 'pointer' }}
-                      onClick={handleAttachImg}
-                    ></Box>
-                  )}
-                </Box>
-                <Box
-                  w="80px"
-                  h="80px"
-                  border={preview?.preview3 ? 'none' : '2px dashed #CBCED6'}
-                  borderRadius="5px"
-                  position="relative"
-                >
-                  {preview?.preview3 ? (
-                    <Box>
-                      <Image src={preview.preview3}></Image>
-                    </Box>
-                  ) : (
-                    <Box
-                      _before={{
-                        content: '""',
-                        display: 'block',
-                        width: '2px',
-                        height: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '29px',
-                        left: '37px',
-                      }}
-                      _after={{
-                        content: '""',
-                        display: 'block',
-                        height: '2px',
-                        width: '18px',
-                        backgroundColor: '#CBCED6',
-                        borderRadius: '2px',
-                        position: 'absolute',
-                        top: '37px',
-                        left: '29px',
-                      }}
-                      _hover={{ cursor: 'pointer' }}
-                      onClick={handleAttachImg}
-                    ></Box>
-                  )}
-                </Box>
-                {/* {preview?.preview2 && (
+              <HStack
+                spacing="20px"
+                pt="30px"
+                pb="100px"
+                direction="row-reverse"
+              >
+                {!preview && (
                   <Box
                     w="80px"
                     h="80px"
-                    border={preview?.preview2 ? 'none' : '2px dashed #CBCED6'}
+                    border="2px dashed #CBCED6"
                     borderRadius="5px"
                     position="relative"
                   >
-                    <Box>
-                      <Image src={preview.preview2}></Image>
-                    </Box>
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
                   </Box>
                 )}
-                {preview?.preview3 && (
+                {preview && preview?.length < 3 && (
                   <Box
                     w="80px"
                     h="80px"
-                    border={preview?.preview3 ? 'none' : '2px dashed #CBCED6'}
+                    border="2px dashed #CBCED6"
                     borderRadius="5px"
                     position="relative"
                   >
-                    <Box>
-                      <Image src={preview.preview3}></Image>
-                    </Box>
+                    <Box
+                      _before={{
+                        content: '""',
+                        display: 'block',
+                        width: '2px',
+                        height: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '29px',
+                        left: '37px',
+                      }}
+                      _after={{
+                        content: '""',
+                        display: 'block',
+                        height: '2px',
+                        width: '18px',
+                        backgroundColor: '#CBCED6',
+                        borderRadius: '2px',
+                        position: 'absolute',
+                        top: '37px',
+                        left: '29px',
+                      }}
+                      _hover={{ cursor: 'pointer' }}
+                      onClick={handleAttachImg}
+                    ></Box>
                   </Box>
-                )} */}
+                )}
+                <Stack direction="row-reverse" spacing="20px">
+                  {preview &&
+                    preview.map((p, index) => {
+                      return (
+                        <Box
+                          key={index}
+                          w="80px"
+                          h="80px"
+                          border={p ? 'none' : '2px dashed #CBCED6'}
+                          borderRadius="5px"
+                          position="relative"
+                        >
+                          <Image src={p}></Image>
+                          <Box
+                            key={index}
+                            position="absolute"
+                            top="-10px"
+                            right="-10px"
+                            onClick={deleteImg}
+                          >
+                            <Image
+                              id={String(index)}
+                              src="/icons/svg/review/delete.svg"
+                            ></Image>
+                          </Box>
+                        </Box>
+                      );
+                    })}
+                </Stack>
               </HStack>
               <Input
                 display="none"

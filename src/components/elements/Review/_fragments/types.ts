@@ -62,9 +62,3 @@ export type ReviewFormValues = {
   content: string;
   photos: FileList;
 };
-
-export interface PreviewsType {
-  preview1?: string;
-  preview2?: string;
-  preview3?: string;
-}
