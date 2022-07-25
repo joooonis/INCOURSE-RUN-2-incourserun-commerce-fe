@@ -60,12 +60,14 @@ function Payment() {
   }, []);
 
   useEffect(() => {
+    if (!router.isReady) return;
+
     const myOrder = findProduct(products, Number(product));
     setOrder(myOrder);
     setTotal(myOrder?.price * Number(quantity));
     if (myOrder?.price * Number(quantity) >= 30000) setDeliveryFee(0);
     else setDeliveryFee(3000);
-  }, [products]);
+  }, [products, router.isReady]);
 
   const {
     handleClick: ordererHandleClick,

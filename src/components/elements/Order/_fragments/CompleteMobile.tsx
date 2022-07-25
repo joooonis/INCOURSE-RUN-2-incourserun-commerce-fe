@@ -18,24 +18,35 @@ function CompleteMobile() {
     else setAuthHeader(token.access);
   }, []);
 
-  const { merchant_uid, imp_uid } = router.query;
+  const { merchant_uid, imp_uid, imp_succes, error_msg } = router.query;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    const data = {
-      imp_uid: imp_uid,
-      merchant_uid: merchant_uid,
-    };
-    instance.post('/v1/orders/payment/complete', data).then((res) => {
-      if (res.data.status === 'paid') {
-        onOpen();
-        setTimeout(
-          () => router.push(`/order/payment/complete/${res.data.order.id}`),
-          3000,
-        );
+    if (!router.isReady) return;
+
+    console.log(router.query);
+    if (imp_succes) {
+      const data = {
+        imp_uid: imp_uid,
+        merchant_uid: merchant_uid,
+      };
+
+      if (data) {
+        instance.post('/v1/orders/payment/complete', data).then((res) => {
+          if (res.data.status === 'paid') {
+            onOpen();
+            setTimeout(
+              () => router.push(`/order/payment/complete/${res.data.order.id}`),
+              3000,
+            );
+          }
+        });
       }
-    });
-  }, [imp_uid, merchant_uid]);
+    } else {
+      alert(`결제 실패: ${error_msg}`);
+      window.history.go(-2);
+    }
+  }, [router.isReady]);
 
   return (
     <Container w="375px" h="812px">

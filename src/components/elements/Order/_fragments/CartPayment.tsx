@@ -51,6 +51,8 @@ function CartPayMent() {
   const [deliveryFee, setDeliveryFee] = useState<number>(0);
 
   useEffect(() => {
+    if (!router.isReady) return;
+
     if (typeof checked === 'string') {
       const queries = JSON.parse(checked);
       if (queries) {
@@ -63,7 +65,7 @@ function CartPayMent() {
         });
       }
     }
-  }, [products]);
+  }, [products, router.isReady]);
 
   useEffect(() => {
     if (orders && quantities) {
@@ -180,7 +182,7 @@ function CartPayMent() {
       '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
     document.body.appendChild(postCode);
 
-    () => {
+    return () => {
       document.body.removeChild(jQuery);
       document.body.removeChild(payModule);
       document.body.removeChild(postCode);
