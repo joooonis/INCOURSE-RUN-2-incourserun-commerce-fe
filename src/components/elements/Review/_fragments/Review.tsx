@@ -76,29 +76,29 @@ function Review() {
     if (attachImgRef.current?.files) {
       const files = attachImgRef.current?.files;
       const imgList = [...img];
-      const imgURLList = [...preview];
+      const previewList = [...preview];
 
       for (let i = 0; i < files.length; i++) {
         if (imgList.length >= 3) {
           alert('사진은 3장까지만 첨부가능합니다.');
           break;
         }
-        const imgURL = URL.createObjectURL(files[i]);
+        const preview = URL.createObjectURL(files[i]);
         imgList.push(files[i]);
-        imgURLList.push(imgURL);
+        previewList.push(preview);
       }
       setImg(imgList);
-      setPreview(imgURLList);
+      setPreview(previewList);
     }
   };
 
   const deleteImg = (e: any) => {
     const imgList = [...img];
-    const imgURLList = [...preview];
+    const previewList = [...preview];
     imgList.splice(Number(e.target.id), 1);
-    imgURLList.splice(Number(e.target.id), 1);
+    previewList.splice(Number(e.target.id), 1);
     setImg(imgList);
-    setPreview(imgURLList);
+    setPreview(previewList);
   };
 
   const postReview = async (data: ReviewFormValues) => {
