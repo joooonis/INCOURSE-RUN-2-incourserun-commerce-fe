@@ -491,7 +491,12 @@ function Detail() {
                 <SingleReview key={review.id} review={review} />
               ))}
           </Box>
-          <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+          <Drawer
+            placement="bottom"
+            onClose={onClose}
+            isOpen={isOpen}
+            autoFocus={false}
+          >
             <DrawerOverlay />
             <DrawerContent bg="transparent">
               <DrawerBody px="16px" py="20px" bg="white" borderTopRadius="20px">
