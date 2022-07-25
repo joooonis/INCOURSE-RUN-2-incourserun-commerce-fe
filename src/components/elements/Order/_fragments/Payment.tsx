@@ -157,7 +157,7 @@ function Payment() {
       '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
     document.body.appendChild(postCode);
 
-    () => {
+    return () => {
       document.body.removeChild(jQuery);
       document.body.removeChild(payModule);
       document.body.removeChild(postCode);
