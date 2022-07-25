@@ -277,6 +277,7 @@ function Edit() {
             borderRadius="25px"
             size="sd"
             py="12px"
+            onClick={() => router.back()}
           >
             취소
           </Button>
