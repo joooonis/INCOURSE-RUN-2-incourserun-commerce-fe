@@ -40,9 +40,7 @@ function Card({ product }: CardProps) {
   };
 
   const incQuantity = () => {
-    if (quantity < 10) {
-      setQunatity((quantity: number) => quantity + 1);
-    }
+    setQunatity((quantity: number) => quantity + 1);
   };
 
   const postCart = () => {
