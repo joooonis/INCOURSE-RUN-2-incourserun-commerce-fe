@@ -29,67 +29,14 @@ import { setAuthHeader } from '@apis/_axios/instance';
 
 import StarRating from '@components/common/StarRating/StarRating';
 import { CartModal } from '@components/elements/Modal';
+import SingleReview from '@components/elements/Review/_fragments/SingleReview';
 import { priceToString } from '@components/hooks';
 
 import { getToken } from '@utils/localStorage/token';
 
 import reviewAnalysis from './reviewAnalysis';
-import { DetailType, ReviewType, SingleReviewProps } from './types';
+import { DetailType, ReviewType } from './types';
 
-function SingleReview({ review }: SingleReviewProps) {
-  const year = review.createdAt.slice(0, 4);
-  const month = review.createdAt.slice(5, 7);
-  const date = review.createdAt.slice(8, 10);
-
-  const yearReply = review.reply?.createdAt.slice(0, 4);
-  const monthReply = review.reply?.createdAt.slice(5, 7);
-  const dateReply = review.reply?.createdAt.slice(8, 10);
-  return (
-    <>
-      <VStack spacing={0} pt="23px" pb="25px" w="full">
-        <Flex w="full" justify="space-between">
-          <Box {...ReviewrStyle}>{review.reviewerNickname}</Box>
-          <StarRating starRating={review.rating} />
-        </Flex>
-        <Box {...ReviewDateStyle} w="full">
-          {year}.{month}.{date}
-        </Box>
-        <Box {...ReviewContentStyle} w="full" pt="17px">
-          {review.content}
-        </Box>
-        <HStack spacing="10px" w="full" justify="flex-start" pt="9px">
-          {review.photos.map((photo) => (
-            <Image
-              key={photo.id}
-              borderRadius="5px"
-              w="80px"
-              h="80px"
-              src={photo.img}
-            ></Image>
-          ))}
-        </HStack>
-      </VStack>
-      {review.reply && (
-        <Flex w="full" pt="6px" pb="30px">
-          <Box pr="9px">
-            <Image src="/icons/svg/review/reply.svg" />
-          </Box>
-          <VStack spacing={0}>
-            <Flex w="full" justify="space-between">
-              <Box {...ReviewrStyle}>인코스런 관리자</Box>
-            </Flex>
-            <Box {...ReviewDateStyle} w="full">
-              {yearReply}.{monthReply}.{dateReply}
-            </Box>
-            <Box {...ReviewContentStyle} w="full" pt="20px">
-              {review.reply.content}
-            </Box>
-          </VStack>
-        </Flex>
-      )}
-    </>
-  );
-}
 interface ReviewChartBarProps {
   countAll: number;
   count: number;
