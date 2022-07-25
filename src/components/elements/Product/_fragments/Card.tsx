@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import {
   Box,
@@ -10,10 +10,8 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
-  HStack,
   Image,
   Input,
-  Text,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -42,9 +40,7 @@ function Card({ product }: CardProps) {
   };
 
   const incQuantity = () => {
-    if (quantity < 10) {
-      setQunatity((quantity: number) => quantity + 1);
-    }
+    setQunatity((quantity: number) => quantity + 1);
   };
 
   const postCart = () => {
@@ -201,7 +197,12 @@ function Card({ product }: CardProps) {
           </Flex>
         </Flex>
       </Box>
-      <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+      <Drawer
+        placement="bottom"
+        onClose={onClose}
+        isOpen={isOpen}
+        autoFocus={false}
+      >
         <DrawerOverlay />
         <DrawerContent bg="transparent">
           <DrawerBody px="16px" py="20px" bg="white" borderTopRadius="20px">
