@@ -162,11 +162,15 @@ function Card({ product }: CardProps) {
               </Flex>
             )}
             <Box {...SubText} pt="25px">
-              <HStack spacing="5px">
+              <Flex flexWrap="wrap">
                 {product.hashtags?.map((hashtag) => {
-                  return <Text key={hashtag.id}>#{hashtag.name}</Text>;
+                  return (
+                    <Box key={hashtag.id} mr="5px">
+                      #{hashtag.name}
+                    </Box>
+                  );
                 })}
-              </HStack>
+              </Flex>
             </Box>
           </Box>
 
