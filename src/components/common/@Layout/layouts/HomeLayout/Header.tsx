@@ -88,23 +88,44 @@ function Header() {
         <DrawerOverlay />
         <DrawerContent borderRight="62px solid rgba(26, 26, 26, 0.2);">
           <DrawerCloseButton />
-          <DrawerBody px="16px" pt="80px">
-            <Box {...TitleText}>카테고리</Box>
-            <VStack
-              {...MenuText}
-              spacing="32px"
-              pt="46px"
-              alignItems="flex-start"
-            >
-              <Box onClick={gotoMain} _hover={{ cursor: 'pointer' }}>
+          <DrawerBody pt="80px" px={0}>
+            <Box {...TitleText} px="16px">
+              카테고리
+            </Box>
+            <VStack {...MenuText} spacing={0} pt="46px" alignItems="flex-start">
+              <Flex
+                onClick={gotoMain}
+                alignItems="center"
+                _hover={{ cursor: 'pointer' }}
+                w="full"
+                h="60px"
+                pl="16px"
+                borderTop="1px solid #F2F3F4"
+              >
                 홈
-              </Box>
-              <Box onClick={gotoProduct} _hover={{ cursor: 'pointer' }}>
+              </Flex>
+              <Flex
+                onClick={gotoProduct}
+                alignItems="center"
+                _hover={{ cursor: 'pointer' }}
+                w="full"
+                h="60px"
+                pl="16px"
+                borderTop="1px solid #F2F3F4"
+              >
                 상품보기
-              </Box>
-              <Box onClick={gotoMyPage} _hover={{ cursor: 'pointer' }}>
+              </Flex>
+              <Flex
+                onClick={gotoMyPage}
+                alignItems="center"
+                _hover={{ cursor: 'pointer' }}
+                w="full"
+                h="60px"
+                pl="16px"
+                borderY="1px solid #F2F3F4"
+              >
                 마이페이지
-              </Box>
+              </Flex>
             </VStack>
 
             {accessToken && (

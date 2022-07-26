@@ -32,7 +32,6 @@ function Order() {
 
   useEffect(() => {
     instance.get('/v1/users/me/orders').then((res) => {
-      console.log(res.data);
       setOrders(res.data);
     });
     instance.get('/v1/products').then((res) => setProducts(res.data));
@@ -92,6 +91,7 @@ function Order() {
                       isOpen={isOpen}
                       onClose={onClose}
                       merchantUid={order.merchantUid}
+                      setOrders={setOrders}
                     />
                   </Flex>
                 )}

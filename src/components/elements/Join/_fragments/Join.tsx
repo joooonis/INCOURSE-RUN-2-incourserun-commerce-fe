@@ -23,6 +23,8 @@ import {
 import instance from '@apis/_axios/instance';
 import { setAuthHeader } from '@apis/_axios/instance';
 
+import { phoneNumber, validateWithByte } from '@components/hooks';
+
 import { getToken } from '@utils/localStorage/token';
 
 import JoinInput from './JoinInput';
@@ -47,14 +49,14 @@ function Join() {
   useEffect(() => {
     setTimeout(() => {
       instance.get('/v1/users/me').then((res) => {
-        if (res.data.name) setValue('name', res.data.name);
-        if (res.data.nickname) setValue('nickname', res.data.nickname);
-        if (res.data.email) setValue('email', res.data.email);
-        if (res.data.phone) setValue('phone', res.data.phone);
-        if (res.data.gender) setValue('gender', res.data.gender);
-        if (res.data.ageRange) setValue('ageRange', res.data.ageRange);
-
-        if (res.data.avatar) setPreview(res.data.avatar);
+        const user = res.data;
+        if (user.name) setValue('name', user.name);
+        if (user.nickname) setValue('nickname', user.nickname);
+        if (user.email) setValue('email', user.email);
+        if (user.phone) setValue('phone', user.phone);
+        if (user.gender) setValue('gender', user.gender);
+        if (user.ageRange) setValue('ageRange', user.ageRange);
+        if (user.avatar) setPreview(user.avatar);
       });
     }, 1000);
   }, []);
@@ -88,23 +90,17 @@ function Join() {
       (img && data.agreeAllTerms) ||
       (img && data.requiredTerms && data.privateInfoTerms)
     ) {
-      instance
-        .patch('/v1/users/me', patchData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', patchData);
 
       const formData = new FormData();
       formData.append('avatar', img[0]);
-      instance
-        .patch('/v1/users/me', formData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', formData);
       router.replace('join/success');
     } else if (
       data.agreeAllTerms ||
       (data.requiredTerms && data.privateInfoTerms)
     ) {
-      instance
-        .patch('/v1/users/me', patchData)
-        .then((res) => console.log(res.data));
+      instance.patch('/v1/users/me', patchData);
       router.replace('join/success');
     }
   };
@@ -150,13 +146,10 @@ function Join() {
     } else setIsJoinButtonActive(false);
   }, [toggle]);
 
-  function validateWithByte(str: string) {
-    let byte = 0;
-    for (let i = 0; i < str.length; ++i) {
-      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
-    }
-    return byte >= 2 && byte <= 10;
-  }
+  const [phone, setPhone] = useState<string>();
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPhone(phoneNumber(event.target.value));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -243,10 +236,12 @@ function Join() {
               label="phone"
               name="핸드폰 번호"
               register={register}
+              value={phone}
               options={{
                 required: true,
-                pattern: /^\(?\d{3}\)?[\s.-]\d{4}[\s.-]\d{4}$/,
+                pattern: /^01([0|1|6|7|8|9])[-]\d{3,4}[-]\d{4}$/,
               }}
+              onChange={onChange}
             />
             {errors.phone && (
               <Box {...ErrorStyle}>정확한 핸드폰 번호를 입력해주세요.</Box>
@@ -308,7 +303,7 @@ function Join() {
               </option>
               <option value="20대" selected={getValues('ageRange') === '20대'}>
                 20대
-              </option>{' '}
+              </option>
               <option value="30대" selected={getValues('ageRange') === '30대'}>
                 30대
               </option>

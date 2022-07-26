@@ -41,6 +41,10 @@ interface Photo {
   id: number;
   img: string;
 }
+type ReplyType = {
+  content: string;
+  createdAt: string;
+};
 
 export type ReviewType = {
   id: number;
@@ -48,16 +52,12 @@ export type ReviewType = {
   createdAt: string;
   rating: number;
   photos: Photo[];
+  reply: ReplyType;
+  reviewerNickname: string;
 };
 
 export interface SingleReviewProps {
   review: ReviewType;
-}
-
-export interface StarRatingProps {
-  starRating: number;
-  upStar?: any;
-  downStar?: any;
 }
 
 export type ReviewFormValues = {
@@ -67,9 +67,3 @@ export type ReviewFormValues = {
   content: string;
   photos: FileList;
 };
-
-export interface PreviewsType {
-  preview1?: string;
-  preview2?: string;
-  preview3?: string;
-}

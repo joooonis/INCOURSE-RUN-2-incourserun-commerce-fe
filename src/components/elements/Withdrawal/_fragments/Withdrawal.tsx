@@ -56,9 +56,7 @@ function Withdrawal() {
       reasons: data.reasons,
       reasonOthers: data.reasonOthers,
     };
-    console.log(withdrawal);
     instance.post('/v1/users/withdrawals', withdrawal).then((res) => {
-      console.log(res);
       onOpen();
     });
   };
@@ -169,7 +167,11 @@ function Withdrawal() {
             />
           </Box>
           <Flex justify="space-between" px="16px" pb="30px">
-            <PrimaryButton variant="outline" w="165px">
+            <PrimaryButton
+              variant="outline"
+              w="165px"
+              onClick={() => router.back()}
+            >
               취소
             </PrimaryButton>
             <PrimaryButton w="165px" type="submit">

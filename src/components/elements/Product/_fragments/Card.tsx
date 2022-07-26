@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Router from 'next/router';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import {
   Box,
@@ -10,10 +10,8 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
-  HStack,
   Image,
   Input,
-  Text,
   VStack,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -32,7 +30,7 @@ interface CardProps {
 function Card({ product }: CardProps) {
   const router = useRouter();
   const gotoDetail = () => {
-    router.replace(`products/${product.id}`);
+    router.push(`products/${product.id}`);
   };
   const [quantity, setQunatity] = useState(1);
   const decQuantity = () => {
@@ -42,9 +40,7 @@ function Card({ product }: CardProps) {
   };
 
   const incQuantity = () => {
-    if (quantity < 10) {
-      setQunatity((quantity: number) => quantity + 1);
-    }
+    setQunatity((quantity: number) => quantity + 1);
   };
 
   const postCart = () => {
@@ -162,11 +158,15 @@ function Card({ product }: CardProps) {
               </Flex>
             )}
             <Box {...SubText} pt="25px">
-              <HStack spacing="5px">
+              <Flex flexWrap="wrap">
                 {product.hashtags?.map((hashtag) => {
-                  return <Text key={hashtag.id}>#{hashtag.name}</Text>;
+                  return (
+                    <Box key={hashtag.id} mr="5px">
+                      #{hashtag.name}
+                    </Box>
+                  );
                 })}
-              </HStack>
+              </Flex>
             </Box>
           </Box>
 
@@ -197,7 +197,12 @@ function Card({ product }: CardProps) {
           </Flex>
         </Flex>
       </Box>
-      <Drawer placement="bottom" onClose={onClose} isOpen={isOpen}>
+      <Drawer
+        placement="bottom"
+        onClose={onClose}
+        isOpen={isOpen}
+        autoFocus={false}
+      >
         <DrawerOverlay />
         <DrawerContent bg="transparent">
           <DrawerBody px="16px" py="20px" bg="white" borderTopRadius="20px">

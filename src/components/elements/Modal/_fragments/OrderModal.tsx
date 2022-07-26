@@ -18,14 +18,9 @@ import PrimaryButton from '@components/common/Button';
 import { MyModalProps, OrderModalProps } from './types';
 
 function OrderCanceledModal({ isOpen, onClose }: MyModalProps) {
-  const router = useRouter();
-  const gotoOrder = () => {
-    onClose();
-    router.push('/order');
-  };
   return (
     <>
-      <Modal onClose={gotoOrder} isOpen={isOpen} isCentered>
+      <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent w="343px">
           <ModalBody pt={0} px="11px" pb="33px">
@@ -33,7 +28,7 @@ function OrderCanceledModal({ isOpen, onClose }: MyModalProps) {
               주문취소가 완료되었습니다.
             </Box>
             <Flex justify="center">
-              <PrimaryButton onClick={gotoOrder} w="155px">
+              <PrimaryButton onClick={onClose} w="155px">
                 확인
               </PrimaryButton>
             </Flex>
@@ -44,7 +39,12 @@ function OrderCanceledModal({ isOpen, onClose }: MyModalProps) {
   );
 }
 
-function OrderModal({ isOpen, onClose, merchantUid }: OrderModalProps) {
+function OrderModal({
+  isOpen,
+  onClose,
+  merchantUid,
+  setOrders,
+}: OrderModalProps) {
   const {
     isOpen: isOrderCanceledModalOpen,
     onOpen: onOrderCanceledModalOpen,
@@ -56,8 +56,10 @@ function OrderModal({ isOpen, onClose, merchantUid }: OrderModalProps) {
       .post('/v1/orders/payment/cancel', {
         merchantUid: merchantUid,
       })
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
+        instance.get('/v1/users/me/orders').then((res) => {
+          setOrders(res.data);
+        });
         onClose();
         onOrderCanceledModalOpen();
       });

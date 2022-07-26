@@ -32,7 +32,7 @@ export const itemSlice = createSlice({
     addItem: (state, action: PayloadAction<ItemSliceActionType>) => {
       const newItem = {
         id: action.payload.id,
-        checked: false,
+        checked: true,
         product: action.payload.product,
         price: action.payload.price,
         quantity: action.payload.quantity,
