@@ -42,7 +42,7 @@ function Success() {
           <Image src="/icons/svg/hands-clapping.svg" alt="logo" />
         </Box>
         <Box w="full" pt="237px">
-          <PrimaryButton>시작하기</PrimaryButton>
+          <PrimaryButton onClick={gotoMain}>시작하기</PrimaryButton>
         </Box>
       </VStack>
     </Container>
