@@ -40,7 +40,7 @@ function Payment() {
     else setAuthHeader(token.access);
   }, []);
 
-  const { register, handleSubmit, setValue, reset, watch } =
+  const { register, handleSubmit, setValue, reset, getValues } =
     useForm<FormValues>();
 
   const router = useRouter();
@@ -87,6 +87,11 @@ function Payment() {
       [name]: value,
     });
   };
+
+  useEffect(() => {
+    if (shippingFullAddress) setValue('shippingAddress', shippingFullAddress);
+  }, [shippingFullAddress]);
+
   const matchShippingOrderer = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
       if (orderer?.name) setValue('shippingName', orderer?.name);
@@ -153,16 +158,9 @@ function Payment() {
     payModule.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
     document.body.appendChild(payModule);
 
-    const postCode = document.createElement('script');
-
-    postCode.src =
-      '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    document.body.appendChild(postCode);
-
     return () => {
       document.body.removeChild(jQuery);
       document.body.removeChild(payModule);
-      document.body.removeChild(postCode);
     };
   }, []);
   const onClickPayment = (PaymentData: PaymentDataType) => {
@@ -333,7 +331,11 @@ function Payment() {
                   {...InputStyle}
                   w="249px"
                   onClick={shippingHandleClick}
-                  value={shippingFullAddress ? shippingFullAddress : ''}
+                  value={
+                    getValues('shippingAddress')
+                      ? getValues('shippingAddress')
+                      : ''
+                  }
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button

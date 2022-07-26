@@ -39,7 +39,8 @@ function CartPayMent() {
     if (!token.access) router.replace('/login');
     else setAuthHeader(token.access);
   }, []);
-  const { register, handleSubmit, setValue, reset } = useForm<FormValues>();
+  const { register, handleSubmit, setValue, reset, getValues } =
+    useForm<FormValues>();
 
   const { checked } = router.query;
 
@@ -106,6 +107,10 @@ function CartPayMent() {
       [name]: value,
     });
   };
+
+  useEffect(() => {
+    if (shippingFullAddress) setValue('shippingAddress', shippingFullAddress);
+  }, [shippingFullAddress]);
 
   const matchShippingOrderer = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -176,16 +181,9 @@ function CartPayMent() {
     payModule.src = 'https://cdn.iamport.kr/js/iamport.payment-1.1.8.js';
     document.body.appendChild(payModule);
 
-    const postCode = document.createElement('script');
-
-    postCode.src =
-      '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-    document.body.appendChild(postCode);
-
     return () => {
       document.body.removeChild(jQuery);
       document.body.removeChild(payModule);
-      document.body.removeChild(postCode);
     };
   }, []);
 
@@ -368,7 +366,11 @@ function CartPayMent() {
                   {...InputStyle}
                   w="249px"
                   onClick={shippingHandleClick}
-                  value={shippingFullAddress ? shippingFullAddress : ''}
+                  value={
+                    getValues('shippingAddress')
+                      ? getValues('shippingAddress')
+                      : ''
+                  }
                   {...register('shippingAddress', { required: true })}
                 />
                 <Button
