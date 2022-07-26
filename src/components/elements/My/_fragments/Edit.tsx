@@ -86,7 +86,6 @@ function Edit() {
       formData.append('avatar', img[0]);
       instance.patch('/v1/users/me', formData).then(() => {
         onOpen();
-        router.push('/');
       });
     } else if (data) {
       instance.patch('/v1/users/me', data).then(() => {
