@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import { Box, Flex, Image, VStack } from '@chakra-ui/react';
+import { Box, Flex, Image, VStack, position } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
 
@@ -270,11 +270,52 @@ function Main() {
           borderLeft="2px solid #CBCED6"
           zIndex={1}
         />
-
         <Box pos="absolute" top="999px" h="37px">
           <Image src="/icons/svg/main/divider.svg" alt="divider" />
         </Box>
         <Box h="840px"></Box>
+        <Box {...StepText} fontWeight={700} color="primary.500" pt="20px">
+          SAVE MONEY
+        </Box>
+        <Flex flexDir="column" pt="30px" textAlign="center" {...StepText}>
+          <Box color="#FF7A00" fontWeight="700">
+            * 온라인 직접 판매
+          </Box>
+          <Box>인코스런은 온라인으로만 직접판매하여,</Box>
+          <Box>더 낮은 가격을 만들어냅니다.</Box>
+        </Flex>
+        <Box {...TitleText} fontWeight={400} pt="80px">
+          이렇게 <span style={{ fontWeight: 700 }}>비교하세요!</span>
+        </Box>
+        <Flex flexDir="column" pt="20px" textAlign="center" {...SubText}>
+          <Box>인코스런은 부담스러운</Box>
+          <Box>
+            영유아 화장품의{' '}
+            <span
+              style={{
+                fontWeight: 700,
+                position: 'relative',
+                textDecoration: 'underline #FF710B 10px',
+                textUnderlineOffset: '-10px',
+              }}
+            >
+              가격거품을 제거해
+            </span>
+          </Box>
+          <Box>
+            <span
+              style={{
+                fontWeight: 700,
+                position: 'relative',
+                textDecoration: 'underline #FF710B 10px',
+                textUnderlineOffset: '-10px',
+              }}
+            >
+              투명한 가격
+            </span>
+            을 만들어 갑니다.
+          </Box>
+        </Flex>
       </Flex>
 
       <Box bgGradient="linear(to-r, #FF710B, #FFAB2E)" position="relative">
