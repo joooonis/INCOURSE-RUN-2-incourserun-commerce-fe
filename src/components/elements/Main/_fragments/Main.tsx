@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import { Box, Flex, Image, VStack, position } from '@chakra-ui/react';
+import { Box, Flex, HStack, Image, VStack, position } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
 
@@ -290,7 +290,7 @@ function Main() {
         <Flex flexDir="column" pt="20px" textAlign="center" {...SubText}>
           <Box>인코스런은 부담스러운</Box>
           <Box>
-            영유아 화장품의{' '}
+            영유아 화장품의
             <span
               style={{
                 fontWeight: 700,
@@ -316,8 +316,99 @@ function Main() {
             을 만들어 갑니다.
           </Box>
         </Flex>
+        <HStack pt="70px" spacing="23px" alignItems="flex-end">
+          <Flex flexDir="column" alignItems="center">
+            <Flex
+              flexDir="column"
+              pt="20px"
+              w="150px"
+              h="360px"
+              alignItems="center"
+              bg="#CBCED6"
+            >
+              <Flex
+                {...PriceText}
+                w="90px"
+                h="30px"
+                borderRadius="15px"
+                bg="gray.700"
+                color="white"
+                justify="center"
+                alignItems="center"
+              >
+                2~30,000원
+              </Flex>
+            </Flex>
+            <Box {...SubText} color="gray.700" pt="10px">
+              시중 주요브랜드
+            </Box>
+          </Flex>
+          <Flex flexDir="column" alignItems="center">
+            <Flex
+              flexDir="column"
+              pt="20px"
+              w="150px"
+              h="120px"
+              alignItems="center"
+              bg="#FFF3E0"
+            >
+              <Flex
+                {...PriceText}
+                w="74px"
+                h="30px"
+                borderRadius="15px"
+                bg="primary.500"
+                color="white"
+                justify="center"
+                alignItems="center"
+              >
+                9,900원
+              </Flex>
+              <Box pt="20px">
+                <Image src="/icons/svg/main/logo.svg" alt="logo" />
+              </Box>
+            </Flex>
+            <Box {...SubText} fontWeight={700} pt="10px" color="primary.500">
+              인코스런
+            </Box>
+          </Flex>
+        </HStack>
       </Flex>
-
+      <Box
+        w="full"
+        h="450px"
+        bgImage="url('/icons/svg/main/background.svg')"
+        pos="relative"
+      >
+        <Flex
+          pos="absolute"
+          top="100px"
+          left="16px"
+          {...TitleText}
+          flexDir="column"
+          alignItems="flex-start"
+        >
+          <Box fontWeight={400}>
+            <span style={{ color: '#FF710B', fontWeight: 700 }}>인코스런</span>
+            가입하고
+          </Box>
+          <Box>전상품 1000원 혜택</Box>
+          <Box fontWeight={400}>받아보세요</Box>
+        </Flex>
+        <Flex
+          pos="absolute"
+          top="234px"
+          left="16px"
+          {...StepText}
+          alignItems="center"
+          cursor="pointer"
+        >
+          이벤트상세보기
+          <Box pl="9.5px">
+            <Image src="/icons/svg/main/arrow.svg" alt="arrow" />
+          </Box>
+        </Flex>
+      </Box>
       <Box bgGradient="linear(to-r, #FF710B, #FFAB2E)" position="relative">
         <VStack w="100%" alignItems="center">
           <Box {...MoreInfoTitleText} pt="83px">
@@ -433,4 +524,10 @@ const StepText = {
   fontWeight: 400,
   fontSize: '16px',
   lineHeight: '28px',
+};
+
+const PriceText = {
+  fontWeight: 700,
+  fontSize: '12px',
+  lineHeight: '18px',
 };
