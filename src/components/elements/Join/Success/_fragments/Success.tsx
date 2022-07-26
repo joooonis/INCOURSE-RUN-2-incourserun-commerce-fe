@@ -12,6 +12,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import PrimaryButton from '@components/common/Button/Button';
+
 import { LAYOUT } from '@constants/layout';
 import { getToken } from '@utils/localStorage/token';
 
@@ -25,29 +27,22 @@ function Success() {
     router.replace('/');
   };
   return (
-    <Container maxW={LAYOUT.SIZE.WIDTH}>
-      <VStack w="100%" py="80px" px="16px" h="812px" justify="space-between">
-        <Flex w="100%" direction="column" alignItems="flex-start">
-          <Heading size="lg" alignSelf="flex-start">
+    <Container maxW="375px">
+      <VStack w="full" pt="80px" h="812px" spacing={0}>
+        <VStack w="full" spacing={0} alignItems="flex-start">
+          <Box {...HeadingText} alignSelf="flex-start">
             회원가입이 <br />
             완료되었습니다.
-          </Heading>
-          <Text color="gray.600" fontSize="12px">
-            관심사별로 자유롭게 소통해보세요
-          </Text>
-        </Flex>
-        <Image src="/icons/svg/hands-clapping.svg" alt="logo" />
-        <Box w="100%" py="60px">
-          <Button
-            colorScheme="primary"
-            w="100%"
-            borderRadius="25px"
-            size="sd"
-            py="12px"
-            onClick={gotoMain}
-          >
-            시작하기
-          </Button>
+          </Box>
+          <Box {...SubTex} color="gray.600" pt="5px">
+            관심사별로 자유롭게 소통해보세요!
+          </Box>
+        </VStack>
+        <Box pt="100px">
+          <Image src="/icons/svg/hands-clapping.svg" alt="logo" />
+        </Box>
+        <Box w="full" pt="237px">
+          <PrimaryButton>시작하기</PrimaryButton>
         </Box>
       </VStack>
     </Container>
@@ -55,3 +50,21 @@ function Success() {
 }
 
 export default Success;
+
+const HeadingText = {
+  fontWeight: 700,
+  fontSize: '26px',
+  lineHeight: '38px',
+};
+
+const SubTex = {
+  fontWeight: 400,
+  fontSize: '12px',
+  lineHeight: '18px',
+};
+
+const ButtonText = {
+  fontWeight: 700,
+  fontSize: '16px',
+  lineHeight: '28px',
+};
