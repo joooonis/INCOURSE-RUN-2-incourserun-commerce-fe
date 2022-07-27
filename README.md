@@ -28,7 +28,7 @@
 <img src="https://img.shields.io/badge/Next.js-000000?logo=Next.js&logoColor=white"/>
 <img src="https://img.shields.io/badge/Chakra%20UI-319795?&logo=Chakra%20UI&logoColor=white" />
 <img src="https://img.shields.io/badge/React-61DAFB?&logo=React&logoColor=black" />
-<img src="https://img.shields.io/badge/React Hook Form
+<img src="https://img.shields.io/badge/React%20Hook%20Form
 -FF4154?logo=React
 &logoColor=white"/>
 <img src ="https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=white"/>
