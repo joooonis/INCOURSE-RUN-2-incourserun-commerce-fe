@@ -68,22 +68,3 @@ const ReviewCountStyle = {
   fontSize: '16px',
   lineHeight: '28px',
 };
-
-const ReviewrStyle = {
-  fontWeight: 700,
-  fontSize: '12px',
-  lineHeight: '18px',
-};
-
-const ReviewDateStyle = {
-  fontSize: '12px',
-  lineHeight: '18px',
-  color: 'gray.600',
-  fontWeight: '400',
-};
-
-const ReviewContentStyle = {
-  fontWeight: 400,
-  fontSize: '16px',
-  lineHeight: '28px',
-};
