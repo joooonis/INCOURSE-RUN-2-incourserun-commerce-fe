@@ -6,6 +6,8 @@ export type ProductType = {
   hashtags: Hashtag[];
   avgRating: number;
   reviewCount: number;
+  productImg?: string;
+  thumbnailImg?: string;
 };
 
 export interface DetailType {
@@ -18,6 +20,7 @@ export interface DetailType {
   detailImg?: string;
   productImg?: string;
   reviewCount: number;
+  thumbnailImg?: string;
 }
 
 type Hashtag = {

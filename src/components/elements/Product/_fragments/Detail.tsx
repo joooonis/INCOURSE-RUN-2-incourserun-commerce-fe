@@ -195,7 +195,7 @@ function Detail() {
   };
 
   return (
-    <Box pt="120px" pb="80px">
+    <Box pt="120px" pb="80px" maxW="375px">
       {detail && (
         <>
           <Box>
@@ -215,6 +215,8 @@ function Detail() {
               boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
               alignItems="flex-start"
               px="16px"
+              flexWrap="wrap"
+              overflowWrap="break-word"
             >
               <Box {...TitleText} pt="45px">
                 {detail.name}
@@ -254,9 +256,15 @@ function Detail() {
                   무료배송
                 </span>
               </Box>
-              <Box {...SubText} pt="10px">
-                {detail.description}
-              </Box>
+              <Flex
+                {...SubText}
+                pt="10px"
+                w="full"
+                flexWrap="wrap"
+                overflowWrap="break-word"
+              >
+                {detail?.description}
+              </Flex>
               {detail.avgRating?.toFixed(1) !== '0.0' && (
                 <Flex {...BoldText} alignItems="center" pt="10px" pb="15px">
                   <Image
@@ -329,7 +337,7 @@ function Detail() {
               </Flex>
             </VStack>
             <Box maxH="477px" overflow="hidden">
-              <Image src={detail.detailImg} alt="cream" />
+              <Image src={detail.detailImg} alt="detail" />
             </Box>
             <Accordion defaultIndex={[1]} allowMultiple>
               <AccordionItem borderWidth={0}>
@@ -338,7 +346,7 @@ function Detail() {
                     <AccordionPanel px={0} pb="20px" pt={0} overflow="hidden">
                       <Image
                         src={detail.detailImg}
-                        alt="cream"
+                        alt="detail"
                         marginTop="-477px"
                       />
                     </AccordionPanel>
@@ -413,7 +421,6 @@ function Detail() {
                   h="30px"
                   bg="gray.200"
                   borderRadius="5px"
-                  border="1px solid red"
                   onChange={handleOrderingOnChange}
                   defaultValue="created_at"
                 >
@@ -427,7 +434,6 @@ function Detail() {
                   h="30px"
                   bg="gray.200"
                   borderRadius="5px"
-                  border="1px solid red"
                   onChange={handleHasPhotoOnChange}
                   defaultValue="전체보기"
                 >
