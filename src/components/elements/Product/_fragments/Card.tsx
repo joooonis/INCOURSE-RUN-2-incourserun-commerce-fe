@@ -82,23 +82,16 @@ function Card({ product }: CardProps) {
         borderRadius="20px"
         boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
       >
-        <Image
-          src="/images/product/card.png"
-          onClick={gotoDetail}
-          _hover={{ cursor: 'pointer' }}
-        />
-        <VStack
-          top="100px"
-          left="30px"
-          position="absolute"
-          flexDir="column"
-          alignItems="flex-start"
-          spacing="9px"
-        >
-          <Image src="/images/product/logo1.svg" />
-          <Image src="/images/product/logo2.svg" />
-          <Image src="/images/product/logo3.svg" />
-        </VStack>
+        <Box borderTopRadius="20px" w="full" h="250px">
+          <Image
+            w="343px"
+            h="250px"
+            src={product.thumbnailImg}
+            onClick={gotoDetail}
+            _hover={{ cursor: 'pointer' }}
+          />
+        </Box>
+
         <Flex
           flexDir="column"
           alignItems="flex-start"
