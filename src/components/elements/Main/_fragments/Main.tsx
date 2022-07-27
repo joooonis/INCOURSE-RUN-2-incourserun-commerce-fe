@@ -2,9 +2,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 
-import { Box, Flex, HStack, Image, VStack, position } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 
 import { setAuthHeader } from '@apis/_axios/instance';
+
+import PrimaryButton from '@components/common/Button/Button';
+import StarRating from '@components/common/StarRating/StarRating';
 
 import { getToken } from '@utils/localStorage/token';
 
@@ -16,7 +19,7 @@ function Main() {
     else setAuthHeader(token.access);
   }, []);
   return (
-    <>
+    <Box maxW="375px" overflow="hidden">
       <Box
         bgImage="/images/main/bg_intro.png"
         bgRepeat="no-repeat"
@@ -409,10 +412,217 @@ function Main() {
           </Box>
         </Flex>
       </Box>
+      <Box
+        px="16px"
+        py="20px"
+        w="full"
+        h="1354px"
+        bgImage="url('/icons/svg/main/background2.svg')"
+      >
+        <Flex
+          w="full"
+          h="1314px"
+          bg="#FFFFFF"
+          flexDir="column"
+          alignItems="center"
+        >
+          <Box {...TitleText} pt="71px">
+            소중한 우리 아이를 위해
+          </Box>
+          <Box {...StepText} pt="20px" textAlign="center">
+            순수 자연유래 / 자연유래 유화제 / 자연유래 <br />
+            계면활성제 99.9% 타가는 EWG 그린등급 <br />
+            성분 100% 만을 사용한 건강한 화장품입니다.
+          </Box>
+          <Flex pt="30px">
+            <PrimaryButton w="190px" onClick={() => router.push('/products')}>
+              상품전체보기
+            </PrimaryButton>
+          </Flex>
+          <Flex flexDir="column" alignItems="center" pt="80px">
+            <Image
+              src="/images/main/product.png"
+              alt="product"
+              w="151px"
+              h="189px"
+            ></Image>
+            <Box {...ProductText} pt="10px">
+              바스&샴푸
+            </Box>
+          </Flex>
+          <Flex flexDir="column" alignItems="center" pt="80px">
+            <Image
+              src="/images/main/product.png"
+              alt="product"
+              w="151px"
+              h="189px"
+            ></Image>
+            <Box {...ProductText} pt="10px">
+              오일
+            </Box>
+          </Flex>
+          <Flex flexDir="column" alignItems="center" pt="80px">
+            <Image
+              src="/images/main/product.png"
+              alt="product"
+              w="151px"
+              h="189px"
+            ></Image>
+            <Box {...ProductText} pt="10px">
+              파우더 로션
+            </Box>
+          </Flex>
+        </Flex>
+      </Box>
+      <Flex
+        w="full"
+        h="876px"
+        flexDir="column"
+        alignItems="center"
+        pos="relative"
+      >
+        <Box {...TitleText} fontWeight={400} pt="80px" textAlign="center">
+          인코스런을 <span style={{ fontWeight: 700 }}>직접 사용해본</span>
+          <br />
+          고객님의 솔직한 리뷰
+        </Box>
+        <HStack
+          pt="50px"
+          spacing="10px"
+          pl="16px"
+          ml={0}
+          alignSelf="flex-start"
+        >
+          <Button size="sm" w="53px" colorScheme="primary" borderRadius="15px">
+            전체
+          </Button>
+          <Button
+            size="sm"
+            px="20px"
+            w="83px"
+            bg="gray.200"
+            fontWeight={400}
+            borderRadius="15px"
+          >
+            바스 & 샴푸
+          </Button>
+          <Button
+            size="sm"
+            w="53px"
+            bg="gray.200"
+            fontWeight={400}
+            borderRadius="15px"
+          >
+            오일
+          </Button>
+          <Button
+            size="sm"
+            w="53px"
+            bg="gray.200"
+            fontWeight={400}
+            borderRadius="15px"
+          >
+            로션
+          </Button>
+          <Button
+            size="sm"
+            w="53px"
+            bg="gray.200"
+            fontWeight={400}
+            borderRadius="15px"
+          >
+            크림
+          </Button>
+          <Button size="sm" bg="gray.200" fontWeight={400} borderRadius="15px">
+            파우더 로션
+          </Button>
+        </HStack>
+        <HStack pt="70px" pl="16px" spacing="10px" alignSelf="flex-start">
+          <Box
+            w="325px"
+            h="464px"
+            borderRadius="20px"
+            boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
+          >
+            <VStack spacing={0} pt="23px" pb="30px" px="20px" w="full">
+              <Flex w="full" justify="space-between">
+                <Box {...ReviewrStyle}>incourse.run</Box>
+                <StarRating starRating={4} width="7.5px" />
+              </Flex>
+              <Box {...ReviewDateStyle} w="full">
+                2021.03.29
+              </Box>
+              <Box {...ReviewContentStyle} w="full" pt="30px">
+                순해서 아이피부에도 자극없이 사용할 수 있어요! 아이 뿐 만아니라
+                온 가족이 사용할 수 있는 화장품이라고 추천받았어요. 처음엔
+                반신반의하는 마음으로 사용하기 시작했는데 지금은 모든 단계에서
+                인코스런 제품을 사용하고있어요! 아토피로 고생했던 우리 아이
+                피부도 지금은 거의 완치단계입니다 . 아이 엄마들에게 추천드려요!
+              </Box>
+              <Box pt="20px" w="full" borderBottom="1px solid #EAECF0"></Box>
+              <HStack spacing="10px" w="full" justify="flex-start" pt="20px">
+                {/* {review.photos.map((photo) => (
+                  <Image
+                    key={photo.id}
+                    borderRadius="5px"
+                    w="80px"
+                    h="80px"
+                    src={photo.img}
+                  ></Image>
+                ))} */}
+                <Image src="images/review/review.png" w="80px" h="80px" />
+                <Image src="images/review/review.png" w="80px" h="80px" />
+                <Image src="images/review/review.png" w="80px" h="80px" />
+              </HStack>
+            </VStack>
+          </Box>
+          <Box
+            w="325px"
+            h="464px"
+            borderRadius="20px"
+            boxShadow="0px 0px 10px rgba(26, 26, 26, 0.1)"
+          >
+            <VStack spacing={0} pt="23px" pb="30px" px="20px" w="full">
+              <Flex w="full" justify="space-between">
+                <Box {...ReviewrStyle}>incourse.run</Box>
+                <StarRating starRating={4} width="7.5px" />
+              </Flex>
+              <Box {...ReviewDateStyle} w="full">
+                2021.03.29
+              </Box>
+              <Box {...ReviewContentStyle} w="full" pt="30px">
+                순해서 아이피부에도 자극없이 사용할 수 있어요! 아이 뿐 만아니라
+                온 가족이 사용할 수 있는 화장품이라고 추천받았어요. 처음엔
+                반신반의하는 마음으로 사용하기 시작했는데 지금은 모든 단계에서
+                인코스런 제품을 사용하고있어요! 아토피로 고생했던 우리 아이
+                피부도 지금은 거의 완치단계입니다 . 아이 엄마들에게 추천드려요!
+              </Box>
+              <Box pt="20px" w="full" borderBottom="1px solid #EAECF0"></Box>
+              <HStack spacing="10px" w="full" justify="flex-start" pt="20px">
+                {/* {review.photos.map((photo) => (
+              <Image
+                key={photo.id}
+                borderRadius="5px"
+                w="80px"
+                h="80px"
+                src={photo.img}
+              ></Image>
+            ))} */}
+                <Image src="images/review/review.png" w="80px" h="80px" />
+                <Image src="images/review/review.png" w="80px" h="80px" />
+                <Image src="images/review/review.png" w="80px" h="80px" />
+              </HStack>
+            </VStack>
+          </Box>
+        </HStack>
+        <Box pos="absolute" bottom="20px" right="6px" w="60px" h="60px">
+          <Image src="icons/svg/main/info.svg" alt="info" />
+        </Box>
+      </Flex>
       <Box bgGradient="linear(to-r, #FF710B, #FFAB2E)" position="relative">
         <VStack w="100%" alignItems="center">
           <Box {...MoreInfoTitleText} pt="83px">
-            인코스런에 대해 더 궁금하신가요?{' '}
+            인코스런에 대해 더 궁금하신가요?
           </Box>
           <Box {...MoreInfoSubText} pt="2px" textAlign="center">
             인스타그램을 방문하시면 더욱 다양한 <br />
@@ -476,7 +686,7 @@ function Main() {
           </a>
         </VStack>
       </Box>
-    </>
+    </Box>
   );
 }
 
@@ -530,4 +740,29 @@ const PriceText = {
   fontWeight: 700,
   fontSize: '12px',
   lineHeight: '18px',
+};
+
+const ProductText = {
+  fontWeight: 700,
+  fontSize: '16px',
+  lineHeight: '28px',
+};
+
+const ReviewrStyle = {
+  fontWeight: 700,
+  fontSize: '12px',
+  lineHeight: '18px',
+};
+
+const ReviewDateStyle = {
+  fontSize: '12px',
+  lineHeight: '18px',
+  color: 'gray.700',
+  fontWeight: '400',
+};
+
+const ReviewContentStyle = {
+  fontWeight: 400,
+  fontSize: '16px',
+  lineHeight: '28px',
 };
