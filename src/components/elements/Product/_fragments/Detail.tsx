@@ -194,6 +194,19 @@ function Detail() {
     });
   };
 
+  function parsingWithByte(str: string) {
+    let byte = 0;
+    for (let i = 0; i < str.length; ++i) {
+      str.charCodeAt(i) > 127 ? (byte += 2) : byte++;
+      if (byte > 47) {
+        str = str.slice(0, i) + '\n' + str.slice(i);
+        byte = 0;
+        i++;
+      }
+    }
+    return str;
+  }
+
   return (
     <Box pt="120px" pb="80px" maxW="375px">
       {detail && (
@@ -219,7 +232,6 @@ function Detail() {
               overflowWrap="break-word"
             >
               <Box {...TitleText} pt="45px">
-                {detail.name}
                 <span
                   style={{
                     paddingLeft: '5px',
@@ -256,14 +268,8 @@ function Detail() {
                   무료배송
                 </span>
               </Box>
-              <Flex
-                {...SubText}
-                pt="10px"
-                w="full"
-                flexWrap="wrap"
-                overflowWrap="break-word"
-              >
-                {detail?.description}
+              <Flex {...SubText} pt="10px" w="full" flexWrap="wrap" wrap="wrap">
+                {parsingWithByte(detail.description)}
               </Flex>
               {detail.avgRating?.toFixed(1) !== '0.0' && (
                 <Flex {...BoldText} alignItems="center" pt="10px" pb="15px">

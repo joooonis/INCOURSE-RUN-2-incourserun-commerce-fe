@@ -16,7 +16,7 @@ export interface DetailType {
   id: number;
   capacity: number;
   price: number;
-  description?: string;
+  description: string;
   detailImg?: string;
   productImg?: string;
   reviewCount: number;
