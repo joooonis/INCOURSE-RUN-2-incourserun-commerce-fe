@@ -64,6 +64,11 @@
 - Kakao 계정 소셜로그인으로 간편하게 회원가입이 가능합니다.
 - 이후 회원가입 페이지에서 추가정보를 작성하여 회원가입을 완료하고 서비스를 이용할 수 있습니다.
 
+👇 카카오 로그인 시퀀스 다이어그램
+<section><img src="https://i.imgur.com/cSb8ElL.png" width='600'/>
+</section>
+
+
 👇 로그인 → 회원가입 → 메인페이지 → 로그아웃</br>
 ![](https://i.imgur.com/GZKTfcc.gif)
 
@@ -123,3 +128,17 @@
 
 👇 마이페이지 → 탈퇴 → 재가입</br>
 ![](https://i.imgur.com/RbREGyn.gif)
+
+## 🌈 도전
+> 프론트엔드에서는 이런점을 고려하였어요!
+- Chakra UI를 사용하여 간편하고 직관적인 UI 컴포넌트 작성
+- TypeScript 사용시 any 사용을 최대한 지양하고 React Component 마다 props의 type 설정
+- 전역상태 최소화 및 Redux Tool Kit을 사용하여 전역 State를 효율적으로 관리 
+- React Hook Form을 사용하여 사용자가 제출한 form 관리 및 유효성 검사 
+- 전역 axios instance를 사용하여 API 통신 및 로그인 token 관리 
+
+> 백엔드에서는 이런점을 고려하였어요!
+- REST API 설계 규칙을 준수
+- 일관성, 사용성을 고려한 API 설계
+- Validation, Permission을 꼼꼼하게 검사
+- 관리자 페이지에서 필요한 데이터들을 쉽게 찾아볼 수 있도록 기능 추가
